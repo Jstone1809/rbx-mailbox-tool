@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mailbox Config Generator</title>
+<style>
+  :root{
+    --bg:#0e1a12;
+    --panel:#13241a;
+    --panel-2:#0b150f;
+    --line:#234433;
+    --text:#e8f5ec;
+    --muted:#8fb39c;
+    --leaf:#3fd07a;
+    --leaf-deep:#1f9d57;
+    --gold:#ffcb45;
+    --code:#bdf0cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #18452b 0%, transparent 60%),
+      var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    padding:24px 16px 64px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto}
+  header{text-align:center;margin-bottom:28px}
+  .badge{
+    display:inline-block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--leaf);border:1px solid var(--line);border-radius:999px;
+    padding:6px 14px;margin-bottom:14px;
+  }
+  h1{
+    font-size:30px;font-weight:800;line-height:1.1;
+    background:linear-gradient(90deg,#ff6b6b,#ffcb45,#3fd07a,#4dabf7,#b197fc);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .sub{color:var(--muted);font-size:14px;margin-top:8px}
+
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:22px;margin-bottom:18px;
+  }
+  .grid{display:grid;gap:16px}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px;font-weight:600;letter-spacing:.02em}
+  input,select{
+    width:100%;background:var(--panel-2);border:1px solid var(--line);
+    color:var(--text);border-radius:12px;padding:13px 14px;font-size:16px;
+    font-family:inherit;transition:border-color .15s,box-shadow .15s;appearance:none;
+  }
+  select{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238fb39c' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;
+  }
+  input:focus,select:focus{
+    outline:none;border-color:var(--leaf);
+    box-shadow:0 0 0 3px rgba(63,208,122,.18);
+  }
+  input::placeholder{color:#557a64}
+
+  .input-row{display:flex;gap:10px;align-items:stretch}
+  .input-row input{flex:1;min-width:0}
+  .btn-paste{
+    background:linear-gradient(135deg,#2dd4d4,#0e9bbf);color:#04181d;
+    border:none;flex:0 0 auto;font-size:15px;
+  }
+  .btn-paste:hover{filter:brightness(1.08)}
+  .btn-paste.done{background:linear-gradient(135deg,#ffcb45,#f5a623);color:#3a2400;border-color:transparent}
+
+  .btn-clear{
+    background:linear-gradient(135deg,#ff6b6b,#d6294e);color:#fff;
+    border:none;flex:0 0 auto;font-size:15px;
+  }
+  .btn-clear:hover{filter:brightness(1.08)}
+  .btn-clear:active{transform:scale(.95)}
+
+  .preview-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px}
+  .preview-head h2{font-size:15px;font-weight:700;color:var(--text)}
+  pre{
+    background:var(--panel-2);border:1px solid var(--line);border-radius:12px;
+    padding:16px;overflow-x:auto;font-size:13px;line-height:1.55;
+    font-family:'SF Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
+    color:var(--code);white-space:pre;
+  }
+  .hl{color:var(--gold);font-weight:700}
+  .btn{
+    border:none;border-radius:11px;padding:11px 18px;font-size:14px;font-weight:700;
+    cursor:pointer;font-family:inherit;transition:transform .08s,filter .15s;
+    display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  }
+  .btn:active{transform:scale(.96)}
+  .btn-copy{
+    background:linear-gradient(135deg,var(--leaf),var(--leaf-deep));color:#06170d;
+  }
+  .btn-copy:hover{filter:brightness(1.08)}
+  .btn-copy.done{background:linear-gradient(135deg,#ffcb45,#f5a623);color:#3a2400}
+  .copy-big{width:100%;justify-content:center;padding:15px;font-size:16px;margin-top:16px}
+  .foot{text-align:center;color:#4f7361;font-size:12px;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">🌱 Grow a Garden</span>
+    <h1>Mailbox Config Generator</h1>
+    <p class="sub">Fill in the order details — your script updates live below.</p>
+  </header>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <label for="username">Username</label>
+        <div class="input-row">
+          <input id="username" type="text" placeholder="Buyer's Roblox username" autocomplete="off" spellcheck="false">
+          <button class="btn btn-paste" id="pasteBtn" type="button">📥 Paste</button>
+          <button class="btn btn-clear" id="clearBtn" type="button">✕ Clear</button>
+        </div>
+      </div>
+      <div>
+        <label for="item">Item</label>
+        <select id="item">
+          <option value="Rainbow">Rainbow</option>
+          <option value="Gold">Gold</option>
+          <option value="Bamboo">Bamboo</option>
+          <option value="Mushroom">Mushroom</option>
+          <option value="custom">Custom…</option>
+        </select>
+        <input id="customItem" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Type any item name" style="display:none;margin-top:10px">
+      </div>
+      <div>
+        <label for="quantity">Quantity</label>
+        <select id="quantity">
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100" selected>100</option>
+          <option value="250">250</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+          <option value="custom">Custom…</option>
+        </select>
+        <input id="customQty" type="number" inputmode="numeric" min="1" step="1"
+               placeholder="Type any number" style="display:none;margin-top:10px">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="preview-head">
+      <h2>Generated Script</h2>
+      <button class="btn btn-copy" id="copyTop">📋 Copy</button>
+    </div>
+    <pre id="output"></pre>
+    <button class="btn btn-copy copy-big" id="copyBig">📋 Copy whole script</button>
+  </div>
+
+  <p class="foot">Highlighted values update as you type.</p>
+</div>
+
+<script>
+const tplConfig = (user, item, qty) => `getgenv().MailboxConfig = {
+    MAIL_USERNAME = { "${user}" },
+    MAIL_ITEM_NAME = { 
+    ["${item}"] = ${qty}},
+    MAIL_NOTE = "Enjoy and have a great day!",
+    SEND_INTERVAL = 9999999999999 , -- auto send every ?? 
+    AUTO_SEND = true,
+}`;
+
+const tpl = (user, item, qty) => `getgenv().MailboxConfig = {
+    MAIL_USERNAME = { "${user}" },
+    MAIL_ITEM_NAME = { 
+    ["${item}"] = ${qty}},
+    MAIL_NOTE = "Enjoy and have a great day!",
+    SEND_INTERVAL = 9999999999999 , -- auto send every ?? 
+    AUTO_SEND = true,
+}
+
+local C = getgenv().MailboxConfig or {}
+local RS = game:GetService("ReplicatedStorage")
+local Net = require(RS:WaitForChild("SharedModules"):WaitForChild("Networking"))
+local PS = require(RS:WaitForChild("ClientModules"):WaitForChild("PlayerStateClient"))
+
+local STACK = {
+    Sprinklers = 1, WateringCans = 1, Mushrooms = 1, Gnomes = 1, Raccoons = 1, Crates = 1,
+    SeedPacks = 1, Trowels = 1, Props = 1, Seeds = 1, HarvestedFruits = 1, Flashbangs = 1, EmptyPots = 1,
+}
+
+local function getInv()
+    local ok, r = pcall(function() return PS:WaitForLocalReplica(5) end)
+    return ok and r and r.Data and type(r.Data.Inventory) == "table" and r.Data.Inventory
+end
+
+local function buildBatch(inv, items)
+    local out, max = {}, 20
+    for name, amt in items do
+        if #out >= max then break end
+        local want = math.max(1, math.floor(tonumber(amt) or 1))
+        if type(inv.Pets) == "table" then
+            for key, p in inv.Pets do
+                if want <= 0 or #out >= max then break end
+                if type(p) == "table" and p.Id and not p.Equipped and tostring(p.Name) == name then
+                    out[#out + 1] = { Category = "Pets", ItemKey = key, Count = 1 }
+                    want -= 1
+                end
+            end
+        end
+        if want > 0 then
+            for cat in STACK do
+                local t = inv[cat]
+                if type(t) == "table" and type(t[name]) == "number" and t[name] > 0 then
+                    out[#out + 1] = { Category = cat, ItemKey = name, Count = math.min(want, t[name]) }
+                    break
+                end
+            end
+        end
+    end
+    return out
+end
+
+getgenv().mailboxSendOnce = function()
+    local users, items = C.MAIL_USERNAME or {}, C.MAIL_ITEM_NAME or {}
+    if #users == 0 or not next(items) then return warn("[Mailbox] empty config") end
+    local inv = getInv()
+    if not inv then return warn("[Mailbox] no inventory") end
+    local batch = buildBatch(inv, items)
+    if #batch == 0 then return warn("[Mailbox] nothing to send") end
+    local target = tostring(users[math.random(#users)])
+    local ok, uid, err = pcall(function() return Net.Mailbox.LookupPlayer:Fire(target) end)
+    if not ok or type(uid) ~= "number" or uid <= 0 then return warn("[Mailbox] lookup:", err) end
+    ok, success, msg = pcall(function() return Net.Mailbox.SendBatch:Fire(uid, batch, C.MAIL_NOTE or "") end)
+    print(success and "[Mailbox] sent to " .. target or "[Mailbox] fail:", msg or success)
+    return success == true
+end
+
+if C.AUTO_SEND ~= false then
+    task.spawn(function()
+        while true do
+            pcall(getgenv().mailboxSendOnce)
+            task.wait(tonumber(C.SEND_INTERVAL) or 10)
+        end
+    end)
+else
+    getgenv().mailboxSendOnce()
+end`;
+
+const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const userEl = document.getElementById('username');
+const itemEl = document.getElementById('item');
+const qtyEl  = document.getElementById('quantity');
+const customEl = document.getElementById('customQty');
+const customItemEl = document.getElementById('customItem');
+const pasteBtn = document.getElementById('pasteBtn');
+const out    = document.getElementById('output');
+
+function getItem(){
+  if(itemEl.value === 'custom'){
+    const v = customItemEl.value.trim();
+    return v === '' ? 'item_insert' : v;
+  }
+  return itemEl.value;
+}
+
+function getQty(){
+  if(qtyEl.value === 'custom'){
+    const n = customEl.value.trim();
+    return n === '' ? 'quantity_insert' : n;
+  }
+  return qtyEl.value;
+}
+
+function plain(){
+  const user = userEl.value.trim() || 'user_insert';
+  return tpl(user, getItem(), getQty());
+}
+
+function render(){
+  const user = userEl.value.trim() || 'user_insert';
+  const item = getItem();
+  const qty  = getQty();
+  // preview shows only the config block; Copy still grabs the full script
+  let html = esc(tplConfig('\u0000U\u0000', '\u0000I\u0000', '\u0000Q\u0000'));
+  html = html
+    .replace('\u0000U\u0000', `<span class="hl">${esc(user)}</span>`)
+    .replace('\u0000I\u0000', `<span class="hl">${esc(item)}</span>`)
+    .replace('\u0000Q\u0000', `<span class="hl">${esc(qty)}</span>`);
+  out.innerHTML = html;
+}
+
+async function copy(btn){
+  try{
+    await navigator.clipboard.writeText(plain());
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=plain();ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}catch(_){}
+    document.body.removeChild(ta);
+  }
+  const label=btn.innerHTML;
+  btn.classList.add('done');
+  btn.innerHTML='✓ Copied!';
+  setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=label;},1600);
+}
+
+async function paste(){
+  // Auto clipboard-read only works on a secure (https) page. Opened locally
+  // as a file:// page, the browser blocks it — so we fall back to the field.
+  if(window.isSecureContext && navigator.clipboard && navigator.clipboard.readText){
+    try{
+      const txt = await navigator.clipboard.readText();
+      userEl.value = txt.trim();
+      render();
+      flash(pasteBtn,'✓ Pasted!',1400);
+      return;
+    }catch(e){ /* permission denied — fall through */ }
+  }
+  // Fallback: open the field + keyboard so the native Paste chip shows.
+  userEl.focus();
+  userEl.select();
+  flash(pasteBtn,'Tap Paste ⤴',2000);
+}
+
+function flash(btn,msg,ms){
+  const label=btn.innerHTML;
+  btn.classList.add('done');
+  btn.innerHTML=msg;
+  setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=label;},ms);
+}
+
+// show/hide custom item field
+itemEl.addEventListener('change',()=>{
+  const isCustom = itemEl.value === 'custom';
+  customItemEl.style.display = isCustom ? 'block' : 'none';
+  if(isCustom) customItemEl.focus();
+  render();
+});
+
+// show/hide custom number field
+qtyEl.addEventListener('change',()=>{
+  const isCustom = qtyEl.value === 'custom';
+  customEl.style.display = isCustom ? 'block' : 'none';
+  if(isCustom) customEl.focus();
+  render();
+});
+
+[userEl,itemEl,customEl,customItemEl].forEach(el=>el.addEventListener('input',render));
+pasteBtn.addEventListener('click',paste);
+document.getElementById('clearBtn').addEventListener('click',()=>{
+  userEl.value='';
+  render();
+  userEl.focus();
+});
+document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
+document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
+render();
+</script>
+</body>
+</html>
