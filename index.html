@@ -79,6 +79,38 @@
   .btn-clear:hover{filter:brightness(1.08)}
   .btn-clear:active{transform:scale(.95)}
 
+  .item-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+  .item-row .col{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+  .btn-remove{
+    flex:0 0 auto;height:48px;background:linear-gradient(135deg,#ff6b6b,#d6294e);
+    color:#fff;border:none;font-size:20px;padding:0 15px;line-height:1;
+  }
+  .btn-remove:hover{filter:brightness(1.08)}
+  .btn-add{
+    background:var(--panel-2);border:1px dashed var(--line);color:var(--leaf);
+    width:100%;justify-content:center;margin-top:2px;
+  }
+  .btn-add:hover{border-color:var(--leaf);background:#102b1c}
+  .col-caps{display:flex;gap:10px;margin-bottom:6px}
+  .col-caps span{flex:1;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+  .col-caps .spacer{flex:0 0 auto;width:48px}
+
+  .combo{position:relative}
+  .combo-list{
+    position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:20;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    max-height:240px;overflow-y:auto;box-shadow:0 12px 32px rgba(0,0,0,.45);
+    display:none;
+  }
+  .combo-list.show{display:block}
+  .combo-item{
+    padding:12px 14px;font-size:15px;cursor:pointer;
+    border-bottom:1px solid rgba(35,68,51,.45);
+  }
+  .combo-item:last-child{border-bottom:none}
+  .combo-item:hover,.combo-item.active{background:#173024;color:var(--leaf)}
+  .combo-empty{padding:12px 14px;font-size:14px;color:var(--muted)}
+
   .preview-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px}
   .preview-head h2{font-size:15px;font-weight:700;color:var(--text)}
   pre{
@@ -122,31 +154,10 @@
         </div>
       </div>
       <div>
-        <label for="item">Item</label>
-        <select id="item">
-          <option value="Rainbow">Rainbow</option>
-          <option value="Gold">Gold</option>
-          <option value="Bamboo">Bamboo</option>
-          <option value="Mushroom">Mushroom</option>
-          <option value="Trowel">Trowel</option>
-          <option value="custom">Custom…</option>
-        </select>
-        <input id="customItem" type="text" autocomplete="off" spellcheck="false"
-               placeholder="Type any item name" style="display:none;margin-top:10px">
-      </div>
-      <div>
-        <label for="quantity">Quantity</label>
-        <select id="quantity">
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100" selected>100</option>
-          <option value="250">250</option>
-          <option value="500">500</option>
-          <option value="1000">1000</option>
-          <option value="custom">Custom…</option>
-        </select>
-        <input id="customQty" type="number" inputmode="numeric" min="1" step="1"
-               placeholder="Type any number" style="display:none;margin-top:10px">
+        <label>Items</label>
+        <div class="col-caps"><span>Item</span><span>Quantity</span><span class="spacer"></span></div>
+        <div id="rows"></div>
+        <button class="btn btn-add" id="addBtn" type="button">+ Add item</button>
       </div>
     </div>
   </div>
@@ -164,19 +175,10 @@
 </div>
 
 <script>
-const tplConfig = (user, item, qty) => `getgenv().MailboxConfig = {
+const tpl = (user, itemsBlock) => `getgenv().MailboxConfig = {
     MAIL_USERNAME = { "${user}" },
     MAIL_ITEM_NAME = { 
-    ["${item}"] = ${qty}},
-    MAIL_NOTE = "Enjoy and have a great day!",
-    SEND_INTERVAL = 9999999999999 , -- auto send every ?? 
-    AUTO_SEND = true,
-}`;
-
-const tpl = (user, item, qty) => `getgenv().MailboxConfig = {
-    MAIL_USERNAME = { "${user}" },
-    MAIL_ITEM_NAME = { 
-    ["${item}"] = ${qty}},
+${itemsBlock}},
     MAIL_NOTE = "Enjoy and have a great day!",
     SEND_INTERVAL = 9999999999999 , -- auto send every ?? 
     AUTO_SEND = true,
@@ -251,46 +253,185 @@ else
 end`;
 
 const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-const userEl = document.getElementById('username');
-const itemEl = document.getElementById('item');
-const qtyEl  = document.getElementById('quantity');
-const customEl = document.getElementById('customQty');
-const customItemEl = document.getElementById('customItem');
-const pasteBtn = document.getElementById('pasteBtn');
-const out    = document.getElementById('output');
 
-function getItem(){
-  if(itemEl.value === 'custom'){
-    const v = customItemEl.value.trim();
-    return v === '' ? 'item_insert' : v;
-  }
-  return itemEl.value;
+const ITEMS = [
+  {label:'Acorn Seed',          code:'Acorn'},
+  {label:'Bamboo Seed',         code:'Bamboo'},
+  {label:'Bear',                code:'Bear'},
+  {label:'Bee',                 code:'Bee'},
+  {label:'Cherry Seed',         code:'Cherry'},
+  {label:'Deer',                code:'Deer'},
+  {label:"Dragon's Breath Seed",code:"Dragon's Breath"},
+  {label:'Dragon Fruit Seed',   code:'Dragon Fruit'},
+  {label:'Ghost Pepper Pack',   code:'Ghost Pepper Pack'},
+  {label:'Ghost Pepper Seed',   code:'Ghost Pepper'},
+  {label:'Gold Seed',           code:'Gold'},
+  {label:'Golden Dragonfly',    code:'Golden Dragonfly'},
+  {label:'Ice Serpent',         code:'Ice Serpent'},
+  {label:'Monkey',              code:'Monkey'},
+  {label:'Moon Bloom Seed',     code:'Moon Bloom'},
+  {label:'Mushroom Seed',       code:'Mushroom'},
+  {label:'Owl',                 code:'Owl'},
+  {label:'Poison Apple Seed',   code:'Poison Apple'},
+  {label:'Pomegranate Seed',    code:'Pomegranate'},
+  {label:'Rainbow Seed',        code:'Rainbow'},
+  {label:'Raccoon',             code:'Raccoon'},
+  {label:'Robin',               code:'Robin'},
+  {label:'Sunflower Seed',      code:'Sunflower'},
+  {label:'Super Sprinkler',     code:'Super Sprinkler'},
+  {label:'Super Watering Can',  code:'Super Watering Can'},
+  {label:'Teleporter Pad Crate',code:'Teleporter Pad Crate'},
+  {label:'Trowel',              code:'Trowel'},
+  {label:'Unicorn',             code:'Unicorn'},
+  {label:'Venom Spitter Seed',  code:'Venom Spitter'},
+  {label:'Venus Fly Trap Seed', code:'Venus Fly Trap'}
+];
+const QTY_OPTIONS  = ['1','2','3','25','50','100','250','500','1000'];
+
+function codeFor(text){
+  const t = text.trim();
+  if(!t) return 'item_insert';
+  const hit = ITEMS.find(it => it.label.toLowerCase() === t.toLowerCase());
+  return hit ? hit.code : t;   // unknown text used as-is (custom item)
 }
 
-function getQty(){
-  if(qtyEl.value === 'custom'){
-    const n = customEl.value.trim();
-    return n === '' ? 'quantity_insert' : n;
+const userEl  = document.getElementById('username');
+const pasteBtn = document.getElementById('pasteBtn');
+const rowsEl  = document.getElementById('rows');
+const out     = document.getElementById('output');
+
+const rows = [];
+
+function buildOptions(values, selected){
+  const opts = values.map(v =>
+    `<option value="${v}"${v===selected?' selected':''}>${v}</option>`).join('');
+  return opts + '<option value="custom">Custom…</option>';
+}
+
+function addRow(){
+  const row = document.createElement('div');
+  row.className = 'item-row';
+  row.innerHTML =
+    '<div class="col">' +
+      '<div class="combo">' +
+        '<input class="itemInput" type="text" autocomplete="off" spellcheck="false" ' +
+               'placeholder="Search or type item\u2026">' +
+        '<div class="combo-list"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="col">' +
+      '<select class="qtySel">' + buildOptions(QTY_OPTIONS,'1') + '</select>' +
+      '<input class="customQty" type="number" inputmode="numeric" min="1" step="1" ' +
+             'placeholder="Type any number" style="display:none">' +
+    '</div>' +
+    '<button class="btn btn-remove" type="button" title="Remove">\u00d7</button>';
+
+  const itemInput = row.querySelector('.itemInput');
+  const comboList = row.querySelector('.combo-list');
+  const qtySel = row.querySelector('.qtySel');
+  const customQty = row.querySelector('.customQty');
+  const removeBtn = row.querySelector('.btn-remove');
+  const obj = {row, itemInput, qtySel, customQty};
+
+  function buildList(){
+    const q = itemInput.value.trim().toLowerCase();
+    const matches = ITEMS.filter(it => it.label.toLowerCase().includes(q));
+    comboList.innerHTML = '';
+    if(matches.length === 0){
+      const d = document.createElement('div');
+      d.className = 'combo-empty';
+      d.textContent = q ? 'No match \u2014 will use what you typed' : 'No items';
+      comboList.appendChild(d);
+      return;
+    }
+    matches.forEach(it=>{
+      const d = document.createElement('div');
+      d.className = 'combo-item';
+      d.textContent = it.label;
+      d.addEventListener('mousedown', e=>{   // fires before blur, keeps focus
+        e.preventDefault();
+        itemInput.value = it.label;
+        comboList.classList.remove('show');
+        render();
+      });
+      comboList.appendChild(d);
+    });
   }
-  return qtyEl.value;
+  function showList(){ buildList(); comboList.classList.add('show'); }
+
+  itemInput.addEventListener('focus', showList);
+  itemInput.addEventListener('input', ()=>{ showList(); render(); });
+  itemInput.addEventListener('blur', ()=> setTimeout(()=>comboList.classList.remove('show'), 150));
+
+  qtySel.addEventListener('change',()=>{
+    const c = qtySel.value === 'custom';
+    customQty.style.display = c ? 'block' : 'none';
+    if(c) customQty.focus();
+    render();
+  });
+  customQty.addEventListener('input',render);
+  removeBtn.addEventListener('click',()=>removeRow(obj));
+
+  rows.push(obj);
+  rowsEl.appendChild(row);
+  updateRemoveVisibility();
+  render();
+}
+
+function removeRow(obj){
+  const i = rows.indexOf(obj);
+  if(i === -1) return;
+  rows.splice(i,1);
+  obj.row.remove();
+  updateRemoveVisibility();
+  render();
+}
+
+function updateRemoveVisibility(){
+  // can't remove the last remaining row
+  rows.forEach(o=>{
+    o.row.querySelector('.btn-remove').style.visibility =
+      rows.length > 1 ? 'visible' : 'hidden';
+  });
+}
+
+function getItems(){
+  return rows.map(o=>{
+    const item = codeFor(o.itemInput.value);
+    const qty = o.qtySel.value === 'custom'
+      ? (o.customQty.value.trim() || 'quantity_insert')
+      : o.qtySel.value;
+    return {item, qty};
+  });
+}
+
+function itemsBlockPlain(items){
+  return items.map(it => `    ["${it.item}"] = ${it.qty}`).join(',\n');
+}
+
+function itemsBlockHL(items){
+  return items.map(it =>
+    `    ["<span class="hl">${esc(it.item)}</span>"] = <span class="hl">${esc(it.qty)}</span>`
+  ).join(',\n');
 }
 
 function plain(){
   const user = userEl.value.trim() || 'user_insert';
-  return tpl(user, getItem(), getQty());
+  return tpl(user, itemsBlockPlain(getItems()));
 }
 
 function render(){
   const user = userEl.value.trim() || 'user_insert';
-  const item = getItem();
-  const qty  = getQty();
   // preview shows only the config block; Copy still grabs the full script
-  let html = esc(tplConfig('\u0000U\u0000', '\u0000I\u0000', '\u0000Q\u0000'));
-  html = html
-    .replace('\u0000U\u0000', `<span class="hl">${esc(user)}</span>`)
-    .replace('\u0000I\u0000', `<span class="hl">${esc(item)}</span>`)
-    .replace('\u0000Q\u0000', `<span class="hl">${esc(qty)}</span>`);
-  out.innerHTML = html;
+  out.innerHTML =
+`getgenv().MailboxConfig = {
+    MAIL_USERNAME = { "<span class="hl">${esc(user)}</span>" },
+    MAIL_ITEM_NAME = { 
+${itemsBlockHL(getItems())}},
+    MAIL_NOTE = "Enjoy and have a great day!",
+    SEND_INTERVAL = 9999999999999 , -- auto send every ?? 
+    AUTO_SEND = true,
+}`;
 }
 
 async function copy(btn){
@@ -334,31 +475,17 @@ function flash(btn,msg,ms){
   setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=label;},ms);
 }
 
-// show/hide custom item field
-itemEl.addEventListener('change',()=>{
-  const isCustom = itemEl.value === 'custom';
-  customItemEl.style.display = isCustom ? 'block' : 'none';
-  if(isCustom) customItemEl.focus();
-  render();
-});
-
-// show/hide custom number field
-qtyEl.addEventListener('change',()=>{
-  const isCustom = qtyEl.value === 'custom';
-  customEl.style.display = isCustom ? 'block' : 'none';
-  if(isCustom) customEl.focus();
-  render();
-});
-
-[userEl,itemEl,customEl,customItemEl].forEach(el=>el.addEventListener('input',render));
 pasteBtn.addEventListener('click',paste);
 document.getElementById('clearBtn').addEventListener('click',()=>{
   userEl.value='';
   render();
 });
+document.getElementById('addBtn').addEventListener('click',addRow);
+userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
-render();
+
+addRow(); // start with one item row
 </script>
 </body>
 </html>
