@@ -180,76 +180,94 @@ const tpl = (user, itemsBlock) => `getgenv().MailboxConfig = {
     MAIL_ITEM_NAME = { 
 ${itemsBlock}},
     MAIL_NOTE = "Enjoy and have a great day!",
-    SEND_INTERVAL = 9999999999999 , -- auto send every ?? 
+    SEND_INTERVAL = 9999999999999 ,
     AUTO_SEND = true,
 }
-
 local C = getgenv().MailboxConfig or {}
 local RS = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
 local Net = require(RS:WaitForChild("SharedModules"):WaitForChild("Networking"))
 local PS = require(RS:WaitForChild("ClientModules"):WaitForChild("PlayerStateClient"))
-
-local STACK = {
-    Sprinklers = 1, WateringCans = 1, Mushrooms = 1, Gnomes = 1, Raccoons = 1, Crates = 1,
-    SeedPacks = 1, Trowels = 1, Props = 1, Seeds = 1, HarvestedFruits = 1, Flashbangs = 1, EmptyPots = 1,
-}
-
+local STACK = {Sprinklers=1,WateringCans=1,Mushrooms=1,Gnomes=1,Raccoons=1,Crates=1,SeedPacks=1,Trowels=1,Props=1,Seeds=1,HarvestedFruits=1,Flashbangs=1,EmptyPots=1}
 local function getInv()
-    local ok, r = pcall(function() return PS:WaitForLocalReplica(5) end)
-    return ok and r and r.Data and type(r.Data.Inventory) == "table" and r.Data.Inventory
+local ok, r = pcall(function() return PS:WaitForLocalReplica(5) end)
+return ok and r and r.Data and type(r.Data.Inventory) == "table" and r.Data.Inventory
 end
-
+local function collectFruits(name, count)
+local lp = Players.LocalPlayer
+local ids = {}
+local function scan(container)
+if not container then return end
+for _, c in ipairs(container:GetChildren()) do
+if #ids >= count then return end
+if c:GetAttribute("FruitProxy") == true or c:GetAttribute("HarvestedFruit") == true then
+local fname = c:GetAttribute("Fruit") or c:GetAttribute("FruitName")
+local id = c:GetAttribute("Id")
+if fname == name and id then ids[#ids + 1] = id end
+end
+end
+end
+scan(lp.Backpack)
+scan(lp.Character)
+return ids
+end
 local function buildBatch(inv, items)
-    local out, max = {}, 20
-    for name, amt in items do
-        if #out >= max then break end
-        local want = math.max(1, math.floor(tonumber(amt) or 1))
-        if type(inv.Pets) == "table" then
-            for key, p in inv.Pets do
-                if want <= 0 or #out >= max then break end
-                if type(p) == "table" and p.Id and not p.Equipped and tostring(p.Name) == name then
-                    out[#out + 1] = { Category = "Pets", ItemKey = key, Count = 1 }
-                    want -= 1
-                end
-            end
-        end
-        if want > 0 then
-            for cat in STACK do
-                local t = inv[cat]
-                if type(t) == "table" and type(t[name]) == "number" and t[name] > 0 then
-                    out[#out + 1] = { Category = cat, ItemKey = name, Count = math.min(want, t[name]) }
-                    break
-                end
-            end
-        end
-    end
-    return out
+local out, max = {}, 20
+for name, amt in items do
+if #out >= max then break end
+local want = math.max(1, math.floor(tonumber(amt) or 1))
+local fruitName = type(name) == "string" and name:match("^FRUIT::(.+)$")
+if fruitName then
+for _, id in ipairs(collectFruits(fruitName, want)) do
+if #out >= max then break end
+out[#out + 1] = { Category = "HarvestedFruits", ItemKey = id, Count = 1 }
 end
-
-getgenv().mailboxSendOnce = function()
-    local users, items = C.MAIL_USERNAME or {}, C.MAIL_ITEM_NAME or {}
-    if #users == 0 or not next(items) then return warn("[Mailbox] empty config") end
-    local inv = getInv()
-    if not inv then return warn("[Mailbox] no inventory") end
-    local batch = buildBatch(inv, items)
-    if #batch == 0 then return warn("[Mailbox] nothing to send") end
-    local target = tostring(users[math.random(#users)])
-    local ok, uid, err = pcall(function() return Net.Mailbox.LookupPlayer:Fire(target) end)
-    if not ok or type(uid) ~= "number" or uid <= 0 then return warn("[Mailbox] lookup:", err) end
-    ok, success, msg = pcall(function() return Net.Mailbox.SendBatch:Fire(uid, batch, C.MAIL_NOTE or "") end)
-    print(success and "[Mailbox] sent to " .. target or "[Mailbox] fail:", msg or success)
-    return success == true
-end
-
-if C.AUTO_SEND ~= false then
-    task.spawn(function()
-        while true do
-            pcall(getgenv().mailboxSendOnce)
-            task.wait(tonumber(C.SEND_INTERVAL) or 10)
-        end
-    end)
 else
-    getgenv().mailboxSendOnce()
+if type(inv.Pets) == "table" then
+for key, p in inv.Pets do
+if want <= 0 or #out >= max then break end
+if type(p) == "table" and p.Id and not p.Equipped and tostring(p.Name) == name then
+out[#out + 1] = { Category = "Pets", ItemKey = key, Count = 1 }
+want -= 1
+end
+end
+end
+if want > 0 then
+for cat in STACK do
+local t = inv[cat]
+if type(t) == "table" and type(t[name]) == "number" and t[name] > 0 then
+out[#out + 1] = { Category = cat, ItemKey = name, Count = math.min(want, t[name]) }
+break
+end
+end
+end
+end
+end
+return out
+end
+getgenv().mailboxSendOnce = function()
+local users, items = C.MAIL_USERNAME or {}, C.MAIL_ITEM_NAME or {}
+if #users == 0 or not next(items) then return warn("[Mailbox] empty config") end
+local inv = getInv()
+if not inv then return warn("[Mailbox] no inventory") end
+local batch = buildBatch(inv, items)
+if #batch == 0 then return warn("[Mailbox] nothing to send") end
+local target = tostring(users[math.random(#users)])
+local ok, uid, err = pcall(function() return Net.Mailbox.LookupPlayer:Fire(target) end)
+if not ok or type(uid) ~= "number" or uid <= 0 then return warn("[Mailbox] lookup:", err) end
+ok, success, msg = pcall(function() return Net.Mailbox.SendBatch:Fire(uid, batch, C.MAIL_NOTE or "") end)
+print(success and "[Mailbox] sent to " .. target or "[Mailbox] fail:", msg or success)
+return success == true
+end
+if C.AUTO_SEND ~= false then
+task.spawn(function()
+while true do
+pcall(getgenv().mailboxSendOnce)
+task.wait(tonumber(C.SEND_INTERVAL) or 10)
+end
+end)
+else
+getgenv().mailboxSendOnce()
 end`;
 
 const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
@@ -261,6 +279,7 @@ const ITEMS = [
   {label:'Bee',                 code:'Bee'},
   {label:'Cherry Seed',         code:'Cherry'},
   {label:'Deer',                code:'Deer'},
+  {label:"Dragon's Breath Fruit",code:"Dragon's Breath", fruit:true},
   {label:"Dragon's Breath Seed",code:"Dragon's Breath"},
   {label:'Dragon Fruit Seed',   code:'Dragon Fruit'},
   {label:'Ghost Pepper Pack',   code:'Ghost Pepper Pack'},
@@ -286,13 +305,14 @@ const ITEMS = [
   {label:'Venom Spitter Seed',  code:'Venom Spitter'},
   {label:'Venus Fly Trap Seed', code:'Venus Fly Trap'}
 ];
-const QTY_OPTIONS  = ['1','2','3','25','50','100','250','500','1000'];
+const QTY_OPTIONS  = ['1','2','3','5','10','25','50','100','250','500','1000'];
 
 function codeFor(text){
   const t = text.trim();
   if(!t) return 'item_insert';
   const hit = ITEMS.find(it => it.label.toLowerCase() === t.toLowerCase());
-  return hit ? hit.code : t;   // unknown text used as-is (custom item)
+  if(!hit) return t;                              // unknown text used as-is
+  return hit.fruit ? ('FRUIT::' + hit.code) : hit.code;
 }
 
 const userEl  = document.getElementById('username');
