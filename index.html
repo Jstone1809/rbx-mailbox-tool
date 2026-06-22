@@ -132,6 +132,12 @@
   .btn-copy:hover{filter:brightness(1.08)}
   .btn-copy.done{background:linear-gradient(135deg,#ffcb45,#f5a623);color:#3a2400}
   .copy-big{width:100%;justify-content:center;padding:15px;font-size:16px;margin-top:16px}
+  .btn-send{
+    background:linear-gradient(135deg,#3aa9e8,#1d7fd1);color:#fff;
+  }
+  .btn-send:hover{filter:brightness(1.08)}
+  .btn-send.done{background:linear-gradient(135deg,#3fd07a,#1f9d57);color:#06170d}
+  .btn-send.err{background:linear-gradient(135deg,#ff6b6b,#d6294e);color:#fff}
   .foot{text-align:center;color:#4f7361;font-size:12px;margin-top:24px}
 </style>
 </head>
@@ -168,6 +174,7 @@
       <button class="btn btn-copy" id="copyTop">📋 Copy</button>
     </div>
     <pre id="output"></pre>
+    <button class="btn btn-send copy-big" id="sendBtn">🚀 Send to Telegram</button>
     <button class="btn btn-copy copy-big" id="copyBig">📋 Copy whole script</button>
   </div>
 
@@ -175,6 +182,15 @@
 </div>
 
 <script>
+// ===== Telegram SEND settings — fill these in =====
+// NOTE: these are visible to anyone who views this page's source.
+// The chat-ID lock in your listener is what keeps others from running
+// scripts on your emulator. If the token is ever abused, revoke it in
+// @BotFather and paste the new one here.
+const BOT_TOKEN = '8880946783:AAE9GVT7l_GEb_EitjOZE0GOb28nktNopAY';
+const CHAT_ID   = '934611914';
+// ==================================================
+
 const tpl = (user, itemsBlock) => `getgenv().MailboxConfig = {
     MAIL_USERNAME = { "${user}" },
     MAIL_ITEM_NAME = { 
@@ -495,6 +511,37 @@ function flash(btn,msg,ms){
   setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=label;},ms);
 }
 
+async function sendToTelegram(btn){
+  if(BOT_TOKEN.indexOf('PASTE_YOUR')!==-1 || CHAT_ID.indexOf('PASTE_YOUR')!==-1){
+    const lbl=btn.innerHTML;
+    btn.classList.add('err');btn.innerHTML='⚠ Set token & chat ID in the file';
+    setTimeout(()=>{btn.classList.remove('err');btn.innerHTML=lbl;},2600);
+    return;
+  }
+  const text=plain();
+  const lbl=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML='⏳ Sending…';
+  let cls='err', out='⚠ Failed';
+  try{
+    const res=await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:CHAT_ID,text})
+    });
+    const data=await res.json();
+    if(data.ok){cls='done';out='✓ Sent!';}
+    else{cls='err';out='⚠ '+(data.description||'Failed');}
+  }catch(e){cls='err';out='⚠ Network error';}
+  btn.classList.add(cls);
+  btn.innerHTML=out;
+  setTimeout(()=>{
+    btn.classList.remove('done','err');
+    btn.innerHTML=lbl;
+    btn.disabled=false;
+  },2400);
+}
+
 pasteBtn.addEventListener('click',paste);
 document.getElementById('clearBtn').addEventListener('click',()=>{
   userEl.value='';
@@ -504,6 +551,7 @@ document.getElementById('addBtn').addEventListener('click',addRow);
 userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
+document.getElementById('sendBtn').addEventListener('click',e=>sendToTelegram(e.currentTarget));
 
 addRow(); // start with one item row
 </script>
