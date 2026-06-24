@@ -91,6 +91,17 @@
     width:100%;justify-content:center;margin-top:2px;
   }
   .btn-add:hover{border-color:var(--leaf);background:#102b1c}
+
+  .btn-reset{
+    background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+  }
+  .btn-reset:hover{border-color:#c0556a;color:#ff8fa3;background:#2a1418}
+
+  .btn-reset-items{
+    background:#241317;border:1px solid #4a2730;color:#e0879a;
+    width:100%;justify-content:center;margin-top:8px;
+  }
+  .btn-reset-items:hover{border-color:#c0556a;color:#ff8fa3;background:#2e171c}
   .col-caps{display:flex;gap:10px;margin-bottom:6px}
   .col-caps span{flex:1;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.02em}
   .col-caps .spacer{flex:0 0 auto;width:48px}
@@ -164,6 +175,7 @@
         <div class="col-caps"><span>Item</span><span>Quantity</span><span class="spacer"></span></div>
         <div id="rows"></div>
         <button class="btn btn-add" id="addBtn" type="button">+ Add item</button>
+        <button class="btn btn-reset-items" id="resetItemsBtn" type="button">♻️ Reset items</button>
       </div>
     </div>
   </div>
@@ -176,6 +188,7 @@
     <pre id="output"></pre>
     <button class="btn btn-send copy-big" id="sendBtn">🚀 Send to Telegram</button>
     <button class="btn btn-copy copy-big" id="copyBig">📋 Copy whole script</button>
+    <button class="btn btn-reset copy-big" id="resetBtn">♻️ Reset all</button>
   </div>
 
   <p class="foot">Highlighted values update as you type.</p>
@@ -187,8 +200,8 @@
 // The chat-ID lock in your listener is what keeps others from running
 // scripts on your emulator. If the token is ever abused, revoke it in
 // @BotFather and paste the new one here.
-const BOT_TOKEN = '8880946783:AAE9GVT7l_GEb_EitjOZE0GOb28nktNopAY';
-const CHAT_ID   = '934611914';
+const BOT_TOKEN = 'PASTE_YOUR_BOT_TOKEN_HERE';
+const CHAT_ID   = 'PASTE_YOUR_CHAT_ID_HERE';
 // ==================================================
 
 const tpl = (user, itemsBlock) => `getgenv().MailboxConfig = {
@@ -321,7 +334,7 @@ const ITEMS = [
   {label:'Venom Spitter Seed',  code:'Venom Spitter'},
   {label:'Venus Fly Trap Seed', code:'Venus Fly Trap'}
 ];
-const QTY_OPTIONS  = ['1','2','3','5','10','25','50','100','250','500','1000'];
+const QTY_OPTIONS  = ['1','2','3','5','10','20','25','50','100','250','500','1000'];
 
 function codeFor(text){
   const t = text.trim();
@@ -371,7 +384,7 @@ function addRow(){
 
   function buildList(){
     const q = itemInput.value.trim().toLowerCase();
-    const matches = ITEMS.filter(it => it.label.toLowerCase().includes(q));
+    const matches = ITEMS.filter(it => it.label.toLowerCase().startsWith(q));
     comboList.innerHTML = '';
     if(matches.length === 0){
       const d = document.createElement('div');
@@ -526,8 +539,7 @@ async function sendToTelegram(btn){
   try{
     const res=await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({chat_id:CHAT_ID,text})
+      body:new URLSearchParams({chat_id:CHAT_ID,text})
     });
     const data=await res.json();
     if(data.ok){cls='done';out='✓ Sent!';}
@@ -548,6 +560,17 @@ document.getElementById('clearBtn').addEventListener('click',()=>{
   render();
 });
 document.getElementById('addBtn').addEventListener('click',addRow);
+document.getElementById('resetItemsBtn').addEventListener('click',()=>{
+  for(const o of rows.slice()) o.row.remove();
+  rows.length=0;
+  addRow();              // keep username, reset items to one default row
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  userEl.value='';
+  for(const o of rows.slice()) o.row.remove();
+  rows.length=0;
+  addRow();              // start fresh with one default row
+});
 userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
