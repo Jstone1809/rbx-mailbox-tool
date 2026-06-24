@@ -191,8 +191,8 @@
       <button class="btn btn-copy" id="copyTop">📋 Copy</button>
     </div>
     <pre id="output"></pre>
-    <button class="btn btn-send copy-big" id="sendBtn">🚀 Send to Telegram</button>
-    <button class="btn btn-claim copy-big" id="claimBtn">📋 Copy claim-all script</button>
+    <button class="btn btn-send copy-big" id="sendBtn">🚀 Copy & open Telegram</button>
+    <button class="btn btn-claim copy-big" id="claimBtn">📥 Claim all — copy & open</button>
     <button class="btn btn-copy copy-big" id="copyBig">📋 Copy whole script</button>
     <button class="btn btn-reset copy-big" id="resetBtn">♻️ Reset all</button>
   </div>
@@ -507,6 +507,25 @@ async function copyText(btn, text){
 
 async function copy(btn){ return copyText(btn, plain()); }
 
+// Copies the script, then opens the Telegram app straight to the bot chat,
+// so you can paste immediately. Copy is done synchronously so it completes
+// inside the tap before the app switch.
+function copyAndOpenBot(btn, text){
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(_){}
+  document.body.removeChild(ta);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).catch(()=>{});
+  }
+  const label=btn.innerHTML;
+  btn.classList.add('done');
+  btn.innerHTML='✓ Copied — opening Telegram';
+  setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=label;},2000);
+  window.open('https://t.me/RBX_Mailbox_Bot','_blank');
+}
+
 async function paste(){
   // Auto clipboard-read only works on a secure (https) page. Opened locally
   // as a file:// page, the browser blocks it — so we fall back to the field.
@@ -561,7 +580,7 @@ async function sendText(btn, text){
   },2400);
 }
 
-function sendToTelegram(btn){ sendText(btn, plain()); }
+function sendToTelegram(btn){ copyAndOpenBot(btn, plain()); }
 
 const CLAIM_ALL_SCRIPT = `local RS = game:GetService("ReplicatedStorage")
 local Net = require(RS:WaitForChild("SharedModules"):WaitForChild("Networking"))
@@ -603,7 +622,7 @@ userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('sendBtn').addEventListener('click',e=>sendToTelegram(e.currentTarget));
-document.getElementById('claimBtn').addEventListener('click',e=>copyText(e.currentTarget, CLAIM_ALL_SCRIPT));
+document.getElementById('claimBtn').addEventListener('click',e=>copyAndOpenBot(e.currentTarget, CLAIM_ALL_SCRIPT));
 
 addRow(); // start with one item row
 </script>
