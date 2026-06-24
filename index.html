@@ -192,7 +192,7 @@
     </div>
     <pre id="output"></pre>
     <button class="btn btn-send copy-big" id="sendBtn">🚀 Send to Telegram</button>
-    <button class="btn btn-claim copy-big" id="claimBtn">📥 Claim all mail</button>
+    <button class="btn btn-claim copy-big" id="claimBtn">📋 Copy claim-all script</button>
     <button class="btn btn-copy copy-big" id="copyBig">📋 Copy whole script</button>
     <button class="btn btn-reset copy-big" id="resetBtn">♻️ Reset all</button>
   </div>
@@ -206,8 +206,8 @@
 // The chat-ID lock in your listener is what keeps others from running
 // scripts on your emulator. If the token is ever abused, revoke it in
 // @BotFather and paste the new one here.
-const BOT_TOKEN = '8880946783:AAE9GVT7l_GEb_EitjOZE0GOb28nktNopAY';
-const CHAT_ID   = '934611914';
+const BOT_TOKEN = 'PASTE_YOUR_BOT_TOKEN_HERE';
+const CHAT_ID   = 'PASTE_YOUR_CHAT_ID_HERE';
 // ==================================================
 
 const tpl = (user, itemsBlock) => `getgenv().MailboxConfig = {
@@ -489,12 +489,12 @@ ${itemsBlockHL(getItems())}},
 }`;
 }
 
-async function copy(btn){
+async function copyText(btn, text){
   try{
-    await navigator.clipboard.writeText(plain());
+    await navigator.clipboard.writeText(text);
   }catch(e){
     const ta=document.createElement('textarea');
-    ta.value=plain();ta.style.position='fixed';ta.style.opacity='0';
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
     document.body.appendChild(ta);ta.select();
     try{document.execCommand('copy');}catch(_){}
     document.body.removeChild(ta);
@@ -504,6 +504,8 @@ async function copy(btn){
   btn.innerHTML='✓ Copied!';
   setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=label;},1600);
 }
+
+async function copy(btn){ return copyText(btn, plain()); }
 
 async function paste(){
   // Auto clipboard-read only works on a secure (https) page. Opened locally
@@ -601,7 +603,7 @@ userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('sendBtn').addEventListener('click',e=>sendToTelegram(e.currentTarget));
-document.getElementById('claimBtn').addEventListener('click',e=>sendText(e.currentTarget, CLAIM_ALL_SCRIPT));
+document.getElementById('claimBtn').addEventListener('click',e=>copyText(e.currentTarget, CLAIM_ALL_SCRIPT));
 
 addRow(); // start with one item row
 </script>
