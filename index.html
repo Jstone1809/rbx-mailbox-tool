@@ -149,6 +149,11 @@
   .btn-send:hover{filter:brightness(1.08)}
   .btn-send.done{background:linear-gradient(135deg,#3fd07a,#1f9d57);color:#06170d}
   .btn-send.err{background:linear-gradient(135deg,#ff6b6b,#d6294e);color:#fff}
+
+  .btn-claim{background:linear-gradient(135deg,#ffcb45,#f5a623);color:#3a2400}
+  .btn-claim:hover{filter:brightness(1.08)}
+  .btn-claim.done{background:linear-gradient(135deg,#3fd07a,#1f9d57);color:#06170d}
+  .btn-claim.err{background:linear-gradient(135deg,#ff6b6b,#d6294e);color:#fff}
   .foot{text-align:center;color:#4f7361;font-size:12px;margin-top:24px}
 </style>
 </head>
@@ -187,6 +192,7 @@
     </div>
     <pre id="output"></pre>
     <button class="btn btn-send copy-big" id="sendBtn">🚀 Send to Telegram</button>
+    <button class="btn btn-claim copy-big" id="claimBtn">📥 Claim all mail</button>
     <button class="btn btn-copy copy-big" id="copyBig">📋 Copy whole script</button>
     <button class="btn btn-reset copy-big" id="resetBtn">♻️ Reset all</button>
   </div>
@@ -524,14 +530,13 @@ function flash(btn,msg,ms){
   setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=label;},ms);
 }
 
-async function sendToTelegram(btn){
+async function sendText(btn, text){
   if(BOT_TOKEN.indexOf('PASTE_YOUR')!==-1 || CHAT_ID.indexOf('PASTE_YOUR')!==-1){
     const lbl=btn.innerHTML;
     btn.classList.add('err');btn.innerHTML='⚠ Set token & chat ID in the file';
     setTimeout(()=>{btn.classList.remove('err');btn.innerHTML=lbl;},2600);
     return;
   }
-  const text=plain();
   const lbl=btn.innerHTML;
   btn.disabled=true;
   btn.innerHTML='⏳ Sending…';
@@ -554,6 +559,27 @@ async function sendToTelegram(btn){
   },2400);
 }
 
+function sendToTelegram(btn){ sendText(btn, plain()); }
+
+const CLAIM_ALL_SCRIPT = `local RS = game:GetService("ReplicatedStorage")
+local Net = require(RS:WaitForChild("SharedModules"):WaitForChild("Networking"))
+local function getInbox()
+local ok, res = pcall(function() return Net.Mailbox.List:Fire() end)
+if ok and type(res) == "table" then return res end
+ok, res = pcall(function() return Net.Mailbox.OpenInbox:Fire() end)
+if ok and type(res) == "table" then return res end
+return nil
+end
+local inbox = getInbox()
+if not inbox then return warn("[ClaimAll] could not read inbox") end
+local claimed, failed = 0, 0
+for mailId in pairs(inbox) do
+local ok, res = pcall(function() return Net.Mailbox.Claim:Fire(mailId) end)
+if ok and res ~= false then claimed += 1 else failed += 1 end
+task.wait(0.4)
+end
+print("[ClaimAll] claimed " .. claimed .. " mail(s), " .. failed .. " failed")`;
+
 pasteBtn.addEventListener('click',paste);
 document.getElementById('clearBtn').addEventListener('click',()=>{
   userEl.value='';
@@ -575,6 +601,7 @@ userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('sendBtn').addEventListener('click',e=>sendToTelegram(e.currentTarget));
+document.getElementById('claimBtn').addEventListener('click',e=>sendText(e.currentTarget, CLAIM_ALL_SCRIPT));
 
 addRow(); // start with one item row
 </script>
