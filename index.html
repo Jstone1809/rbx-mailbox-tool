@@ -137,6 +137,7 @@
     display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
   }
   .btn:active{transform:scale(.96)}
+  a.btn{text-decoration:none;box-sizing:border-box}
   .btn-copy{
     background:linear-gradient(135deg,var(--leaf),var(--leaf-deep));color:#06170d;
   }
@@ -191,8 +192,8 @@
       <button class="btn btn-copy" id="copyTop">📋 Copy</button>
     </div>
     <pre id="output"></pre>
-    <button class="btn btn-send copy-big" id="sendBtn">🚀 Copy & open Telegram</button>
-    <button class="btn btn-claim copy-big" id="claimBtn">📥 Claim all — copy & open</button>
+    <a class="btn btn-send copy-big" id="sendBtn" href="https://t.me/RBX_Mailbox_Bot" target="_blank" rel="noopener">🚀 Copy & open Telegram</a>
+    <a class="btn btn-claim copy-big" id="claimBtn" href="https://t.me/RBX_Mailbox_Bot" target="_blank" rel="noopener">📥 Claim all — copy & open</a>
     <button class="btn btn-copy copy-big" id="copyBig">📋 Copy whole script</button>
     <button class="btn btn-reset copy-big" id="resetBtn">♻️ Reset all</button>
   </div>
@@ -508,23 +509,28 @@ async function copyText(btn, text){
 
 async function copy(btn){ return copyText(btn, plain()); }
 
-// Copies the script, then opens the Telegram app straight to the bot chat,
-// so you can paste immediately. Copy is done synchronously so it completes
-// inside the tap before the app switch.
-function copyAndOpenBot(btn, text){
-  const ta=document.createElement('textarea');
-  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
-  document.body.appendChild(ta);ta.focus();ta.select();
-  try{document.execCommand('copy');}catch(_){}
-  document.body.removeChild(ta);
+// The buttons are real links to the bot, so the OS opens Telegram on tap.
+// This just copies the script in the same tap. Synchronous copy first (commits
+// before the app foregrounds on mobile), with the async API as a backup.
+function copyForPaste(btn, text){
+  try{
+    const ta=document.createElement('textarea');
+    ta.value=text;ta.contentEditable='true';ta.readOnly=false;
+    ta.style.position='fixed';ta.style.top='0';ta.style.left='0';ta.style.opacity='0';
+    document.body.appendChild(ta);
+    const range=document.createRange();range.selectNodeContents(ta);
+    const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+    ta.setSelectionRange(0,text.length);
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }catch(_){}
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).catch(()=>{});
+    navigator.clipboard.writeText(text).then(()=>{}).catch(()=>{});
   }
   const label=btn.innerHTML;
   btn.classList.add('done');
-  btn.innerHTML='✓ Copied — opening Telegram';
+  btn.innerHTML='✓ Copied — paste in Telegram';
   setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=label;},2000);
-  window.open('https://t.me/RBX_Mailbox_Bot','_blank');
 }
 
 async function paste(){
@@ -581,7 +587,7 @@ async function sendText(btn, text){
   },2400);
 }
 
-function sendToTelegram(btn){ copyAndOpenBot(btn, plain()); }
+function sendToTelegram(btn){ copyForPaste(btn, plain()); }
 
 const CLAIM_ALL_SCRIPT = `local RS = game:GetService("ReplicatedStorage")
 local Net = require(RS:WaitForChild("SharedModules"):WaitForChild("Networking"))
@@ -623,7 +629,7 @@ userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('sendBtn').addEventListener('click',e=>sendToTelegram(e.currentTarget));
-document.getElementById('claimBtn').addEventListener('click',e=>copyAndOpenBot(e.currentTarget, CLAIM_ALL_SCRIPT));
+document.getElementById('claimBtn').addEventListener('click',e=>copyForPaste(e.currentTarget, CLAIM_ALL_SCRIPT));
 
 addRow(); // start with one item row
 </script>
