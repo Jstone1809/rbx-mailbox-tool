@@ -309,38 +309,38 @@ end`;
 const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 
 const ITEMS = [
-  {label:'Acorn Seed',          code:'Acorn'},
-  {label:'Bamboo Seed',         code:'Bamboo'},
-  {label:'Bear',                code:'Bear'},
-  {label:'Bee',                 code:'Bee'},
-  {label:'Cherry Seed',         code:'Cherry'},
-  {label:'Deer',                code:'Deer'},
-  {label:"Dragon's Breath Fruit",code:"Dragon's Breath", fruit:true},
-  {label:"Dragon's Breath Seed",code:"Dragon's Breath"},
-  {label:'Dragon Fruit Seed',   code:'Dragon Fruit'},
-  {label:'Ghost Pepper Fruit',  code:'Ghost Pepper', fruit:true},
-  {label:'Ghost Pepper Pack',   code:'Ghost Pepper Pack'},
-  {label:'Ghost Pepper Seed',   code:'Ghost Pepper'},
-  {label:'Gold Seed',           code:'Gold'},
-  {label:'Golden Dragonfly',    code:'Golden Dragonfly'},
-  {label:'Ice Serpent',         code:'Ice Serpent'},
-  {label:'Monkey',              code:'Monkey'},
-  {label:'Moon Bloom Seed',     code:'Moon Bloom'},
-  {label:'Mushroom Seed',       code:'Mushroom'},
-  {label:'Owl',                 code:'Owl'},
-  {label:'Poison Apple Seed',   code:'Poison Apple'},
-  {label:'Pomegranate Seed',    code:'Pomegranate'},
+  {label:'Acorn Seed',          code:'Acorn', max:20},
+  {label:'Bamboo Seed',         code:'Bamboo', min:100},
+  {label:'Bear',                code:'Bear', max:20},
+  {label:'Bee',                 code:'Bee', max:20},
+  {label:'Cherry Seed',         code:'Cherry', max:20},
+  {label:'Deer',                code:'Deer', max:20},
+  {label:"Dragon's Breath Fruit",code:"Dragon's Breath", fruit:true, max:20},
+  {label:"Dragon's Breath Seed",code:"Dragon's Breath", max:20},
+  {label:'Dragon Fruit Seed',   code:'Dragon Fruit', max:20},
+  {label:'Ghost Pepper Fruit',  code:'Ghost Pepper', fruit:true, max:20},
+  {label:'Ghost Pepper Pack',   code:'Ghost Pepper Pack', min:10, max:50},
+  {label:'Ghost Pepper Seed',   code:'Ghost Pepper', max:25},
+  {label:'Gold Seed',           code:'Gold', min:100},
+  {label:'Golden Dragonfly',    code:'Golden Dragonfly', max:20},
+  {label:'Ice Serpent',         code:'Ice Serpent', max:20},
+  {label:'Monkey',              code:'Monkey', max:20},
+  {label:'Moon Bloom Seed',     code:'Moon Bloom', max:20},
+  {label:'Mushroom Seed',       code:'Mushroom', min:100},
+  {label:'Owl',                 code:'Owl', max:20},
+  {label:'Poison Apple Seed',   code:'Poison Apple', max:20},
+  {label:'Pomegranate Seed',    code:'Pomegranate', max:20},
   {label:'Rainbow Seed',        code:'Rainbow'},
-  {label:'Raccoon',             code:'Raccoon'},
-  {label:'Robin',               code:'Robin'},
-  {label:'Sunflower Seed',      code:'Sunflower'},
-  {label:'Super Sprinkler',     code:'Super Sprinkler'},
-  {label:'Super Watering Can',  code:'Super Watering Can'},
-  {label:'Teleporter Pad Crate',code:'Teleporter Pad Crate'},
-  {label:'Trowel',              code:'Trowel'},
-  {label:'Unicorn',             code:'Unicorn'},
-  {label:'Venom Spitter Seed',  code:'Venom Spitter'},
-  {label:'Venus Fly Trap Seed', code:'Venus Fly Trap'}
+  {label:'Raccoon',             code:'Raccoon', max:20},
+  {label:'Robin',               code:'Robin', max:20},
+  {label:'Sunflower Seed',      code:'Sunflower', max:20},
+  {label:'Super Sprinkler',     code:'Super Sprinkler', max:20},
+  {label:'Super Watering Can',  code:'Super Watering Can', max:20},
+  {label:'Teleporter Pad Crate',code:'Teleporter Pad Crate', max:20},
+  {label:'Trowel',              code:'Trowel', min:10},
+  {label:'Unicorn',             code:'Unicorn', max:20},
+  {label:'Venom Spitter Seed',  code:'Venom Spitter', max:20},
+  {label:'Venus Fly Trap Seed', code:'Venus Fly Trap', max:20}
 ];
 const QTY_OPTIONS  = ['1','2','3','5','10','20','25','50','100','250','500','1000'];
 
@@ -363,6 +363,27 @@ function buildOptions(values, selected){
   const opts = values.map(v =>
     `<option value="${v}"${v===selected?' selected':''}>${v}</option>`).join('');
   return opts + '<option value="custom">Custom…</option>';
+}
+
+// Rebuilds a row's quantity dropdown to fit the selected item's min/max.
+// Keeps the current pick if it's still valid; otherwise defaults to the
+// lowest allowed preset (i.e. the minimum where one is set).
+function applyQtyConstraints(o){
+  const it = ITEMS.find(x => x.label.toLowerCase() === o.itemInput.value.trim().toLowerCase());
+  const min = it && it.min ? it.min : 1;
+  const max = it && it.max ? it.max : Infinity;
+  let vals = QTY_OPTIONS.filter(v => { const n = +v; return n >= min && n <= max; });
+  if(vals.length === 0) vals = [String(it && it.min ? it.min : 1)];
+  const cur = o.qtySel.value;
+  let keep;
+  if(cur === 'custom') keep = 'custom';
+  else if(vals.includes(cur)) keep = cur;
+  else keep = vals[0];                       // jump to min (or 1) when current no longer fits
+  o.qtySel.innerHTML = buildOptions(vals, keep === 'custom' ? null : keep);
+  if(keep === 'custom') o.qtySel.value = 'custom';
+  o.customQty.min = String(min);
+  if(max !== Infinity) o.customQty.max = String(max); else o.customQty.removeAttribute('max');
+  o.customQty.style.display = o.qtySel.value === 'custom' ? 'block' : 'none';
 }
 
 function addRow(){
@@ -409,6 +430,7 @@ function addRow(){
         e.preventDefault();
         itemInput.value = it.label;
         comboList.classList.remove('show');
+        applyQtyConstraints(obj);
         render();
       });
       comboList.appendChild(d);
@@ -417,7 +439,7 @@ function addRow(){
   function showList(){ buildList(); comboList.classList.add('show'); }
 
   itemInput.addEventListener('focus', showList);
-  itemInput.addEventListener('input', ()=>{ showList(); render(); });
+  itemInput.addEventListener('input', ()=>{ showList(); applyQtyConstraints(obj); render(); });
   itemInput.addEventListener('blur', ()=> setTimeout(()=>comboList.classList.remove('show'), 150));
 
   qtySel.addEventListener('change',()=>{
