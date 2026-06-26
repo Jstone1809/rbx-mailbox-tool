@@ -262,7 +262,7 @@ else
 if type(inv.Pets) == "table" then
 for key, p in inv.Pets do
 if want <= 0 or #out >= max then break end
-if type(p) == "table" and p.Id and not p.Equipped and tostring(p.Name) == name then
+if type(p) == "table" and p.Id and not p.Equipped and (tostring(p.Name):gsub("%s",""):lower()) == (tostring(name):gsub("%s",""):lower()) then
 out[#out + 1] = { Category = "Pets", ItemKey = key, Count = 1 }
 want -= 1
 end
