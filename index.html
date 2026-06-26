@@ -151,10 +151,6 @@
   .btn-send.done{background:linear-gradient(135deg,#3fd07a,#1f9d57);color:#06170d}
   .btn-send.err{background:linear-gradient(135deg,#ff6b6b,#d6294e);color:#fff}
 
-  .btn-claim{background:linear-gradient(135deg,#ffcb45,#f5a623);color:#3a2400}
-  .btn-claim:hover{filter:brightness(1.08)}
-  .btn-claim.done{background:linear-gradient(135deg,#3fd07a,#1f9d57);color:#06170d}
-  .btn-claim.err{background:linear-gradient(135deg,#ff6b6b,#d6294e);color:#fff}
   .foot{text-align:center;color:#4f7361;font-size:12px;margin-top:24px}
 </style>
 </head>
@@ -192,9 +188,7 @@
       <button class="btn btn-copy" id="copyTop">📋 Copy</button>
     </div>
     <pre id="output"></pre>
-    <a class="btn btn-send copy-big" id="sendBtn" href="https://t.me/RBX_Mailbox_Bot" target="_blank" rel="noopener">🚀 Copy & open Telegram</a>
-    <a class="btn btn-claim copy-big" id="claimBtn" href="https://t.me/RBX_Mailbox_Bot" target="_blank" rel="noopener">📥 Claim all — copy & open</a>
-    <button class="btn btn-copy copy-big" id="copyBig">📋 Copy whole script</button>
+    <button class="btn btn-send copy-big" id="sendBtn">🚀 Copy order</button>
     <button class="btn btn-reset copy-big" id="resetBtn">♻️ Reset all</button>
   </div>
 
@@ -229,10 +223,8 @@ const ITEMS = [
   {label:'Bee',                 code:'Bee', max:20},
   {label:'Cherry Seed',         code:'Cherry', max:20},
   {label:'Deer',                code:'Deer', max:20},
-  {label:"Dragon's Breath Fruit",code:"Dragon's Breath", fruit:true, max:20},
   {label:"Dragon's Breath Seed",code:"Dragon's Breath", max:20},
   {label:'Dragon Fruit Seed',   code:'Dragon Fruit', max:20},
-  {label:'Ghost Pepper Fruit',  code:'Ghost Pepper', fruit:true, max:20},
   {label:'Ghost Pepper Pack',   code:'Ghost Pepper Pack', min:10, max:50},
   {label:'Ghost Pepper Seed',   code:'Ghost Pepper', max:25},
   {label:'Gold Seed',           code:'Gold', min:100},
@@ -531,24 +523,6 @@ async function sendText(btn, text){
 
 function sendToTelegram(btn){ copyForPaste(btn, plain()); }
 
-const CLAIM_ALL_SCRIPT = `local RS = game:GetService("ReplicatedStorage")
-local Net = require(RS:WaitForChild("SharedModules"):WaitForChild("Networking"))
-local function getInbox()
-local ok, res = pcall(function() return Net.Mailbox.List:Fire() end)
-if ok and type(res) == "table" then return res end
-ok, res = pcall(function() return Net.Mailbox.OpenInbox:Fire() end)
-if ok and type(res) == "table" then return res end
-return nil
-end
-local inbox = getInbox()
-if not inbox then return warn("[ClaimAll] could not read inbox") end
-local claimed, failed = 0, 0
-for mailId in pairs(inbox) do
-local ok, res = pcall(function() return Net.Mailbox.Claim:Fire(mailId) end)
-if ok and res ~= false then claimed += 1 else failed += 1 end
-task.wait(0.4)
-end
-print("[ClaimAll] claimed " .. claimed .. " mail(s), " .. failed .. " failed")`;
 
 pasteBtn.addEventListener('click',paste);
 document.getElementById('clearBtn').addEventListener('click',()=>{
@@ -569,9 +543,7 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 });
 userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
-document.getElementById('copyBig').addEventListener('click',e=>copy(e.currentTarget));
 document.getElementById('sendBtn').addEventListener('click',e=>sendToTelegram(e.currentTarget));
-document.getElementById('claimBtn').addEventListener('click',e=>copyForPaste(e.currentTarget, CLAIM_ALL_SCRIPT));
 
 addRow(); // start with one item row
 </script>
