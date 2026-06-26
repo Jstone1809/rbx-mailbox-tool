@@ -150,6 +150,12 @@
   .btn-send:hover{filter:brightness(1.08)}
   .btn-send.done{background:linear-gradient(135deg,#3fd07a,#1f9d57);color:#06170d}
   .btn-send.err{background:linear-gradient(135deg,#ff6b6b,#d6294e);color:#fff}
+  .relay-setup{margin-top:14px}
+  .relay-setup summary{cursor:pointer;font-weight:600;color:#9fb3c8}
+  .relay-setup input{width:100%;box-sizing:border-box;margin:8px 0;padding:10px 12px;
+    border-radius:10px;border:1px solid #2a3a4d;background:#0e1722;color:#e6eef7;font-size:15px}
+  .relay-setup .hint{font-size:13px;color:#7d93a8}
+  #relayStatus{margin-left:10px;font-size:13px;color:#7d93a8}
 
   .foot{text-align:center;color:#4f7361;font-size:12px;margin-top:24px}
 </style>
@@ -191,6 +197,17 @@
     <button class="btn btn-send copy-big" id="sendBtn">🚀 Copy order</button>
     <button class="btn btn-reset copy-big" id="resetBtn">♻️ Reset all</button>
   </div>
+
+  <details class="card relay-setup" id="relaySetup">
+    <summary>⚙️ One-tap send setup</summary>
+    <p class="hint">Enter your relay URL + secret once. Stored only in this browser
+      (localStorage), never in the page source. When set, “Send order” fires the
+      order straight to the bot — no copy-paste.</p>
+    <input id="relayUrl" placeholder="Relay URL — https://….workers.dev" autocomplete="off" spellcheck="false">
+    <input id="relaySecret" placeholder="Relay secret" autocomplete="off" spellcheck="false">
+    <button class="btn btn-copy" id="relaySaveBtn">Save</button>
+    <span id="relayStatus"></span>
+  </details>
 
   <p class="foot">Highlighted values update as you type.</p>
 </div>
@@ -548,6 +565,55 @@ async function sendText(btn, text){
 
 function sendToTelegram(btn){ copyForPaste(btn, plain()); }
 
+// ---- One-tap send via the Cloudflare relay --------------------------------
+const RELAY = {
+  get url(){ return (localStorage.getItem('relayUrl')||'').trim().replace(/\/+$/,''); },
+  get secret(){ return (localStorage.getItem('relaySecret')||'').trim(); },
+  get on(){ return !!(this.url && this.secret); }
+};
+
+function refreshSendButton(){
+  document.getElementById('sendBtn').innerHTML = RELAY.on ? '🚀 Send order' : '🚀 Copy order';
+}
+
+async function sendOrder(btn){
+  const text = plain();
+  if(text.includes('user_insert') || text.includes('item_insert') || text.includes('quantity_insert')){
+    flash(btn,'⚠ Fill in the order first',2000);
+    return;
+  }
+  if(!RELAY.on){ copyForPaste(btn, text); return; }   // not set up → copy as before
+  const lbl = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '⏳ Sending…';
+  let cls='err', msg='⚠ Failed';
+  try{
+    const res = await fetch(`${RELAY.url}/push?key=${encodeURIComponent(RELAY.secret)}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({order:text})
+    });
+    const data = await res.json().catch(()=>({}));
+    if(res.ok && data.ok){ cls='done'; msg='✓ Sent to bot!'; }
+    else { cls='err'; msg='⚠ '+(data.error||('HTTP '+res.status)); }
+  }catch(e){ cls='err'; msg='⚠ Network error'; }
+  btn.classList.add(cls); btn.innerHTML=msg;
+  setTimeout(()=>{btn.classList.remove('done','err'); btn.innerHTML=lbl; btn.disabled=false;}, 2400);
+}
+
+function initRelaySetup(){
+  const urlEl=document.getElementById('relayUrl');
+  const secEl=document.getElementById('relaySecret');
+  const statusEl=document.getElementById('relayStatus');
+  urlEl.value = RELAY.url; secEl.value = RELAY.secret;
+  if(RELAY.on) statusEl.textContent='✓ Configured';
+  document.getElementById('relaySaveBtn').addEventListener('click',()=>{
+    localStorage.setItem('relayUrl', urlEl.value.trim());
+    localStorage.setItem('relaySecret', secEl.value.trim());
+    statusEl.textContent = RELAY.on ? '✓ Saved — Send order is live' : 'Enter both fields';
+    refreshSendButton();
+  });
+}
+
 
 pasteBtn.addEventListener('click',paste);
 document.getElementById('clearBtn').addEventListener('click',()=>{
@@ -568,7 +634,9 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 });
 userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
-document.getElementById('sendBtn').addEventListener('click',e=>sendToTelegram(e.currentTarget));
+document.getElementById('sendBtn').addEventListener('click',e=>sendOrder(e.currentTarget));
+initRelaySetup();
+refreshSendButton();
 
 addRow(); // start with one item row
 </script>
