@@ -209,9 +209,6 @@ const tpl = (user, itemsBlock) => `getgenv().MailboxConfig = {
     MAIL_USERNAME = { "${user}" },
     MAIL_ITEM_NAME = { 
 ${itemsBlock}},
-    MAIL_NOTE = "Enjoy and have a great day!",
-    SEND_INTERVAL = 9999999999999 ,
-    AUTO_SEND = true,
 }`;
 
 const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
@@ -266,9 +263,9 @@ const out     = document.getElementById('output');
 
 const rows = [];
 
-function buildOptions(values, selected){
+function buildOptions(values, selected, labelFn){
   const opts = values.map(v =>
-    `<option value="${v}"${v===selected?' selected':''}>${v}</option>`).join('');
+    `<option value="${v}"${v===selected?' selected':''}>${labelFn?labelFn(v):v}</option>`).join('');
   return opts + '<option value="custom">Custom…</option>';
 }
 
@@ -291,7 +288,11 @@ function applyQtyConstraints(o){
   if(cur === 'custom') keep = 'custom';
   else if(vals.includes(cur)) keep = cur;
   else keep = vals[0];                       // jump to min (or 1) when current no longer fits
-  o.qtySel.innerHTML = buildOptions(vals, keep === 'custom' ? null : keep);
+  // Sheckles presets show as 1M / 5M … 1B (value stays the millions number).
+  const sheckLabel = (it && it.code === 'SHECKLES')
+    ? (v => { const n = +v; return n >= 1000 ? (n/1000) + 'B' : n + 'M'; })
+    : null;
+  o.qtySel.innerHTML = buildOptions(vals, keep === 'custom' ? null : keep, sheckLabel);
   if(keep === 'custom') o.qtySel.value = 'custom';
   o.customQty.min = String(min);
   if(max !== Infinity) o.customQty.max = String(max); else o.customQty.removeAttribute('max');
@@ -406,23 +407,47 @@ function itemsBlockHL(items){
   ).join(',\n');
 }
 
-function plain(){
+function readableItems(){
+  return rows.map(o=>{
+    const label = o.itemInput.value.trim() || 'item_insert';
+    const code = codeFor(label);
+    const qty = o.qtySel.value === 'custom'
+      ? (o.customQty.value.trim() || 'quantity_insert')
+      : o.qtySel.value;
+    if(code === 'SHECKLES'){
+      const n = +qty;
+      const sh = (isFinite(n) && n >= 1000) ? (n/1000)+'B' : qty+'M';
+      return `${sh} Sheckles`;
+    }
+    return `${label} x${qty}`;
+  });
+}
+
+function readableOrder(){
   const user = userEl.value.trim() || 'user_insert';
-  return tpl(user, itemsBlockPlain(getItems()));
+  return `@${user}\n` + readableItems().join('\n');
+}
+
+function plain(){
+  return readableOrder();
 }
 
 function render(){
   const user = userEl.value.trim() || 'user_insert';
-  // preview shows only the config block; Copy still grabs the full script
-  out.innerHTML =
-`getgenv().MailboxConfig = {
-    MAIL_USERNAME = { "<span class="hl">${esc(user)}</span>" },
-    MAIL_ITEM_NAME = { 
-${itemsBlockHL(getItems())}},
-    MAIL_NOTE = "Enjoy and have a great day!",
-    SEND_INTERVAL = 9999999999999 , -- auto send every ?? 
-    AUTO_SEND = true,
-}`;
+  const itemsHL = rows.map(o=>{
+    const label = o.itemInput.value.trim() || 'item_insert';
+    const code = codeFor(label);
+    const qty = o.qtySel.value === 'custom'
+      ? (o.customQty.value.trim() || 'quantity_insert')
+      : o.qtySel.value;
+    if(code === 'SHECKLES'){
+      const n = +qty;
+      const sh = (isFinite(n) && n >= 1000) ? (n/1000)+'B' : qty+'M';
+      return `<span class="hl">${esc(sh)}</span> Sheckles`;
+    }
+    return `${esc(label)} x<span class="hl">${esc(qty)}</span>`;
+  }).join('\n');
+  out.innerHTML = `@<span class="hl">${esc(user)}</span>\n${itemsHL}`;
 }
 
 async function copyText(btn, text){
