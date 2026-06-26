@@ -249,51 +249,71 @@ return ids
 end
 local function buildBatch(inv, items)
 local out, max = {}, 20
+local summary = {}
+local function tally(nm, n) if n > 0 then summary[nm] = (summary[nm] or 0) + n end end
 for name, amt in items do
 if #out >= max then break end
 local want = math.max(1, math.floor(tonumber(amt) or 1))
 local fruitName = type(name) == "string" and name:match("^FRUIT::(.+)$")
 if fruitName then
+local added = 0
 for _, id in ipairs(collectFruits(fruitName, want)) do
 if #out >= max then break end
 out[#out + 1] = { Category = "HarvestedFruits", ItemKey = id, Count = 1 }
+added += 1
 end
+tally(fruitName, added)
 else
+local matched = 0
 if type(inv.Pets) == "table" then
 for key, p in inv.Pets do
 if want <= 0 or #out >= max then break end
 if type(p) == "table" and p.Id and not p.Equipped and (tostring(p.Name):gsub("%s",""):lower()) == (tostring(name):gsub("%s",""):lower()) then
 out[#out + 1] = { Category = "Pets", ItemKey = key, Count = 1 }
 want -= 1
+matched += 1
 end
 end
 end
+if matched > 0 then tally(name, matched) end
 if want > 0 then
 for cat in STACK do
 local t = inv[cat]
 if type(t) == "table" and type(t[name]) == "number" and t[name] > 0 then
-out[#out + 1] = { Category = cat, ItemKey = name, Count = math.min(want, t[name]) }
+local c = math.min(want, t[name])
+out[#out + 1] = { Category = cat, ItemKey = name, Count = c }
+tally(name, c)
 break
 end
 end
 end
 end
 end
-return out
+return out, summary
 end
 getgenv().mailboxSendOnce = function()
+local function result(s) pcall(function() writefile("send_result.txt", s) end) end
 local users, items = C.MAIL_USERNAME or {}, C.MAIL_ITEM_NAME or {}
-if #users == 0 or not next(items) then return warn("[Mailbox] empty config") end
+if #users == 0 or not next(items) then result("FAIL|Empty config - nothing sent.") return warn("[Mailbox] empty config") end
 local inv = getInv()
-if not inv then return warn("[Mailbox] no inventory") end
-local batch = buildBatch(inv, items)
-if #batch == 0 then return warn("[Mailbox] nothing to send") end
+if not inv then result("FAIL|Could not read inventory.") return warn("[Mailbox] no inventory") end
+local batch, summary = buildBatch(inv, items)
+if #batch == 0 then result("FAIL|Nothing matched to send.") return warn("[Mailbox] nothing to send") end
 local target = tostring(users[math.random(#users)])
 local ok, uid, err = pcall(function() return Net.Mailbox.LookupPlayer:Fire(target) end)
-if not ok or type(uid) ~= "number" or uid <= 0 then return warn("[Mailbox] lookup:", err) end
-ok, success, msg = pcall(function() return Net.Mailbox.SendBatch:Fire(uid, batch, C.MAIL_NOTE or "") end)
+if not ok or type(uid) ~= "number" or uid <= 0 then result("FAIL|Could not find @" .. target .. ".") return warn("[Mailbox] lookup:", err) end
+local sok, success, msg = pcall(function() return Net.Mailbox.SendBatch:Fire(uid, batch, C.MAIL_NOTE or "") end)
+if sok and success then
+local lines = {}
+for disp, cnt in pairs(summary) do
+lines[#lines + 1] = ("SENT|@%s sent %s %d Confirmed"):format(target, tostring(disp), cnt)
+end
+result(table.concat(lines, "\n"))
+else
+result("FAIL|@" .. target .. " send may have failed.")
+end
 print(success and "[Mailbox] sent to " .. target or "[Mailbox] fail:", msg or success)
-return success == true
+return success and true or false
 end
 if C.AUTO_SEND ~= false then
 task.spawn(function()
