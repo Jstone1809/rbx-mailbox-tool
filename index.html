@@ -120,6 +120,13 @@
   }
   .combo-item:last-child{border-bottom:none}
   .combo-item:hover,.combo-item.active{background:#173024;color:var(--leaf)}
+  .combo-item.bundle{color:var(--gold);border-left:3px solid var(--gold)}
+  .combo-item.bundle:hover,.combo-item.bundle.active{background:#2a2410;color:var(--gold)}
+  .itemInput.bundle-selected{
+    border-color:var(--gold);
+    background:rgba(255,203,69,.10);
+    font-weight:600;
+  }
   .combo-empty{padding:12px 14px;font-size:14px;color:var(--muted)}
 
   .preview-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px}
@@ -264,7 +271,13 @@ const ITEMS = [
   {label:'Trowel',              code:'Trowel', min:10},
   {label:'Unicorn',             code:'Unicorn', max:20},
   {label:'Venom Spitter Seed',  code:'Venom Spitter', max:20},
-  {label:'Venus Fly Trap Seed', code:'Venus Fly Trap', max:20}
+  {label:'Venus Fly Trap Seed', code:'Venus Fly Trap', max:20},
+  // Bundles (kept last so they sort below normal items in the dropdown).
+  // One pick sends every component at the chosen quantity.
+  {label:"Dragon's Breath + Moon Bloom Seed",              bundle:["Dragon's Breath Seed","Moon Bloom Seed"],                    qtyOptions:[1,3,5,10]},
+  {label:"Dragon's Breath + Hypno Bloom Seed",             bundle:["Dragon's Breath Seed","Hypno Bloom Seed"],                   qtyOptions:[1,3,5,10]},
+  {label:"Dragon's Breath + Moon Bloom + Hypno Bloom Seed",bundle:["Dragon's Breath Seed","Moon Bloom Seed","Hypno Bloom Seed"], qtyOptions:[1,3,5,10]},
+  {label:"Super Sprinkler + Super Watering Can",           bundle:["Super Sprinkler","Super Watering Can"],                      qtyOptions:[10,25,50,100,250,500,1000]}
 ];
 const QTY_OPTIONS  = ['1','2','3','5','10','20','25','50','100','250','500','1000'];
 
@@ -273,7 +286,35 @@ function codeFor(text){
   if(!t) return 'item_insert';
   const hit = ITEMS.find(it => it.label.toLowerCase() === t.toLowerCase());
   if(!hit) return t;                              // unknown text used as-is
+  if(hit.bundle) return null;                     // bundles expand into components, no single code
   return hit.fruit ? ('FRUIT::' + hit.code) : hit.code;
+}
+
+// The chosen quantity for a row (respecting the custom field).
+function rowQty(o){
+  return o.qtySel.value === 'custom'
+    ? (o.customQty.value.trim() || 'quantity_insert')
+    : o.qtySel.value;
+}
+
+// Expand a row into one-or-more {label, qty} pieces. A bundle becomes one piece
+// per component, each at the row's chosen quantity; a normal item stays a single.
+function expandRow(o){
+  const label = o.itemInput.value.trim();
+  const qty = rowQty(o);
+  const it = ITEMS.find(x => x.label.toLowerCase() === label.toLowerCase());
+  if(it && it.bundle) return it.bundle.map(cl => ({label: cl, qty}));
+  return [{label: label || 'item_insert', qty}];
+}
+
+function pieceLine(label, qty, hl){
+  const code = codeFor(label);
+  if(code === 'SHECKLES'){
+    const n = +qty;
+    const sh = (isFinite(n) && n >= 1000) ? (n/1000)+'B' : qty+'M';
+    return hl ? `<span class="hl">${esc(sh)}</span> Sheckles` : `${sh} Sheckles`;
+  }
+  return hl ? `${esc(label)} x<span class="hl">${esc(qty)}</span>` : `${label} x${qty}`;
 }
 
 const userEl  = document.getElementById('username');
@@ -294,6 +335,7 @@ function buildOptions(values, selected, labelFn){
 // lowest allowed preset (i.e. the minimum where one is set).
 function applyQtyConstraints(o){
   const it = ITEMS.find(x => x.label.toLowerCase() === o.itemInput.value.trim().toLowerCase());
+  o.itemInput.classList.toggle('bundle-selected', !!(it && it.bundle));   // distinct look for bundles
   const min = it && it.min ? it.min : 1;
   const max = it && it.max ? it.max : Infinity;
   let vals;
@@ -357,8 +399,8 @@ function addRow(){
     }
     matches.forEach(it=>{
       const d = document.createElement('div');
-      d.className = 'combo-item';
-      d.textContent = it.label;
+      d.className = 'combo-item' + (it.bundle ? ' bundle' : '');
+      d.textContent = (it.bundle ? '🎁 ' : '') + it.label;
       d.addEventListener('mousedown', e=>{   // fires before blur, keeps focus
         e.preventDefault();
         itemInput.value = it.label;
@@ -428,19 +470,9 @@ function itemsBlockHL(items){
 }
 
 function readableItems(){
-  return rows.map(o=>{
-    const label = o.itemInput.value.trim() || 'item_insert';
-    const code = codeFor(label);
-    const qty = o.qtySel.value === 'custom'
-      ? (o.customQty.value.trim() || 'quantity_insert')
-      : o.qtySel.value;
-    if(code === 'SHECKLES'){
-      const n = +qty;
-      const sh = (isFinite(n) && n >= 1000) ? (n/1000)+'B' : qty+'M';
-      return `${sh} Sheckles`;
-    }
-    return `${label} x${qty}`;
-  });
+  const lines = [];
+  rows.forEach(o => expandRow(o).forEach(p => lines.push(pieceLine(p.label, p.qty, false))));
+  return lines;
 }
 
 function readableOrder(){
@@ -454,20 +486,9 @@ function plain(){
 
 function render(){
   const user = userEl.value.trim() || 'user_insert';
-  const itemsHL = rows.map(o=>{
-    const label = o.itemInput.value.trim() || 'item_insert';
-    const code = codeFor(label);
-    const qty = o.qtySel.value === 'custom'
-      ? (o.customQty.value.trim() || 'quantity_insert')
-      : o.qtySel.value;
-    if(code === 'SHECKLES'){
-      const n = +qty;
-      const sh = (isFinite(n) && n >= 1000) ? (n/1000)+'B' : qty+'M';
-      return `<span class="hl">${esc(sh)}</span> Sheckles`;
-    }
-    return `${esc(label)} x<span class="hl">${esc(qty)}</span>`;
-  }).join('\n');
-  out.innerHTML = `@<span class="hl">${esc(user)}</span>\n${itemsHL}`;
+  const lines = [];
+  rows.forEach(o => expandRow(o).forEach(p => lines.push(pieceLine(p.label, p.qty, true))));
+  out.innerHTML = `@<span class="hl">${esc(user)}</span>\n${lines.join('\n')}`;
 }
 
 async function copyText(btn, text){
