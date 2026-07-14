@@ -694,18 +694,30 @@ refreshSendButton();
 // ===== eBay Orders panel =====================================================
 function ebExtractUser(notes){
   if(!notes) return '';
-  let m = notes.match(/@([A-Za-z0-9_]{3,20})/);
+  let m = notes.match(/text\s*:\s*([A-Za-z0-9_]{3,20})/i);   // eBay personalisation = username
+  if(m) return m[1];
+  m = notes.match(/@([A-Za-z0-9_]{3,20})/);
   if(m) return m[1];
   m = notes.match(/roblox\s*(?:user(?:name)?)?\s*[:\-]?\s*([A-Za-z0-9_]{3,20})/i);
   if(m) return m[1];
   return '';
 }
+// What the buyer actually bought: the chosen variation if present, else the
+// "Item=..." value from the personalisation note, else fall back to the title.
+function ebItemSource(li, notes){
+  if(li.variation && li.variation.trim()) return li.variation.trim();
+  const m = (notes||'').match(/item\s*=\s*(.+?)(?:\s+text\s*:|$)/i);
+  if(m) return m[1].trim();
+  return li.title||'';
+}
 function ebMapTitle(title, qty){
+  const lineQty = Number(qty)||1;
   const t = (title||'').toLowerCase();
   if(t.includes('sheckle')){
+    // Sheckles: total = amount × how many units were bought (10B ×2 = 20B)
     let mB = t.match(/([\d.]+)\s*b\b/), mM = t.match(/([\d.]+)\s*m\b/);
-    if(mB) return `${mB[1]}B Sheckles`;
-    if(mM) return `${mM[1]}M Sheckles`;
+    if(mB){ const n=Math.round(parseFloat(mB[1])*lineQty*1000)/1000; return `${n}B Sheckles`; }
+    if(mM){ const n=Math.round(parseFloat(mM[1])*lineQty*1000)/1000; return `${n}M Sheckles`; }
   }
   let best=null;
   for(const it of ITEMS){
@@ -718,11 +730,33 @@ function ebMapTitle(title, qty){
   let q=null; const mq=t.match(/x\s*([\d,]+)/); if(mq) q=mq[1].replace(/,/g,'');
   if(best){
     const it = ITEMS.find(i=>i.label.toLowerCase()===best);
-    return `${it?it.label:best} x${q||qty||1}`;
+    return `${it?it.label:best} x${q||lineQty}`;   // seeds/pets: qty = item count
   }
-  return `${title} x${qty||1}`;   // no match — you fix it before approving
+  return `${title} x${lineQty}`;   // no match — you fix it before approving
 }
-function ebCompose(items){ return items.map(li=>ebMapTitle(li.title, li.qty)).join('\n'); }
+// If the text names one of your defined bundles (all its components appear),
+// return that bundle so we can expand it into every component. Prefers the
+// bundle with the most components (so the 3-item bundle beats the 2-item one).
+function ebMatchBundle(text){
+  const t=(text||'').toLowerCase();
+  let best=null;
+  for(const it of ITEMS){
+    if(!it.bundle) continue;
+    const all = it.bundle.every(cl => t.includes(cl.toLowerCase().replace(/ seed$/,'')));
+    if(all && (!best || it.bundle.length>best.bundle.length)) best=it;
+  }
+  return best;
+}
+function ebCompose(items, notes){
+  const lines=[];
+  (items||[]).forEach(li=>{
+    const src = ebItemSource(li, notes);
+    const bundle = ebMatchBundle(src);
+    if(bundle) bundle.bundle.forEach(cl => lines.push(ebMapTitle(cl, li.qty)));  // expand
+    else lines.push(ebMapTitle(src, li.qty));
+  });
+  return lines.join('\n');
+}
 
 async function ebayFetch(){
   const card=document.getElementById('ebayCard');
@@ -746,7 +780,7 @@ function ebayRender(orders){
     box.className='ebay-order';
     const titles=(o.items||[]).map(i=>`${esc(String(i.title||''))} ×${esc(String(i.qty||1))}`).join('<br>');
     const user=ebExtractUser(o.notes);
-    const composed=ebCompose(o.items||[]);
+    const composed=ebCompose(o.items||[], o.notes);
     box.innerHTML=`
       <div class="ebay-meta"><span class="ebay-id">${esc(String(o.orderId||''))}</span>
         <strong>@${esc(String(o.buyer||'?'))}</strong> · ${esc(String(o.currency||''))} ${esc(String(o.total||''))}</div>
