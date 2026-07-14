@@ -896,7 +896,15 @@ function ebBuildCard(o, st, skey){
   });
   return box;
 }
-document.getElementById('ebayRefresh').addEventListener('click', ebayFetch);
+document.getElementById('ebayRefresh').addEventListener('click', async ()=>{
+  const btn=document.getElementById('ebayRefresh'); const lbl=btn.textContent;
+  if(!RELAY.on){ ebayFetch(); return; }
+  btn.disabled=true; btn.textContent='⏳ Checking eBay…';
+  try{ await fetch(`${RELAY.url}/ebay/refresh?key=${encodeURIComponent(RELAY.secret)}`,{method:'POST'}); }catch(e){}
+  // Burst-poll for ~14s so a newly-found order shows without waiting for the timer.
+  for(let i=0;i<7;i++){ await ebayFetch(); await new Promise(r=>setTimeout(r,2000)); }
+  btn.textContent=lbl; btn.disabled=false;
+});
 ebayFetch();
 ebPollTimer=setInterval(ebayFetch, ebPollMs);
 
