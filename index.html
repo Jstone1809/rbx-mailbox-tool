@@ -189,6 +189,10 @@
   .ebay-actions{display:flex;gap:8px;margin-top:10px}
   .ebay-actions .btn{flex:1}
   .eb-status{display:inline-block;margin-top:6px;font-size:13px;color:var(--muted)}
+  .eb-processing{color:var(--gold);font-size:14px;padding:10px 2px}
+  .eb-done{color:var(--leaf);font-weight:700;font-size:14px;padding:10px 2px}
+  .eb-fail{color:#ff8080;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.3);
+    border-radius:8px;padding:8px 10px;margin:8px 0;font-size:13px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -776,72 +780,102 @@ function ebHighlight(text){
   }).join('\n');
 }
 
+function ebIdSafe(id){ return 'eb_'+String(id).replace(/[^A-Za-z0-9_-]/g,''); }
+let ebPollTimer=null, ebPollMs=20000;
 async function ebayFetch(){
   const card=document.getElementById('ebayCard');
   if(!RELAY.on){ card.style.display='none'; return; }
   try{
     const res=await fetch(`${RELAY.url}/ebay/pending?key=${encodeURIComponent(RELAY.secret)}`);
     const data=await res.json();
-    ebayRender(data.orders||[]);
+    const orders=data.orders||[];
+    ebayRender(orders);
+    // poll faster while something is mid-delivery, so Completed/Failed shows quickly
+    const want = orders.some(o=>(o.status||'')==='processing') ? 4000 : 20000;
+    if(want!==ebPollMs){ ebPollMs=want; clearInterval(ebPollTimer); ebPollTimer=setInterval(ebayFetch, ebPollMs); }
   }catch(e){ /* keep last view */ }
 }
+function ebMetaHtml(o){
+  const titles=(o.items||[]).map(i=>`${esc(String(i.title||''))} ×${esc(String(i.qty||1))}`).join('<br>');
+  return `<div class="ebay-meta"><span class="ebay-id">${esc(String(o.orderId||''))}</span>
+      <strong>@${esc(String(o.buyer||'?'))}</strong> · ${esc(String(o.currency||''))} ${esc(String(o.total||''))}</div>
+    <div class="ebay-titles">${titles}</div>
+    ${o.notes?`<div class="ebay-notes">📝 ${esc(String(o.notes))}</div>`:''}`;
+}
+const EB_PROCESSING = `<div class="eb-processing">⏳ Delivering… waiting for the bot to confirm.</div>`;
 function ebayRender(orders){
-  const card=document.getElementById('ebayCard');
-  const list=document.getElementById('ebayList');
-  const count=document.getElementById('ebayCount');
+  const card=document.getElementById('ebayCard'), list=document.getElementById('ebayList'), count=document.getElementById('ebayCount');
   card.style.display='block';
-  count.textContent = orders.length ? `(${orders.length})` : '';
-  if(!orders.length){ list.innerHTML='<p class="hint">No eBay orders waiting.</p>'; return; }
-  list.innerHTML='';
+  const active=orders.filter(o=>(o.status||'new')!=='completed');
+  count.textContent = active.length ? `(${active.length})` : '';
+  const seen=new Set();
   orders.forEach(o=>{
-    const box=document.createElement('div');
-    box.className='ebay-order';
-    const titles=(o.items||[]).map(i=>`${esc(String(i.title||''))} ×${esc(String(i.qty||1))}`).join('<br>');
-    const user=ebExtractUser(o.notes);
-    const composed=ebCompose(o.items||[], o.notes);
-    box.innerHTML=`
-      <div class="ebay-meta"><span class="ebay-id">${esc(String(o.orderId||''))}</span>
-        <strong>@${esc(String(o.buyer||'?'))}</strong> · ${esc(String(o.currency||''))} ${esc(String(o.total||''))}</div>
-      <div class="ebay-titles">${titles}</div>
-      ${o.notes?`<div class="ebay-notes">📝 ${esc(String(o.notes))}</div>`:''}
-      <label>Roblox username</label>
+    seen.add(String(o.orderId));
+    const st=o.status||'new';
+    const existing=document.getElementById(ebIdSafe(o.orderId));
+    if(existing && existing.dataset.status===st) return;   // unchanged — leave it (keeps typed input)
+    const el=ebBuildCard(o, st);
+    if(existing) existing.replaceWith(el); else list.appendChild(el);
+  });
+  [...list.querySelectorAll('.ebay-order')].forEach(elm=>{ if(!seen.has(elm.dataset.orderId)) elm.remove(); });
+  const anyCard=list.querySelector('.ebay-order'), hint=list.querySelector('.eb-empty');
+  if(!anyCard && !hint) list.insertAdjacentHTML('beforeend','<p class="hint eb-empty">No eBay orders waiting.</p>');
+  if(anyCard && hint) hint.remove();
+}
+function ebBuildCard(o, st){
+  const box=document.createElement('div');
+  box.className='ebay-order'; box.id=ebIdSafe(o.orderId);
+  box.dataset.orderId=String(o.orderId); box.dataset.status=st;
+  if(st==='processing'){ box.innerHTML=ebMetaHtml(o)+EB_PROCESSING; return box; }
+  if(st==='completed'){
+    box.innerHTML=ebMetaHtml(o)+`<div class="eb-done">✓ Completed — delivered.</div>`;
+    setTimeout(async ()=>{   // show briefly, then clear it from the server + view
+      try{ await fetch(`${RELAY.url}/ebay/reject?key=${encodeURIComponent(RELAY.secret)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})}); }catch(e){}
+      box.remove();
+    }, 3500);
+    return box;
+  }
+  // 'new' or 'failed' — interactive card (failed adds a red banner + a Retry label)
+  const isFail=st==='failed';
+  const user=ebExtractUser(o.notes), composed=ebCompose(o.items||[], o.notes);
+  box.innerHTML = ebMetaHtml(o)
+    + (isFail?`<div class="eb-fail">⚠ Failed: ${esc(String(o.message||'delivery did not complete'))}</div>`:'')
+    + `<label>Roblox username</label>
       <input class="eb-user" value="${esc(user)}" placeholder="username" autocomplete="off" spellcheck="false">
       <label>Delivery order (check this matches before approving)</label>
       <div class="eb-items" contenteditable="true" spellcheck="false">${ebHighlight(composed)}</div>
       <div class="ebay-actions">
-        <button class="btn btn-send eb-approve" type="button">✓ Approve &amp; Deliver</button>
+        <button class="btn btn-send eb-approve" type="button">${isFail?'↻ Retry &amp; Deliver':'✓ Approve &amp; Deliver'}</button>
         <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
       </div>
       <span class="eb-status"></span>`;
-    const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), st=box.querySelector('.eb-status');
-    iEl.addEventListener('blur',()=>{ iEl.innerHTML = ebHighlight(iEl.innerText); });   // recolour after edits
-    box.querySelector('.eb-approve').addEventListener('click', async e=>{
-      const u=uEl.value.trim().replace(/^@/,'');
-      if(!u){ st.textContent='⚠ Enter the Roblox username'; return; }
-      if(!iEl.innerText.trim()){ st.textContent='⚠ No items'; return; }
-      e.target.disabled=true; st.textContent='⏳ Sending…';
-      try{
-        const res=await fetch(`${RELAY.url}/ebay/approve?key=${encodeURIComponent(RELAY.secret)}`,{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({orderId:o.orderId, order:`@${u}\n${iEl.innerText.trim()}`})
-        });
-        const d=await res.json();
-        if(res.ok&&d.ok){ st.textContent='✓ Sent to bot'; box.remove(); ebayFetch(); }
-        else{ st.textContent='⚠ '+(d.error||('HTTP '+res.status)); e.target.disabled=false; }
-      }catch(err){ st.textContent='⚠ Network error'; e.target.disabled=false; }
-    });
-    box.querySelector('.eb-dismiss').addEventListener('click', async ()=>{
-      if(!confirm('Dismiss this eBay order without delivering?')) return;
-      try{ await fetch(`${RELAY.url}/ebay/reject?key=${encodeURIComponent(RELAY.secret)}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})}); }catch(e){}
-      box.remove(); ebayFetch();
-    });
-    list.appendChild(box);
+  const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), stEl=box.querySelector('.eb-status');
+  iEl.addEventListener('blur',()=>{ iEl.innerHTML=ebHighlight(iEl.innerText); });
+  box.querySelector('.eb-approve').addEventListener('click', async e=>{
+    const u=uEl.value.trim().replace(/^@/,'');
+    if(!u){ stEl.textContent='⚠ Enter the Roblox username'; return; }
+    if(!iEl.innerText.trim()){ stEl.textContent='⚠ No items'; return; }
+    e.target.disabled=true; stEl.textContent='⏳ Sending…';
+    try{
+      const res=await fetch(`${RELAY.url}/ebay/approve?key=${encodeURIComponent(RELAY.secret)}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({orderId:o.orderId, order:`@${u}\n${iEl.innerText.trim()}`})
+      });
+      const d=await res.json();
+      if(res.ok&&d.ok){ box.dataset.status='processing'; box.innerHTML=ebMetaHtml(o)+EB_PROCESSING; ebayFetch(); }
+      else{ stEl.textContent='⚠ '+(d.error||('HTTP '+res.status)); e.target.disabled=false; }
+    }catch(err){ stEl.textContent='⚠ Network error'; e.target.disabled=false; }
   });
+  box.querySelector('.eb-dismiss').addEventListener('click', async ()=>{
+    if(!confirm('Dismiss this eBay order without delivering?')) return;
+    try{ await fetch(`${RELAY.url}/ebay/reject?key=${encodeURIComponent(RELAY.secret)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})}); }catch(e){}
+    box.remove(); ebayFetch();
+  });
+  return box;
 }
 document.getElementById('ebayRefresh').addEventListener('click', ebayFetch);
 ebayFetch();
-setInterval(ebayFetch, 30000);   // auto-check every 30s while the page is open
+ebPollTimer=setInterval(ebayFetch, ebPollMs);
 
 addRow(); // start with one item row
 </script>
