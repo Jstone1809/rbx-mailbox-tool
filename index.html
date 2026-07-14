@@ -193,6 +193,11 @@
   .eb-done{color:var(--leaf);font-weight:700;font-size:14px;padding:10px 2px}
   .eb-fail{color:#ff8080;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.3);
     border-radius:8px;padding:8px 10px;margin:8px 0;font-size:13px;line-height:1.5}
+  .eb-remnote{color:var(--gold);background:rgba(255,203,69,.08);border-radius:8px;
+    padding:7px 10px;margin:6px 0;font-size:13px}
+  .eb-ask{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    font-size:12px;font-weight:600;padding:6px 12px;margin-top:6px}
+  .eb-ask:hover{color:var(--text);border-color:var(--leaf)}
 </style>
 </head>
 <body>
@@ -744,7 +749,7 @@ function ebMapTitle(title, qty){
   let q=null; const mq=t.match(/x\s*([\d,]+)/); if(mq) q=mq[1].replace(/,/g,'');
   if(best){
     const it = ITEMS.find(i=>i.label.toLowerCase()===best);
-    return `${it?it.label:best} x${q||lineQty}`;   // seeds/pets: qty = item count
+    return `${it?it.label:best} x${q ? q*lineQty : lineQty}`;   // seeds/pets: qty = item count
   }
   return `${title} x${lineQty}`;   // no match — you fix it before approving
 }
@@ -765,9 +770,15 @@ function ebCompose(items, notes){
   const lines=[];
   (items||[]).forEach(li=>{
     const src = ebItemSource(li, notes);
-    const bundle = ebMatchBundle(src);
-    if(bundle) bundle.bundle.forEach(cl => lines.push(ebMapTitle(cl, li.qty)));  // expand
-    else lines.push(ebMapTitle(src, li.qty));
+    if(src.includes('+')){
+      // A multi-item variation like "Dragon's Breath x5+Moon Bloom x5+Hypno Bloom x5"
+      // — split it so each component keeps its OWN quantity, not a default of 1.
+      src.split('+').forEach(part=>{ if(part.trim()) lines.push(ebMapTitle(part.trim(), li.qty)); });
+    } else {
+      const bundle = ebMatchBundle(src);
+      if(bundle) bundle.bundle.forEach(cl => lines.push(ebMapTitle(cl, li.qty)));  // named bundle, no per-item qty
+      else lines.push(ebMapTitle(src, li.qty));
+    }
   });
   return lines.join('\n');
 }
@@ -822,6 +833,33 @@ function ebayRender(orders){
   if(!anyCard && !hint) list.insertAdjacentHTML('beforeend','<p class="hint eb-empty">No eBay orders waiting.</p>');
   if(anyCard && hint) hint.remove();
 }
+// Work out what still needs sending after a partial failure, using the ORIGINAL
+// approved order's item names (so the resend order is always valid to deliver).
+function ebParseDelivered(delivered){
+  const lines=(delivered||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  const user=(lines[0]&&lines[0].startsWith('@'))?lines[0].slice(1):'';
+  const items=lines.slice(1).filter(l=>!l.startsWith('#'));
+  return {user, items};
+}
+function ebNorm(s){ return (s||'').toLowerCase().replace(/\s*x\s*\d+\s*$/,'').replace(/[^a-z0-9]/g,'').replace(/seed$/,''); }
+function ebRemaining(o){
+  const {user, items}=ebParseDelivered(o.delivered);
+  const msg=o.message||''; const remaining=[];
+  const rm=msg.match(/resend:\s*([^\n]+)/i);           // "resend: Moon Bloom x3, Unicorn x1"
+  if(rm){
+    rm[1].split(',').forEach(part=>{
+      const m=part.trim().match(/^(.+?)\s*x\s*(\d+)\s*$/i);
+      if(!m) return;
+      const disp=ebNorm(m[1]), qty=m[2];
+      const orig=items.find(it=>{ const n=ebNorm(it); return n===disp || (disp&&n.includes(disp)) || (n&&disp.includes(n)); });
+      const name=orig?orig.replace(/\s*x\s*\d+\s*$/i,'').trim():m[1].trim();
+      remaining.push(`${name} x${qty}`);
+    });
+  }
+  const sm=msg.match(/sent\s*~?\s*(\d+)M\s*of\s*(\d+)M\s*Sheckles/i);   // Sheckles short
+  if(sm){ const left=parseInt(sm[2])-parseInt(sm[1]); if(left>0) remaining.push(`${left}M Sheckles`); }
+  return {user: user || ebExtractUser(o.notes), remaining};
+}
 function ebBuildCard(o, st, skey){
   const box=document.createElement('div');
   box.className='ebay-order'; box.id=ebIdSafe(o.orderId);
@@ -860,20 +898,60 @@ function ebBuildCard(o, st, skey){
   }
   // 'new' or 'failed' — interactive card (failed adds a red banner + a Retry label)
   const isFail=st==='failed';
+  const rem = isFail ? ebRemaining(o) : {remaining:[], user:''};
+  const hasRem = rem.remaining && rem.remaining.length>0;
   const user=ebExtractUser(o.notes), composed=ebCompose(o.items||[], o.notes);
   box.innerHTML = ebMetaHtml(o)
     + (isFail?`<div class="eb-fail">⚠ Failed: ${esc(String(o.message||'delivery did not complete'))}</div>`:'')
+    + (hasRem?`<div class="eb-remnote">↩ Still to send: ${esc(rem.remaining.join(', '))}</div>`:'')
     + `<label>Roblox username</label>
       <input class="eb-user" value="${esc(user)}" placeholder="username" autocomplete="off" spellcheck="false">
+      <button class="btn eb-ask" type="button">✉ Ask buyer for username</button>
       <label>Delivery order (check this matches before approving)</label>
       <div class="eb-items" contenteditable="true" spellcheck="false">${ebHighlight(composed)}</div>
       <div class="ebay-actions">
-        <button class="btn btn-send eb-approve" type="button">${isFail?'↻ Retry &amp; Deliver':'✓ Approve &amp; Deliver'}</button>
+        ${hasRem?`<button class="btn btn-send eb-complete" type="button">✅ Complete remaining</button>`:''}
+        <button class="btn ${hasRem?'btn-copy':'btn-send'} eb-approve" type="button">${isFail?(hasRem?'↻ Resend full order':'↻ Retry &amp; Deliver'):'✓ Approve &amp; Deliver'}</button>
         <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
       </div>
       <span class="eb-status"></span>`;
   const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), stEl=box.querySelector('.eb-status');
   iEl.addEventListener('blur',()=>{ iEl.innerHTML=ebHighlight(iEl.innerText); });
+  const askBtn=box.querySelector('.eb-ask');
+  if(askBtn) askBtn.addEventListener('click', async e=>{
+    const btn=e.target; btn.disabled=true; btn.textContent='⏳ Messaging buyer…';
+    try{
+      await fetch(`${RELAY.url}/ebay/ask-username?key=${encodeURIComponent(RELAY.secret)}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})});
+    }catch(err){ btn.textContent='⚠ Network error'; btn.disabled=false; return; }
+    // poll for the PC's send result (~12s), then settle the button label
+    for(let i=0;i<6;i++){
+      await new Promise(r=>setTimeout(r,2000));
+      try{
+        const res=await fetch(`${RELAY.url}/ebay/pending?key=${encodeURIComponent(RELAY.secret)}`);
+        const d=await res.json();
+        const ord=(d.orders||[]).find(x=>String(x.orderId)===String(o.orderId));
+        if(ord && ord.askUsername==='sent'){ btn.textContent='✉ Request sent ✓'; return; }
+        if(ord && ord.askUsername==='failed'){ btn.textContent='⚠ '+(ord.askMsg||'failed'); btn.disabled=false; return; }
+      }catch(e){}
+    }
+    btn.textContent='✉ Request sent';
+  });
+  const cBtn=box.querySelector('.eb-complete');
+  if(cBtn) cBtn.addEventListener('click', async e=>{
+    const u=(rem.user||uEl.value.trim().replace(/^@/,''));
+    if(!u){ stEl.textContent='⚠ No username'; return; }
+    e.target.disabled=true; stEl.textContent='⏳ Sending remaining…';
+    try{
+      const res=await fetch(`${RELAY.url}/ebay/approve?key=${encodeURIComponent(RELAY.secret)}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({orderId:o.orderId, order:`@${u}\n${rem.remaining.join('\n')}`, keepDelivered:true})
+      });
+      const d=await res.json();
+      if(res.ok&&d.ok){ box.dataset.status='processing'; box.innerHTML=ebMetaHtml(o)+EB_PROCESSING; ebayFetch(); }
+      else{ stEl.textContent='⚠ '+(d.error||('HTTP '+res.status)); e.target.disabled=false; }
+    }catch(err){ stEl.textContent='⚠ Network error'; e.target.disabled=false; }
+  });
   box.querySelector('.eb-approve').addEventListener('click', async e=>{
     const u=uEl.value.trim().replace(/^@/,'');
     if(!u){ stEl.textContent='⚠ Enter the Roblox username'; return; }
