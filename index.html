@@ -165,6 +165,20 @@
   #relayStatus{margin-left:10px;font-size:13px;color:#7d93a8}
 
   .foot{text-align:center;color:#4f7361;font-size:12px;margin-top:24px}
+  .ebay-card .preview-head h2{display:flex;align-items:center;gap:8px}
+  .ebay-count{color:var(--gold);font-weight:700}
+  .ebay-order{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:var(--panel-2)}
+  .ebay-meta{font-size:14px;color:var(--text);margin-bottom:6px}
+  .ebay-id{color:var(--muted);font-size:12px;float:right}
+  .ebay-titles{font-size:13px;color:var(--code);margin:6px 0;line-height:1.5}
+  .ebay-notes{font-size:13px;color:var(--gold);background:rgba(255,203,69,.08);
+    border-radius:8px;padding:6px 8px;margin:6px 0}
+  .ebay-order label{display:block;font-size:12px;color:var(--muted);margin:8px 0 3px}
+  .ebay-order .eb-user,.ebay-order .eb-items{width:100%}
+  .ebay-order textarea{font-family:inherit;resize:vertical}
+  .ebay-actions{display:flex;gap:8px;margin-top:10px}
+  .ebay-actions .btn{flex:1}
+  .eb-status{display:inline-block;margin-top:6px;font-size:13px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -174,6 +188,14 @@
     <h1>Mailbox Config Generator</h1>
     <p class="sub">Fill in the order details — your script updates live below.</p>
   </header>
+
+  <div class="card ebay-card" id="ebayCard" style="display:none">
+    <div class="preview-head">
+      <h2>📥 eBay Orders <span class="ebay-count" id="ebayCount"></span></h2>
+      <button class="btn btn-copy" id="ebayRefresh" type="button">↻ Refresh</button>
+    </div>
+    <div id="ebayList"></div>
+  </div>
 
   <div class="card">
     <div class="grid">
@@ -668,6 +690,105 @@ document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTar
 document.getElementById('sendBtn').addEventListener('click',e=>sendOrder(e.currentTarget));
 initRelaySetup();
 refreshSendButton();
+
+// ===== eBay Orders panel =====================================================
+function ebExtractUser(notes){
+  if(!notes) return '';
+  let m = notes.match(/@([A-Za-z0-9_]{3,20})/);
+  if(m) return m[1];
+  m = notes.match(/roblox\s*(?:user(?:name)?)?\s*[:\-]?\s*([A-Za-z0-9_]{3,20})/i);
+  if(m) return m[1];
+  return '';
+}
+function ebMapTitle(title, qty){
+  const t = (title||'').toLowerCase();
+  if(t.includes('sheckle')){
+    let mB = t.match(/([\d.]+)\s*b\b/), mM = t.match(/([\d.]+)\s*m\b/);
+    if(mB) return `${mB[1]}B Sheckles`;
+    if(mM) return `${mM[1]}M Sheckles`;
+  }
+  let best=null;
+  for(const it of ITEMS){
+    if(it.bundle) continue;
+    const lbl = it.label.toLowerCase();
+    if(t.includes(lbl) && (!best || lbl.length>best.length)) best=lbl;
+    const base = lbl.replace(/ seed$/,'');
+    if(base!==lbl && t.includes(base) && (!best || base.length>best.length)) best=lbl;
+  }
+  let q=null; const mq=t.match(/x\s*([\d,]+)/); if(mq) q=mq[1].replace(/,/g,'');
+  if(best){
+    const it = ITEMS.find(i=>i.label.toLowerCase()===best);
+    return `${it?it.label:best} x${q||qty||1}`;
+  }
+  return `${title} x${qty||1}`;   // no match — you fix it before approving
+}
+function ebCompose(items){ return items.map(li=>ebMapTitle(li.title, li.qty)).join('\n'); }
+
+async function ebayFetch(){
+  const card=document.getElementById('ebayCard');
+  if(!RELAY.on){ card.style.display='none'; return; }
+  try{
+    const res=await fetch(`${RELAY.url}/ebay/pending?key=${encodeURIComponent(RELAY.secret)}`);
+    const data=await res.json();
+    ebayRender(data.orders||[]);
+  }catch(e){ /* keep last view */ }
+}
+function ebayRender(orders){
+  const card=document.getElementById('ebayCard');
+  const list=document.getElementById('ebayList');
+  const count=document.getElementById('ebayCount');
+  card.style.display='block';
+  count.textContent = orders.length ? `(${orders.length})` : '';
+  if(!orders.length){ list.innerHTML='<p class="hint">No eBay orders waiting.</p>'; return; }
+  list.innerHTML='';
+  orders.forEach(o=>{
+    const box=document.createElement('div');
+    box.className='ebay-order';
+    const titles=(o.items||[]).map(i=>`${esc(String(i.title||''))} ×${esc(String(i.qty||1))}`).join('<br>');
+    const user=ebExtractUser(o.notes);
+    const composed=ebCompose(o.items||[]);
+    box.innerHTML=`
+      <div class="ebay-meta"><span class="ebay-id">${esc(String(o.orderId||''))}</span>
+        <strong>@${esc(String(o.buyer||'?'))}</strong> · ${esc(String(o.currency||''))} ${esc(String(o.total||''))}</div>
+      <div class="ebay-titles">${titles}</div>
+      ${o.notes?`<div class="ebay-notes">📝 ${esc(String(o.notes))}</div>`:''}
+      <label>Roblox username</label>
+      <input class="eb-user" value="${esc(user)}" placeholder="username" autocomplete="off" spellcheck="false">
+      <label>Delivery order (check this matches before approving)</label>
+      <textarea class="eb-items" rows="${Math.max(2,(o.items||[]).length)}">${esc(composed)}</textarea>
+      <div class="ebay-actions">
+        <button class="btn btn-send eb-approve" type="button">✓ Approve &amp; Deliver</button>
+        <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
+      </div>
+      <span class="eb-status"></span>`;
+    const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), st=box.querySelector('.eb-status');
+    box.querySelector('.eb-approve').addEventListener('click', async e=>{
+      const u=uEl.value.trim().replace(/^@/,'');
+      if(!u){ st.textContent='⚠ Enter the Roblox username'; return; }
+      if(!iEl.value.trim()){ st.textContent='⚠ No items'; return; }
+      e.target.disabled=true; st.textContent='⏳ Sending…';
+      try{
+        const res=await fetch(`${RELAY.url}/ebay/approve?key=${encodeURIComponent(RELAY.secret)}`,{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({orderId:o.orderId, order:`@${u}\n${iEl.value.trim()}`})
+        });
+        const d=await res.json();
+        if(res.ok&&d.ok){ st.textContent='✓ Sent to bot'; box.remove(); ebayFetch(); }
+        else{ st.textContent='⚠ '+(d.error||('HTTP '+res.status)); e.target.disabled=false; }
+      }catch(err){ st.textContent='⚠ Network error'; e.target.disabled=false; }
+    });
+    box.querySelector('.eb-dismiss').addEventListener('click', async ()=>{
+      if(!confirm('Dismiss this eBay order without delivering?')) return;
+      try{ await fetch(`${RELAY.url}/ebay/reject?key=${encodeURIComponent(RELAY.secret)}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})}); }catch(e){}
+      box.remove(); ebayFetch();
+    });
+    list.appendChild(box);
+  });
+}
+document.getElementById('ebayRefresh').addEventListener('click', ebayFetch);
+ebayFetch();
+setInterval(ebayFetch, 30000);   // auto-check every 30s while the page is open
 
 addRow(); // start with one item row
 </script>
