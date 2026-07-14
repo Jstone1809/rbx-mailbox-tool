@@ -173,6 +173,8 @@
   .ebay-titles{font-size:13px;color:var(--code);margin:6px 0;line-height:1.5}
   .ebay-notes{font-size:13px;color:var(--gold);background:rgba(255,203,69,.08);
     border-radius:8px;padding:6px 8px;margin:6px 0}
+  .ebay-reply{font-size:13px;color:#7fd8ff;background:rgba(90,180,255,.1);
+    border:1px solid rgba(90,180,255,.3);border-radius:8px;padding:7px 10px;margin:6px 0;line-height:1.5}
   .ebay-order label{display:block;font-size:12px;color:var(--muted);margin:8px 0 3px}
   .ebay-order .eb-user,.ebay-order .eb-items{width:100%}
   .ebay-order .eb-user{
@@ -811,7 +813,8 @@ function ebMetaHtml(o){
   return `<div class="ebay-meta"><span class="ebay-id">${esc(String(o.orderId||''))}</span>
       <strong>@${esc(String(o.buyer||'?'))}</strong> · ${esc(String(o.currency||''))} ${esc(String(o.total||''))}</div>
     <div class="ebay-titles">${titles}</div>
-    ${o.notes?`<div class="ebay-notes">📝 ${esc(String(o.notes))}</div>`:''}`;
+    ${o.notes?`<div class="ebay-notes">📝 ${esc(String(o.notes))}</div>`:''}
+    ${o.reply?`<div class="ebay-reply">💬 Buyer replied: ${esc(String(o.reply))}</div>`:''}`;
 }
 const EB_PROCESSING = `<div class="eb-processing">⏳ Delivering… waiting for the bot to confirm.</div>`;
 function ebayRender(orders){
@@ -822,7 +825,7 @@ function ebayRender(orders){
   orders.forEach(o=>{
     seen.add(String(o.orderId));
     const st=o.status||'new';
-    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '');
+    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + (o.reply?':r'+o.reply.length:'');
     const existing=document.getElementById(ebIdSafe(o.orderId));
     if(existing && existing.dataset.status===skey) return;   // unchanged — leave it (keeps typed input)
     const el=ebBuildCard(o, st, skey);
