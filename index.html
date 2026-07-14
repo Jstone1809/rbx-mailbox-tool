@@ -791,7 +791,7 @@ async function ebayFetch(){
     const orders=data.orders||[];
     ebayRender(orders);
     // poll faster while something is mid-delivery, so Completed/Failed shows quickly
-    const want = orders.some(o=>(o.status||'')==='processing') ? 4000 : 20000;
+    const want = orders.some(o=>(o.status||'')==='processing' || o.dispatch==='requested') ? 4000 : 20000;
     if(want!==ebPollMs){ ebPollMs=want; clearInterval(ebPollTimer); ebPollTimer=setInterval(ebayFetch, ebPollMs); }
   }catch(e){ /* keep last view */ }
 }
@@ -806,15 +806,15 @@ const EB_PROCESSING = `<div class="eb-processing">⏳ Delivering… waiting for 
 function ebayRender(orders){
   const card=document.getElementById('ebayCard'), list=document.getElementById('ebayList'), count=document.getElementById('ebayCount');
   card.style.display='block';
-  const active=orders.filter(o=>(o.status||'new')!=='completed');
-  count.textContent = active.length ? `(${active.length})` : '';
+  count.textContent = orders.length ? `(${orders.length})` : '';
   const seen=new Set();
   orders.forEach(o=>{
     seen.add(String(o.orderId));
     const st=o.status||'new';
+    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '');
     const existing=document.getElementById(ebIdSafe(o.orderId));
-    if(existing && existing.dataset.status===st) return;   // unchanged — leave it (keeps typed input)
-    const el=ebBuildCard(o, st);
+    if(existing && existing.dataset.status===skey) return;   // unchanged — leave it (keeps typed input)
+    const el=ebBuildCard(o, st, skey);
     if(existing) existing.replaceWith(el); else list.appendChild(el);
   });
   [...list.querySelectorAll('.ebay-order')].forEach(elm=>{ if(!seen.has(elm.dataset.orderId)) elm.remove(); });
@@ -822,17 +822,40 @@ function ebayRender(orders){
   if(!anyCard && !hint) list.insertAdjacentHTML('beforeend','<p class="hint eb-empty">No eBay orders waiting.</p>');
   if(anyCard && hint) hint.remove();
 }
-function ebBuildCard(o, st){
+function ebBuildCard(o, st, skey){
   const box=document.createElement('div');
   box.className='ebay-order'; box.id=ebIdSafe(o.orderId);
-  box.dataset.orderId=String(o.orderId); box.dataset.status=st;
+  box.dataset.orderId=String(o.orderId); box.dataset.status=(skey||st);
   if(st==='processing'){ box.innerHTML=ebMetaHtml(o)+EB_PROCESSING; return box; }
   if(st==='completed'){
-    box.innerHTML=ebMetaHtml(o)+`<div class="eb-done">✓ Completed — delivered.</div>`;
-    setTimeout(async ()=>{   // show briefly, then clear it from the server + view
+    const disp=o.dispatch||'none';
+    let block;
+    if(disp==='requested'){
+      block=`<div class="eb-done">✓ Completed — delivered.</div><div class="eb-processing">📦 Marking dispatched on eBay…</div>`;
+    }else if(disp==='failed'){
+      block=`<div class="eb-done">✓ Completed — delivered.</div>
+        <div class="eb-fail">⚠ Dispatch failed: ${esc(String(o.dispatchMsg||'could not mark dispatched'))}</div>
+        <div class="ebay-actions"><button class="btn btn-send eb-dispatch" type="button">↻ Retry dispatch</button>
+        <button class="btn btn-clear eb-hide" type="button">Hide</button></div>`;
+    }else{
+      block=`<div class="eb-done">✓ Completed — delivered.</div>
+        <div class="ebay-actions"><button class="btn btn-send eb-dispatch" type="button">📦 Mark dispatched</button>
+        <button class="btn btn-clear eb-hide" type="button">Hide</button></div>`;
+    }
+    box.innerHTML=ebMetaHtml(o)+block+`<span class="eb-status"></span>`;
+    const stEl=box.querySelector('.eb-status');
+    const dBtn=box.querySelector('.eb-dispatch');
+    if(dBtn) dBtn.addEventListener('click', async e=>{
+      e.target.disabled=true; stEl.textContent='⏳ Sending to eBay…';
+      try{ await fetch(`${RELAY.url}/ebay/dispatch?key=${encodeURIComponent(RELAY.secret)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})});
+        box.dataset.status='completed:requested'; box.innerHTML=ebMetaHtml(o)+`<div class="eb-done">✓ Completed — delivered.</div><div class="eb-processing">📦 Marking dispatched on eBay…</div>`; ebayFetch();
+      }catch(err){ stEl.textContent='⚠ Network error'; e.target.disabled=false; }
+    });
+    const hBtn=box.querySelector('.eb-hide');
+    if(hBtn) hBtn.addEventListener('click', async ()=>{
       try{ await fetch(`${RELAY.url}/ebay/reject?key=${encodeURIComponent(RELAY.secret)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})}); }catch(e){}
       box.remove();
-    }, 3500);
+    });
     return box;
   }
   // 'new' or 'failed' — interactive card (failed adds a red banner + a Retry label)
