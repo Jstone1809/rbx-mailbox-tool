@@ -179,13 +179,13 @@
     background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
     padding:10px 12px;color:var(--text);font-size:14px;
   }
-  .ebay-order textarea.eb-items{
+  .ebay-order textarea.eb-items,.ebay-order .eb-items[contenteditable]{
     background:var(--panel-2);border:1px solid var(--line);border-radius:12px;
-    padding:12px 14px;color:var(--code);white-space:pre;overflow:hidden;
+    padding:12px 14px;color:var(--code);white-space:pre-wrap;overflow-wrap:anywhere;
     font-family:'SF Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
-    font-size:13px;line-height:1.55;resize:vertical;min-height:44px;
+    font-size:13px;line-height:1.6;resize:vertical;min-height:44px;
   }
-  .ebay-order textarea.eb-items:focus{outline:none;border-color:var(--leaf)}
+  .ebay-order .eb-items[contenteditable]:focus{outline:none;border-color:var(--leaf)}
   .ebay-actions{display:flex;gap:8px;margin-top:10px}
   .ebay-actions .btn{flex:1}
   .eb-status{display:inline-block;margin-top:6px;font-size:13px;color:var(--muted)}
@@ -767,6 +767,14 @@ function ebCompose(items, notes){
   });
   return lines.join('\n');
 }
+// Colour the quantity/amount gold, like the generated-script preview.
+function ebHighlight(text){
+  return esc(text).split('\n').map(line=>{
+    let l = line.replace(/(\d[\d.]*\s*[BM])(\s+Sheckles)/i, '<span class="hl">$1</span>$2');
+    if(l!==line) return l;                                   // Sheckles amount
+    return line.replace(/(x\d+)\b/i, '<span class="hl">$1</span>');   // item xN
+  }).join('\n');
+}
 
 async function ebayFetch(){
   const card=document.getElementById('ebayCard');
@@ -799,25 +807,23 @@ function ebayRender(orders){
       <label>Roblox username</label>
       <input class="eb-user" value="${esc(user)}" placeholder="username" autocomplete="off" spellcheck="false">
       <label>Delivery order (check this matches before approving)</label>
-      <textarea class="eb-items" rows="${Math.max(2, composed.split('\n').length)}">${esc(composed)}</textarea>
+      <div class="eb-items" contenteditable="true" spellcheck="false">${ebHighlight(composed)}</div>
       <div class="ebay-actions">
         <button class="btn btn-send eb-approve" type="button">✓ Approve &amp; Deliver</button>
         <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
       </div>
       <span class="eb-status"></span>`;
     const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), st=box.querySelector('.eb-status');
-    const autosize=el=>{ el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px'; };
-    requestAnimationFrame(()=>autosize(iEl));   // fit on first render
-    iEl.addEventListener('input',()=>autosize(iEl));
+    iEl.addEventListener('blur',()=>{ iEl.innerHTML = ebHighlight(iEl.innerText); });   // recolour after edits
     box.querySelector('.eb-approve').addEventListener('click', async e=>{
       const u=uEl.value.trim().replace(/^@/,'');
       if(!u){ st.textContent='⚠ Enter the Roblox username'; return; }
-      if(!iEl.value.trim()){ st.textContent='⚠ No items'; return; }
+      if(!iEl.innerText.trim()){ st.textContent='⚠ No items'; return; }
       e.target.disabled=true; st.textContent='⏳ Sending…';
       try{
         const res=await fetch(`${RELAY.url}/ebay/approve?key=${encodeURIComponent(RELAY.secret)}`,{
           method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({orderId:o.orderId, order:`@${u}\n${iEl.value.trim()}`})
+          body:JSON.stringify({orderId:o.orderId, order:`@${u}\n${iEl.innerText.trim()}`})
         });
         const d=await res.json();
         if(res.ok&&d.ok){ st.textContent='✓ Sent to bot'; box.remove(); ebayFetch(); }
