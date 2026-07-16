@@ -175,6 +175,7 @@
     border-radius:8px;padding:6px 8px;margin:6px 0}
   .ebay-reply{font-size:13px;color:#7fd8ff;background:rgba(90,180,255,.1);
     border:1px solid rgba(90,180,255,.3);border-radius:8px;padding:7px 10px;margin:6px 0;line-height:1.5}
+  .eb-rmsg{margin-top:4px;padding-left:8px;border-left:2px solid rgba(90,180,255,.45);color:#cfefff}
   .ebay-order label{display:block;font-size:12px;color:var(--muted);margin:8px 0 3px}
   .ebay-order .eb-user,.ebay-order .eb-items{width:100%}
   .ebay-order .eb-user{
@@ -200,6 +201,10 @@
   .eb-ask{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
     font-size:12px;font-weight:600;padding:6px 12px;margin-top:6px}
   .eb-ask:hover{color:var(--text);border-color:var(--leaf)}
+  .eb-copymsg{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    font-size:12px;font-weight:600;padding:6px 12px;margin-top:8px;width:100%}
+  .eb-copymsg:hover{color:var(--text);border-color:var(--leaf)}
+  .eb-copymsg.done{color:var(--leaf);border-color:var(--leaf)}
 </style>
 </head>
 <body>
@@ -295,6 +300,7 @@ const ITEMS = [
   {label:'Eclipse Bloom Seed',  code:'Eclipse Bloom', max:20},
   {label:'Fire Fern Seed',      code:'Fire Fern', max:20},
   {label:'Firefly',             code:'Firefly', max:20},
+  {label:'Ghost Pepper Pack',   code:'Ghost Pepper Pack', min:10, max:50},
   {label:'Ghost Pepper Seed',   code:'Ghost Pepper', max:25},
   {label:'Gold Seed',           code:'Gold', min:100},
   {label:'Golden Dragonfly',    code:'Golden Dragonfly', max:20},
@@ -715,19 +721,25 @@ refreshSendButton();
 // ===== eBay Orders panel =====================================================
 function ebExtractUser(notes){
   if(!notes) return '';
-  let m = notes.match(/text\s*:\s*([A-Za-z0-9_]{3,20})/i);   // eBay personalisation = username
+  // eBay localises the personalisation label: Text (EN/DE), Texto (ES/PT),
+  // Texte (FR), Testo (IT), Tekst (NL/PL). Longest first so "Texto" wins over "Text".
+  let m = notes.match(/\b(?:texto|texte|testo|tekst|text)\s*:\s*([A-Za-z0-9_]{3,20})/i);
   if(m) return m[1];
   m = notes.match(/@([A-Za-z0-9_]{3,20})/);
   if(m) return m[1];
   m = notes.match(/roblox\s*(?:user(?:name)?)?\s*[:\-]?\s*([A-Za-z0-9_]{3,20})/i);
   if(m) return m[1];
+  // Unknown language: the username is normally the LAST "label: value" in the note.
+  // Require a letter so we never mistake an item/order number for a username.
+  m = notes.match(/:\s*([A-Za-z0-9_]{3,20})\s*$/);
+  if(m && /[A-Za-z]/.test(m[1])) return m[1];
   return '';
 }
 // What the buyer actually bought: the chosen variation if present, else the
 // "Item=..." value from the personalisation note, else fall back to the title.
 function ebItemSource(li, notes){
   if(li.variation && li.variation.trim()) return li.variation.trim();
-  const m = (notes||'').match(/item\s*=\s*(.+?)(?:\s+text\s*:|$)/i);
+  const m = (notes||'').match(/item\s*=\s*(.+?)(?:\s+(?:texto|texte|testo|tekst|text)\s*:|$)/i);
   if(m) return m[1].trim();
   return li.title||'';
 }
@@ -740,18 +752,26 @@ function ebMapTitle(title, qty){
     if(mB){ const n=Math.round(parseFloat(mB[1])*lineQty*1000)/1000; return `${n}B Sheckles`; }
     if(mM){ const n=Math.round(parseFloat(mM[1])*lineQty*1000)/1000; return `${n}M Sheckles`; }
   }
-  let best=null;
+  // Pick the best matching item. A FULL label match ("ghost pepper pack") must beat
+  // a base match ("ghost pepper" from "Ghost Pepper Seed") even when both are the
+  // same length — otherwise a Pack gets mis-read as a Seed.
+  let best=null, bestScore=-1;
   for(const it of ITEMS){
     if(it.bundle) continue;
     const lbl = it.label.toLowerCase();
-    if(t.includes(lbl) && (!best || lbl.length>best.length)) best=lbl;
+    if(t.includes(lbl)){
+      const score = lbl.length*2 + 1;                 // +1 so full beats base on a tie
+      if(score>bestScore){ bestScore=score; best=it.label; }
+    }
     const base = lbl.replace(/ seed$/,'');
-    if(base!==lbl && t.includes(base) && (!best || base.length>best.length)) best=lbl;
+    if(base!==lbl && t.includes(base)){
+      const score = base.length*2;
+      if(score>bestScore){ bestScore=score; best=it.label; }
+    }
   }
   let q=null; const mq=t.match(/x\s*([\d,]+)/); if(mq) q=mq[1].replace(/,/g,'');
   if(best){
-    const it = ITEMS.find(i=>i.label.toLowerCase()===best);
-    return `${it?it.label:best} x${q ? q*lineQty : lineQty}`;   // seeds/pets: qty = item count
+    return `${best} x${q ? q*lineQty : lineQty}`;   // seeds/pets: qty = item count
   }
   return `${title} x${lineQty}`;   // no match — you fix it before approving
 }
@@ -814,7 +834,19 @@ function ebMetaHtml(o){
       <strong>@${esc(String(o.buyer||'?'))}</strong> · ${esc(String(o.currency||''))} ${esc(String(o.total||''))}</div>
     <div class="ebay-titles">${titles}</div>
     ${o.notes?`<div class="ebay-notes">📝 ${esc(String(o.notes))}</div>`:''}
-    ${o.reply?`<div class="ebay-reply">💬 Buyer replied: ${esc(String(o.reply))}</div>`:''}`;
+    ${ebRepliesHtml(o)}`;
+}
+// Every message the buyer has sent on this order, oldest first.
+function ebReplyList(o){
+  if(Array.isArray(o.replies)) return o.replies.filter(Boolean);
+  return o.reply ? [o.reply] : [];          // older single-reply records
+}
+function ebRepliesHtml(o){
+  const list = ebReplyList(o);
+  if(!list.length) return '';
+  const head = list.length>1 ? `💬 Buyer sent ${list.length} messages:` : '💬 Buyer replied:';
+  return `<div class="ebay-reply">${head}`
+    + list.map(r=>`<div class="eb-rmsg">${esc(String(r))}</div>`).join('') + `</div>`;
 }
 const EB_PROCESSING = `<div class="eb-processing">⏳ Delivering… waiting for the bot to confirm.</div>`;
 function ebayRender(orders){
@@ -825,7 +857,7 @@ function ebayRender(orders){
   orders.forEach(o=>{
     seen.add(String(o.orderId));
     const st=o.status||'new';
-    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + (o.reply?':r'+o.reply.length:'');
+    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + ':r'+ebReplyList(o).join('|').length;
     const existing=document.getElementById(ebIdSafe(o.orderId));
     if(existing && existing.dataset.status===skey) return;   // unchanged — leave it (keeps typed input)
     const el=ebBuildCard(o, st, skey);
@@ -862,6 +894,23 @@ function ebRemaining(o){
   const sm=msg.match(/sent\s*~?\s*(\d+)M\s*of\s*(\d+)M\s*Sheckles/i);   // Sheckles short
   if(sm){ const left=parseInt(sm[2])-parseInt(sm[1]); if(left>0) remaining.push(`${left}M Sheckles`); }
   return {user: user || ebExtractUser(o.notes), remaining};
+}
+// Rebuild the exact confirmation message the bot would send, for orders you
+// complete by hand. Mirrors ebay_poller.py (fast wording within the hour).
+const EB_MSG_TAIL_FAST = 'If you could leave a good review it would be amazing \u263a\ufe0f';
+const EB_MSG_TAIL_SLOW = 'Have a great day!';
+function ebBuiltMessage(o, user, itemsText){
+  let fast=false;
+  try{ fast = (Date.now() - new Date(o.creationDate).getTime()) <= 60*60*1000; }catch(e){}
+  const opening = 'Thanks for your order! Your item(s) have been sent to your mailbox by your garden '
+    + '\u2014 please open and claim \ud83d\ude42 ' + (fast?EB_MSG_TAIL_FAST:EB_MSG_TAIL_SLOW);
+  const items = (itemsText||'').split('\n').map(s=>s.trim()).filter(s=>s && !s.startsWith('#'));
+  let msg = opening;
+  if(items.length){
+    msg += '\n\nOrder Complete:\n' + items.join('\n');
+    if(user) msg += `\nSent to @${user}`;
+  }
+  return msg;
 }
 function ebBuildCard(o, st, skey){
   const box=document.createElement('div');
@@ -917,10 +966,16 @@ function ebBuildCard(o, st, skey){
         <button class="btn ${hasRem?'btn-copy':'btn-send'} eb-approve" type="button">${isFail?(hasRem?'↻ Resend full order':'↻ Retry &amp; Deliver'):'✓ Approve &amp; Deliver'}</button>
         <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
       </div>
+      <button class="btn eb-copymsg" type="button">📋 Copy "order complete" message</button>
       <span class="eb-status"></span>`;
   const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), stEl=box.querySelector('.eb-status');
   iEl.addEventListener('blur',()=>{ iEl.innerHTML=ebHighlight(iEl.innerText); });
   const askBtn=box.querySelector('.eb-ask');
+  const cpBtn=box.querySelector('.eb-copymsg');
+  if(cpBtn) cpBtn.addEventListener('click', e=>{
+    const u=uEl.value.trim().replace(/^@/,'');
+    copyText(e.target, ebBuiltMessage(o, u, iEl.innerText));
+  });
   if(askBtn) askBtn.addEventListener('click', async e=>{
     const btn=e.target; btn.disabled=true; btn.textContent='⏳ Messaging buyer…';
     try{
@@ -982,8 +1037,8 @@ document.getElementById('ebayRefresh').addEventListener('click', async ()=>{
   if(!RELAY.on){ ebayFetch(); return; }
   btn.disabled=true; btn.textContent='⏳ Checking eBay…';
   try{ await fetch(`${RELAY.url}/ebay/refresh?key=${encodeURIComponent(RELAY.secret)}`,{method:'POST'}); }catch(e){}
-  // Burst-poll for ~14s so a newly-found order shows without waiting for the timer.
-  for(let i=0;i<7;i++){ await ebayFetch(); await new Promise(r=>setTimeout(r,2000)); }
+  // Burst-poll for ~20s so new orders AND buyer replies show without waiting.
+  for(let i=0;i<10;i++){ await ebayFetch(); await new Promise(r=>setTimeout(r,2000)); }
   btn.textContent=lbl; btn.disabled=false;
 });
 ebayFetch();
