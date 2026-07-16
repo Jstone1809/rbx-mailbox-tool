@@ -151,6 +151,8 @@
   .btn-copy:hover{filter:brightness(1.08)}
   .btn-copy.done{background:linear-gradient(135deg,#ffcb45,#f5a623);color:#3a2400}
   .copy-big{width:100%;justify-content:center;padding:15px;font-size:16px;margin-top:16px}
+  .msg-row{display:flex;gap:8px;margin-top:10px}
+  .msg-row .btn{flex:1;justify-content:center;padding:11px 10px;font-size:13px}
   .btn-send{
     background:linear-gradient(135deg,#3aa9e8,#1d7fd1);color:#fff;
   }
@@ -250,6 +252,10 @@
     </div>
     <pre id="output"></pre>
     <button class="btn btn-send copy-big" id="sendBtn">🚀 Copy order</button>
+    <div class="msg-row">
+      <button class="btn btn-copy" id="copyMsgFast">📋 Message + review ask</button>
+      <button class="btn btn-copy" id="copyMsgPlain">📋 Message only</button>
+    </div>
     <button class="btn btn-reset copy-big" id="resetBtn">♻️ Reset all</button>
   </div>
 
@@ -714,6 +720,13 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 });
 userEl.addEventListener('input',render);
 document.getElementById('copyTop').addEventListener('click',e=>copy(e.currentTarget));
+// Copy the buyer confirmation for an order you've completed here manually. Two
+// buttons because the page can't know if it was a fast delivery — you do.
+function manualMessage(fast){
+  return orderCompleteMessage(userEl.value.trim().replace(/^@/,''), readableItems(), fast);
+}
+document.getElementById('copyMsgFast').addEventListener('click',e=>copyText(e.currentTarget, manualMessage(true)));
+document.getElementById('copyMsgPlain').addEventListener('click',e=>copyText(e.currentTarget, manualMessage(false)));
 document.getElementById('sendBtn').addEventListener('click',e=>sendOrder(e.currentTarget));
 initRelaySetup();
 refreshSendButton();
@@ -899,18 +912,23 @@ function ebRemaining(o){
 // complete by hand. Mirrors ebay_poller.py (fast wording within the hour).
 const EB_MSG_TAIL_FAST = 'If you could leave a good review it would be amazing \u263a\ufe0f';
 const EB_MSG_TAIL_SLOW = 'Have a great day!';
+// One shared builder so the manual copy buttons and the eBay cards always produce
+// the exact same message the bot sends.
+function orderCompleteMessage(user, itemLines, fast){
+  let msg = 'Thanks for your order! Your item(s) have been sent to your mailbox by your garden '
+    + '\u2014 please open and claim \ud83d\ude42 ' + (fast?EB_MSG_TAIL_FAST:EB_MSG_TAIL_SLOW);
+  const items = (itemLines||[]).map(s=>String(s).trim())
+    .filter(s=>s && !s.startsWith('#') && !/item_insert/i.test(s));
+  if(items.length){
+    msg += '\n\nOrder Complete:\n' + items.join('\n');
+    if(user && user!=='user_insert') msg += `\nSent to @${user}`;
+  }
+  return msg;
+}
 function ebBuiltMessage(o, user, itemsText){
   let fast=false;
   try{ fast = (Date.now() - new Date(o.creationDate).getTime()) <= 60*60*1000; }catch(e){}
-  const opening = 'Thanks for your order! Your item(s) have been sent to your mailbox by your garden '
-    + '\u2014 please open and claim \ud83d\ude42 ' + (fast?EB_MSG_TAIL_FAST:EB_MSG_TAIL_SLOW);
-  const items = (itemsText||'').split('\n').map(s=>s.trim()).filter(s=>s && !s.startsWith('#'));
-  let msg = opening;
-  if(items.length){
-    msg += '\n\nOrder Complete:\n' + items.join('\n');
-    if(user) msg += `\nSent to @${user}`;
-  }
-  return msg;
+  return orderCompleteMessage(user, (itemsText||'').split('\n'), fast);
 }
 function ebBuildCard(o, st, skey){
   const box=document.createElement('div');
