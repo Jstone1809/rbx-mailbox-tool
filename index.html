@@ -153,6 +153,20 @@
   .copy-big{width:100%;justify-content:center;padding:15px;font-size:16px;margin-top:16px}
   .msg-row{display:flex;gap:8px;margin-top:10px}
   .msg-row .btn{flex:1;justify-content:center;padding:11px 10px;font-size:13px}
+  .cmd-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .cmd-grid .btn{font-size:13px;padding:9px 14px;background:var(--panel-2);
+    border:1px solid var(--line);color:var(--text);font-weight:600}
+  .cmd-grid .btn:hover{border-color:var(--leaf)}
+  .cmd-grid .btn.danger{color:#ff8080;border-color:rgba(255,107,107,.35)}
+  .cmd-grid .btn.danger:hover{border-color:#ff8080}
+  .cmd-out{max-height:340px;overflow-y:auto;white-space:pre-wrap;margin:0;font-size:12.5px}
+  .cmd-counts{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+  .cnt-chip{font-size:12px;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:999px;padding:4px 10px;color:var(--muted);white-space:nowrap}
+  .cnt-chip b{color:var(--text);font-weight:700}
+  .cnt-chip.active{border-color:var(--leaf);color:var(--leaf)}
+  .cnt-chip.warn b{color:var(--gold)}
+  .cnt-chip.full b{color:#ff8080}
   .btn-send{
     background:linear-gradient(135deg,#3aa9e8,#1d7fd1);color:#fff;
   }
@@ -223,6 +237,15 @@
       <button class="btn btn-copy" id="ebayRefresh" type="button">↻ Refresh</button>
     </div>
     <div id="ebayList"></div>
+  </div>
+
+  <div class="card cmd-card" id="cmdCard" style="display:none">
+    <div class="preview-head">
+      <h2>🤖 Bot Console</h2>
+      <div class="cmd-counts" id="cmdCounts"></div>
+    </div>
+    <div class="cmd-grid" id="cmdGrid"></div>
+    <pre class="cmd-out" id="cmdOut">Run a command to see the bot's reply here.</pre>
   </div>
 
   <div class="card">
@@ -731,7 +754,84 @@ document.getElementById('sendBtn').addEventListener('click',e=>sendOrder(e.curre
 initRelaySetup();
 refreshSendButton();
 
-// ===== eBay Orders panel =====================================================
+// ===== Bot Console =========================================================
+// Buttons post a command onto the same relay queue the listener already polls,
+// so it runs exactly as if you'd typed it in Telegram. The bot mirrors its
+// replies back here for a few minutes after each command.
+const CMDS = [
+  {c:'/inv',     l:'🎒 Inventory'},
+  {c:'/restock', l:'🛒 Restock'},
+  {c:'/claim',   l:'📬 Claim'},
+  {c:'/fruits',  l:'🍎 Fruits'},
+  {c:'/sends',   l:'📨 Sends'},
+  {c:'/queue',   l:'🗒 Queue'},
+  {c:'/ping',    l:'🏓 Ping'},
+  {c:'/status',  l:'📸 Status'},
+  {c:'/flush',   l:'🌐 Flush'},
+  {c:'/stop',    l:'🛑 Stop', danger:true},
+  {c:'/drain',   l:'📦 Drain', danger:true, confirm:'Drain all seeds & pets to the next account?'},
+];
+let cmdPollMs=0, cmdPollTimer=null, cmdFastUntil=0;
+
+function cmdRenderButtons(){
+  const g=document.getElementById('cmdGrid');
+  if(g.childElementCount) return;
+  CMDS.forEach(d=>{
+    const b=document.createElement('button');
+    b.className='btn'+(d.danger?' danger':''); b.type='button'; b.textContent=d.l;
+    b.addEventListener('click',()=>{
+      if(d.confirm && !confirm(d.confirm)) return;
+      runCmd(d.c, b);
+    });
+    g.appendChild(b);
+  });
+}
+async function runCmd(cmd, btn){
+  if(!RELAY.on) return;
+  const lbl=btn.textContent; btn.disabled=true; btn.textContent='⏳ '+cmd;
+  try{
+    await fetch(`${RELAY.url}/cmd?key=${encodeURIComponent(RELAY.secret)}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cmd})});
+    cmdFastUntil=Date.now()+150000;      // watch closely for ~2.5 min
+    cmdSchedule(); cmdFetch();
+  }catch(e){ document.getElementById('cmdOut').textContent='⚠ Network error sending '+cmd; }
+  setTimeout(()=>{btn.disabled=false; btn.textContent=lbl;},1000);
+}
+function cmdRenderCounts(c){
+  const el=document.getElementById('cmdCounts');
+  if(!c || !Array.isArray(c.accounts)){ el.innerHTML=''; return; }
+  el.innerHTML = c.accounts.map(a=>{
+    const lim=c.limit||50;
+    const cls = a.count>=lim ? 'full' : (a.count/lim>=0.8 ? 'warn' : '');
+    const act = a.name===c.active ? ' active' : '';
+    return `<span class="cnt-chip ${cls}${act}">${esc(String(a.name))} <b>${a.count}/${lim}</b></span>`;
+  }).join('');
+}
+function cmdRenderLog(l){
+  const el=document.getElementById('cmdOut');
+  if(!l || !Array.isArray(l.lines) || !l.lines.length) return;
+  const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+  const txt=l.lines.join('\n\n');
+  if(el.textContent!==txt){ el.textContent=txt; if(atBottom) el.scrollTop=el.scrollHeight; }
+}
+async function cmdFetch(){
+  const card=document.getElementById('cmdCard');
+  if(!RELAY.on){ card.style.display='none'; return; }
+  card.style.display='block'; cmdRenderButtons();
+  try{
+    const res=await fetch(`${RELAY.url}/state?key=${encodeURIComponent(RELAY.secret)}`);
+    const d=await res.json();
+    cmdRenderCounts(d.counts); cmdRenderLog(d.log);
+  }catch(e){ /* keep last view */ }
+}
+function cmdSchedule(){
+  const want = Date.now()<cmdFastUntil ? 3000 : 20000;
+  if(want===cmdPollMs && cmdPollTimer) return;
+  cmdPollMs=want; clearInterval(cmdPollTimer);
+  cmdPollTimer=setInterval(async()=>{ await cmdFetch(); cmdSchedule(); }, cmdPollMs);
+}
+cmdFetch();
+cmdSchedule();
 function ebExtractUser(notes){
   if(!notes) return '';
   // eBay localises the personalisation label: Text (EN/DE), Texto (ES/PT),
