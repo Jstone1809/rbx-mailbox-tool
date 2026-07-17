@@ -183,6 +183,15 @@
   .foot{text-align:center;color:#4f7361;font-size:12px;margin-top:24px}
   .ebay-card .preview-head h2{display:flex;align-items:center;gap:8px}
   .ebay-count{color:var(--gold);font-weight:700}
+  .eb-head-right{display:flex;align-items:center;gap:10px}
+  .auto-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+    color:var(--muted);background:var(--panel-2);border:1px solid var(--line);
+    border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none;white-space:nowrap}
+  .auto-toggle:hover{color:var(--text)}
+  .auto-toggle input{accent-color:var(--leaf);cursor:pointer;margin:0}
+  .auto-toggle.on{color:var(--leaf);border-color:var(--leaf)}
+  .eb-autobadge{display:inline-block;font-size:11px;font-weight:700;color:var(--leaf);
+    border:1px solid var(--leaf);border-radius:999px;padding:1px 7px;margin-left:6px}
   .ebay-order{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:var(--panel-2)}
   .ebay-meta{font-size:14px;color:var(--text);margin-bottom:6px}
   .ebay-id{color:var(--muted);font-size:12px;float:right}
@@ -214,6 +223,10 @@
     border-radius:8px;padding:8px 10px;margin:8px 0;font-size:13px;line-height:1.5}
   .eb-remnote{color:var(--gold);background:rgba(255,203,69,.08);border-radius:8px;
     padding:7px 10px;margin:6px 0;font-size:13px}
+  .eb-outsourced{color:#c8a4ff;background:rgba(170,120,255,.12);
+    border:1px solid rgba(170,120,255,.35);border-radius:8px;
+    padding:7px 10px;margin:6px 0;font-size:13px;line-height:1.5}
+  .eb-outsourced b{color:#e2d0ff}
   .eb-ask{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
     font-size:12px;font-weight:600;padding:6px 12px;margin-top:6px}
   .eb-ask:hover{color:var(--text);border-color:var(--leaf)}
@@ -234,7 +247,12 @@
   <div class="card ebay-card" id="ebayCard" style="display:none">
     <div class="preview-head">
       <h2>📥 eBay Orders <span class="ebay-count" id="ebayCount"></span></h2>
-      <button class="btn btn-copy" id="ebayRefresh" type="button">↻ Refresh</button>
+      <div class="eb-head-right">
+        <label class="auto-toggle" title="Orders with a username that map cleanly are sent and dispatched without you">
+          <input type="checkbox" id="autoSend"> 🤖 Auto-send
+        </label>
+        <button class="btn btn-copy" id="ebayRefresh" type="button">↻ Refresh</button>
+      </div>
     </div>
     <div id="ebayList"></div>
   </div>
@@ -754,22 +772,52 @@ document.getElementById('sendBtn').addEventListener('click',e=>sendOrder(e.curre
 initRelaySetup();
 refreshSendButton();
 
+// ===== Auto-send ============================================================
+// The Worker does the auto-sending (it's always on, unlike this page), so it
+// needs to know what you sell. Push the catalogue up on load — the Worker only
+// writes if it actually changed. If you add an item here and never open the
+// page, the Worker won't recognise it and that order simply waits for you,
+// which is the safe way to fail.
+async function syncItems(){
+  if(!RELAY.on) return;
+  const compact = ITEMS.map(i => i.bundle ? {label:i.label, bundle:i.bundle} : {label:i.label});
+  try{
+    await fetch(`${RELAY.url}/items?key=${encodeURIComponent(RELAY.secret)}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:compact})});
+  }catch(e){}
+}
+function autoRender(on){
+  const cb=document.getElementById('autoSend');
+  if(!cb) return;
+  cb.checked=!!on;
+  cb.closest('.auto-toggle').classList.toggle('on', !!on);
+}
+document.getElementById('autoSend').addEventListener('change', async e=>{
+  const on=e.target.checked;
+  if(on && !confirm('Auto-send eligible orders without reviewing them first?\n\nOnly orders that have a username AND map cleanly to known items are sent. Anything unusual still waits for you.')){
+    e.target.checked=false; return;
+  }
+  autoRender(on);
+  try{
+    await fetch(`${RELAY.url}/auto?key=${encodeURIComponent(RELAY.secret)}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({on})});
+    if(on) syncItems();
+  }catch(err){ autoRender(!on); }
+});
+
 // ===== Bot Console =========================================================
 // Buttons post a command onto the same relay queue the listener already polls,
 // so it runs exactly as if you'd typed it in Telegram. The bot mirrors its
 // replies back here for a few minutes after each command.
 const CMDS = [
   {c:'/inv',     l:'🎒 Inventory'},
-  {c:'/restock', l:'🛒 Restock'},
   {c:'/claim',   l:'📬 Claim'},
   {c:'/fruits',  l:'🍎 Fruits'},
-  {c:'/sends',   l:'📨 Sends'},
   {c:'/queue',   l:'🗒 Queue'},
   {c:'/ping',    l:'🏓 Ping'},
   {c:'/status',  l:'📸 Status'},
   {c:'/flush',   l:'🌐 Flush'},
   {c:'/stop',    l:'🛑 Stop', danger:true},
-  {c:'/drain',   l:'📦 Drain', danger:true, confirm:'Drain all seeds & pets to the next account?'},
 ];
 let cmdPollMs=0, cmdPollTimer=null, cmdFastUntil=0;
 
@@ -821,7 +869,7 @@ async function cmdFetch(){
   try{
     const res=await fetch(`${RELAY.url}/state?key=${encodeURIComponent(RELAY.secret)}`);
     const d=await res.json();
-    cmdRenderCounts(d.counts); cmdRenderLog(d.log);
+    cmdRenderCounts(d.counts); cmdRenderLog(d.log); autoRender(d.auto);
   }catch(e){ /* keep last view */ }
 }
 function cmdSchedule(){
@@ -832,6 +880,7 @@ function cmdSchedule(){
 }
 cmdFetch();
 cmdSchedule();
+syncItems();
 function ebExtractUser(notes){
   if(!notes) return '';
   // eBay localises the personalisation label: Text (EN/DE), Texto (ES/PT),
@@ -901,6 +950,28 @@ function ebMatchBundle(text){
   }
   return best;
 }
+// ---- Outsourced Sheckles ---------------------------------------------------
+// Big Sheckles orders are fulfilled elsewhere, so the bot must never try to send
+// them — but the rest of the order still goes out as normal. Change this number
+// to move the cut-off (5 = anything 5B and above, which covers 5B, 10B and 2x10B).
+const OUTSOURCE_MIN_B = 5;
+function ebSheckB(line){
+  let m = String(line).match(/^\s*([\d.]+)\s*B\s+Sheckles\s*$/i);
+  if(m) return parseFloat(m[1]);
+  m = String(line).match(/^\s*([\d.]+)\s*M\s+Sheckles\s*$/i);
+  if(m) return parseFloat(m[1])/1000;
+  return null;
+}
+function ebIsOutsourced(line){
+  const b = ebSheckB(line);
+  return b !== null && b >= OUTSOURCE_MIN_B;
+}
+function ebSplit(text){
+  const deliver=[], out=[];
+  String(text||'').split('\n').map(s=>s.trim()).filter(Boolean)
+    .forEach(l => (ebIsOutsourced(l) ? out : deliver).push(l));
+  return {deliver, out};
+}
 function ebCompose(items, notes){
   const lines=[];
   (items||[]).forEach(li=>{
@@ -944,7 +1015,7 @@ async function ebayFetch(){
 function ebMetaHtml(o){
   const titles=(o.items||[]).map(i=>`${esc(String(i.title||''))} ×${esc(String(i.qty||1))}`).join('<br>');
   return `<div class="ebay-meta"><span class="ebay-id">${esc(String(o.orderId||''))}</span>
-      <strong>@${esc(String(o.buyer||'?'))}</strong> · ${esc(String(o.currency||''))} ${esc(String(o.total||''))}</div>
+      <strong>@${esc(String(o.buyer||'?'))}</strong> · ${esc(String(o.currency||''))} ${esc(String(o.total||''))}${o.auto?'<span class="eb-autobadge">🤖 AUTO</span>':''}</div>
     <div class="ebay-titles">${titles}</div>
     ${o.notes?`<div class="ebay-notes">📝 ${esc(String(o.notes))}</div>`:''}
     ${ebRepliesHtml(o)}`;
@@ -1071,17 +1142,24 @@ function ebBuildCard(o, st, skey){
   const rem = isFail ? ebRemaining(o) : {remaining:[], user:''};
   const hasRem = rem.remaining && rem.remaining.length>0;
   const user=ebExtractUser(o.notes), composed=ebCompose(o.items||[], o.notes);
+  const sp = ebSplit(composed);
+  const outsourced = sp.out;                     // 5B+ Sheckles — you fulfil these elsewhere
+  const deliverText = sp.deliver.join('\n');     // what the bot actually sends
+  const nothingToSend = outsourced.length>0 && sp.deliver.length===0;
   box.innerHTML = ebMetaHtml(o)
     + (isFail?`<div class="eb-fail">⚠ Failed: ${esc(String(o.message||'delivery did not complete'))}</div>`:'')
     + (hasRem?`<div class="eb-remnote">↩ Still to send: ${esc(rem.remaining.join(', '))}</div>`:'')
+    + (outsourced.length?`<div class="eb-outsourced">⚡ Outsourced — the bot will NOT send: <b>${esc(outsourced.join(', '))}</b></div>`:'')
     + `<label>Roblox username</label>
       <input class="eb-user" value="${esc(user)}" placeholder="username" autocomplete="off" spellcheck="false">
       <button class="btn eb-ask" type="button">✉ Ask buyer for username</button>
-      <label>Delivery order (check this matches before approving)</label>
-      <div class="eb-items" contenteditable="true" spellcheck="false">${ebHighlight(composed)}</div>
+      <label>${nothingToSend?'Nothing for the bot to send on this order':'Delivery order (check this matches before approving)'}</label>
+      <div class="eb-items" contenteditable="true" spellcheck="false">${ebHighlight(deliverText)}</div>
       <div class="ebay-actions">
         ${hasRem?`<button class="btn btn-send eb-complete" type="button">✅ Complete remaining</button>`:''}
-        <button class="btn ${hasRem?'btn-copy':'btn-send'} eb-approve" type="button">${isFail?(hasRem?'↻ Resend full order':'↻ Retry &amp; Deliver'):'✓ Approve &amp; Deliver'}</button>
+        ${nothingToSend
+          ? `<button class="btn btn-send eb-done" type="button">✓ Mark done (outsourced)</button>`
+          : `<button class="btn ${hasRem?'btn-copy':'btn-send'} eb-approve" type="button">${isFail?(hasRem?'↻ Resend full order':'↻ Retry &amp; Deliver'):'✓ Approve &amp; Deliver'}</button>`}
         <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
       </div>
       <button class="btn eb-copymsg" type="button">📋 Copy "order complete" message</button>
@@ -1092,7 +1170,9 @@ function ebBuildCard(o, st, skey){
   const cpBtn=box.querySelector('.eb-copymsg');
   if(cpBtn) cpBtn.addEventListener('click', e=>{
     const u=uEl.value.trim().replace(/^@/,'');
-    copyText(e.target, ebBuiltMessage(o, u, iEl.innerText));
+    // the buyer still receives the outsourced Sheckles, so list them on the receipt
+    const all = iEl.innerText + (outsourced.length ? '\n'+outsourced.join('\n') : '');
+    copyText(e.target, ebBuiltMessage(o, u, all));
   });
   if(askBtn) askBtn.addEventListener('click', async e=>{
     const btn=e.target; btn.disabled=true; btn.textContent='⏳ Messaging buyer…';
@@ -1128,7 +1208,8 @@ function ebBuildCard(o, st, skey){
       else{ stEl.textContent='⚠ '+(d.error||('HTTP '+res.status)); e.target.disabled=false; }
     }catch(err){ stEl.textContent='⚠ Network error'; e.target.disabled=false; }
   });
-  box.querySelector('.eb-approve').addEventListener('click', async e=>{
+  const apBtn=box.querySelector('.eb-approve');
+  if(apBtn) apBtn.addEventListener('click', async e=>{
     const u=uEl.value.trim().replace(/^@/,'');
     if(!u){ stEl.textContent='⚠ Enter the Roblox username'; return; }
     if(!iEl.innerText.trim()){ stEl.textContent='⚠ No items'; return; }
@@ -1136,10 +1217,29 @@ function ebBuildCard(o, st, skey){
     try{
       const res=await fetch(`${RELAY.url}/ebay/approve?key=${encodeURIComponent(RELAY.secret)}`,{
         method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({orderId:o.orderId, order:`@${u}\n${iEl.innerText.trim()}`})
+        // outsourced rides along so the buyer's receipt still lists the Sheckles
+        body:JSON.stringify({orderId:o.orderId, order:`@${u}\n${iEl.innerText.trim()}`, outsourced})
       });
       const d=await res.json();
       if(res.ok&&d.ok){ box.dataset.status='processing'; box.innerHTML=ebMetaHtml(o)+EB_PROCESSING; ebayFetch(); }
+      else{ stEl.textContent='⚠ '+(d.error||('HTTP '+res.status)); e.target.disabled=false; }
+    }catch(err){ stEl.textContent='⚠ Network error'; e.target.disabled=false; }
+  });
+  // Sheckles-only order: nothing for the bot to do, so close it out by hand once
+  // your supplier has delivered — that unlocks Mark dispatched + the receipt.
+  const dnBtn=box.querySelector('.eb-done');
+  if(dnBtn) dnBtn.addEventListener('click', async e=>{
+    const u=uEl.value.trim().replace(/^@/,'');
+    if(!u){ stEl.textContent='⚠ Enter the Roblox username'; return; }
+    if(!confirm('Mark this order delivered? Only do this once the outsourced Sheckles have actually been sent.')) return;
+    e.target.disabled=true; stEl.textContent='⏳ Marking…';
+    try{
+      const res=await fetch(`${RELAY.url}/ebay/done?key=${encodeURIComponent(RELAY.secret)}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({orderId:o.orderId, user:u, outsourced})
+      });
+      const d=await res.json();
+      if(res.ok&&d.ok){ ebayFetch(); }
       else{ stEl.textContent='⚠ '+(d.error||('HTTP '+res.status)); e.target.disabled=false; }
     }catch(err){ stEl.textContent='⚠ Network error'; e.target.disabled=false; }
   });
