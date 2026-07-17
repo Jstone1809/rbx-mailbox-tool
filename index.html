@@ -184,12 +184,21 @@
   .ebay-card .preview-head h2{display:flex;align-items:center;gap:8px}
   .ebay-count{color:var(--gold);font-weight:700}
   .eb-head-right{display:flex;align-items:center;gap:10px}
-  .auto-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+  .auto-toggle{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;
     color:var(--muted);background:var(--panel-2);border:1px solid var(--line);
-    border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none;white-space:nowrap}
+    border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none;white-space:nowrap;
+    transition:color .15s,border-color .15s,background .15s}
   .auto-toggle:hover{color:var(--text)}
-  .auto-toggle input{accent-color:var(--leaf);cursor:pointer;margin:0}
-  .auto-toggle.on{color:var(--leaf);border-color:var(--leaf)}
+  .auto-toggle input{position:absolute;opacity:0;width:0;height:0}
+  .auto-dot{width:17px;height:17px;border-radius:50%;border:2px solid var(--line);
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+    font-size:11px;font-weight:900;line-height:1;transition:background .15s,border-color .15s}
+  .auto-state{font-size:11px;font-weight:900;letter-spacing:.5px;
+    border-radius:999px;padding:1px 7px;background:var(--line);color:var(--muted)}
+  .auto-toggle.on{color:var(--leaf);border-color:var(--leaf);background:rgba(74,222,128,.12)}
+  .auto-toggle.on .auto-dot{background:var(--leaf);border-color:var(--leaf);color:#08160c}
+  .auto-toggle.on .auto-dot::after{content:'✓'}
+  .auto-toggle.on .auto-state{background:var(--leaf);color:#08160c}
   .eb-autobadge{display:inline-block;font-size:11px;font-weight:700;color:var(--leaf);
     border:1px solid var(--leaf);border-radius:999px;padding:1px 7px;margin-left:6px}
   .ebay-order{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:var(--panel-2)}
@@ -249,7 +258,10 @@
       <h2>📥 eBay Orders <span class="ebay-count" id="ebayCount"></span></h2>
       <div class="eb-head-right">
         <label class="auto-toggle" title="Orders with a username that map cleanly are sent and dispatched without you">
-          <input type="checkbox" id="autoSend"> 🤖 Auto-send
+          <input type="checkbox" id="autoSend">
+          <span class="auto-dot"></span>
+          <span>🤖 Auto-send</span>
+          <span class="auto-state" id="autoState">OFF</span>
         </label>
         <button class="btn btn-copy" id="ebayRefresh" type="button">↻ Refresh</button>
       </div>
@@ -791,6 +803,8 @@ function autoRender(on){
   if(!cb) return;
   cb.checked=!!on;
   cb.closest('.auto-toggle').classList.toggle('on', !!on);
+  const s=document.getElementById('autoState');
+  if(s) s.textContent = on ? 'ON' : 'OFF';
 }
 document.getElementById('autoSend').addEventListener('change', async e=>{
   const on=e.target.checked;
