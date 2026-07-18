@@ -232,6 +232,11 @@
     border-radius:8px;padding:8px 10px;margin:8px 0;font-size:13px;line-height:1.5}
   .eb-remnote{color:var(--gold);background:rgba(255,203,69,.08);border-radius:8px;
     padding:7px 10px;margin:6px 0;font-size:13px}
+  .eb-stuck{margin-top:8px;font-size:12.5px;color:var(--muted);display:flex;
+    align-items:center;gap:8px;flex-wrap:wrap}
+  .eb-forceclear{background:var(--panel-2);border:1px solid rgba(255,107,107,.35);
+    color:#ff8080;font-size:12px;font-weight:600;padding:6px 12px}
+  .eb-forceclear:hover{border-color:#ff8080}
   .eb-outsourced{color:#c8a4ff;background:rgba(170,120,255,.12);
     border:1px solid rgba(170,120,255,.35);border-radius:8px;
     padding:7px 10px;margin:6px 0;font-size:13px;line-height:1.5}
@@ -384,6 +389,7 @@ const ITEMS = [
   {label:'Poison Apple Seed',   code:'Poison Apple', max:20},
   {label:'Pomegranate Seed',    code:'Pomegranate', max:20},
   {label:'Rainbow Seed',        code:'Rainbow'},
+  {label:'Rainbow Carpet',      code:'Rainbow Carpet', manual:true, max:1},
   {label:'Raccoon',             code:'Raccoon', max:20},
   {label:'Robin',               code:'Robin', max:20},
   {label:'Rocket Pop Seed',     code:'Rocket Pop', qtyOptions:[1,10,25,50,100,250,500,1000]},
@@ -803,7 +809,11 @@ refreshSendButton();
 // which is the safe way to fail.
 async function syncItems(){
   if(!RELAY.on) return;
-  const compact = ITEMS.map(i => i.bundle ? {label:i.label, bundle:i.bundle} : {label:i.label});
+  const compact = ITEMS.map(i => {
+    const o = i.bundle ? {label:i.label, bundle:i.bundle} : {label:i.label};
+    if(i.manual) o.manual = true;
+    return o;
+  });
   try{
     await fetch(`${RELAY.url}/items?key=${encodeURIComponent(RELAY.secret)}`,{
       method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:compact})});
@@ -975,11 +985,12 @@ function ebMatchBundle(text){
   }
   return best;
 }
-// ---- Outsourced Sheckles ---------------------------------------------------
-// Big Sheckles orders are fulfilled elsewhere, so the bot must never try to send
-// them — but the rest of the order still goes out as normal. Change this number
-// to move the cut-off (5 = anything 5B and above, which covers 5B, 10B and 2x10B).
+// ---- Outsourced / manual items ---------------------------------------------
+// The bot must never try to send these — big Sheckles (fulfilled elsewhere) and
+// gamepass items like Rainbow Carpet (done by hand) — but they still belong on
+// the buyer's receipt. Change the number to move the Sheckles cut-off.
 const OUTSOURCE_MIN_B = 5;
+const MANUAL_LABELS = ITEMS.filter(i=>i.manual).map(i=>i.label.toLowerCase());
 function ebSheckB(line){
   let m = String(line).match(/^\s*([\d.]+)\s*B\s+Sheckles\s*$/i);
   if(m) return parseFloat(m[1]);
@@ -987,9 +998,14 @@ function ebSheckB(line){
   if(m) return parseFloat(m[1])/1000;
   return null;
 }
+function ebIsManual(line){
+  const t = String(line).toLowerCase().replace(/\s*x\s*\d+\s*$/,'').trim();
+  return MANUAL_LABELS.some(l => t===l || t.includes(l));
+}
 function ebIsOutsourced(line){
   const b = ebSheckB(line);
-  return b !== null && b >= OUTSOURCE_MIN_B;
+  if(b !== null && b >= OUTSOURCE_MIN_B) return true;
+  return ebIsManual(line);
 }
 function ebSplit(text){
   const deliver=[], out=[];
@@ -1066,7 +1082,8 @@ function ebayRender(orders){
   orders.forEach(o=>{
     seen.add(String(o.orderId));
     const st=o.status||'new';
-    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + ':r'+ebReplyList(o).join('|').length;
+    const stuckTag = (st==='processing' && o.processingAt && Date.now()-o.processingAt>180000) ? ':stuck' : '';
+    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + stuckTag + ':r'+ebReplyList(o).join('|').length;
     const existing=document.getElementById(ebIdSafe(o.orderId));
     if(existing && existing.dataset.status===skey) return;   // unchanged — leave it (keeps typed input)
     const el=ebBuildCard(o, st, skey);
@@ -1130,7 +1147,24 @@ function ebBuildCard(o, st, skey){
   const box=document.createElement('div');
   box.className='ebay-order'; box.id=ebIdSafe(o.orderId);
   box.dataset.orderId=String(o.orderId); box.dataset.status=(skey||st);
-  if(st==='processing'){ box.innerHTML=ebMetaHtml(o)+EB_PROCESSING; return box; }
+  if(st==='processing'){
+    const started = o.processingAt || 0;
+    const stuck = started && (Date.now() - started) > 180000;   // 3 min
+    box.innerHTML = ebMetaHtml(o) + EB_PROCESSING
+      + (stuck ? `<div class="eb-stuck">Taking longer than usual.
+          <button class="btn eb-forceclear" type="button">✕ Clear stuck order</button></div>` : '');
+    const fc = box.querySelector('.eb-forceclear');
+    if(fc) fc.addEventListener('click', async e=>{
+      if(!confirm('Remove this order from the site? Only do this if it has actually been delivered — the bot will forget it.')) return;
+      e.target.disabled=true; e.target.textContent='⏳ Clearing…';
+      try{
+        await fetch(`${RELAY.url}/ebay/reject?key=${encodeURIComponent(RELAY.secret)}`,{
+          method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})});
+        ebayFetch();
+      }catch(err){ e.target.disabled=false; e.target.textContent='✕ Clear stuck order'; }
+    });
+    return box;
+  }
   if(st==='completed'){
     const disp=o.dispatch||'none';
     let block;
