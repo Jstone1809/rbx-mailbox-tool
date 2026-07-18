@@ -1082,7 +1082,7 @@ function ebayRender(orders){
   orders.forEach(o=>{
     seen.add(String(o.orderId));
     const st=o.status||'new';
-    const stuckTag = (st==='processing' && o.processingAt && Date.now()-o.processingAt>180000) ? ':stuck' : '';
+    const stuckTag = (st==='processing' && (!o.processingAt || Date.now()-o.processingAt>180000)) ? ':stuck' : '';
     const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + stuckTag + ':r'+ebReplyList(o).join('|').length;
     const existing=document.getElementById(ebIdSafe(o.orderId));
     if(existing && existing.dataset.status===skey) return;   // unchanged — leave it (keeps typed input)
@@ -1149,7 +1149,9 @@ function ebBuildCard(o, st, skey){
   box.dataset.orderId=String(o.orderId); box.dataset.status=(skey||st);
   if(st==='processing'){
     const started = o.processingAt || 0;
-    const stuck = started && (Date.now() - started) > 180000;   // 3 min
+    // No timestamp = it went into processing before timestamps existed, so it's
+    // definitely stale. Otherwise stuck after 3 min.
+    const stuck = !started || (Date.now() - started) > 180000;
     box.innerHTML = ebMetaHtml(o) + EB_PROCESSING
       + (stuck ? `<div class="eb-stuck">Taking longer than usual.
           <button class="btn eb-forceclear" type="button">✕ Clear stuck order</button></div>` : '');
