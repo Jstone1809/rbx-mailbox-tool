@@ -1222,7 +1222,11 @@ function ebBuildCard(o, st, skey){
   const isFail=st==='failed';
   const rem = isFail ? ebRemaining(o) : {remaining:[], user:''};
   const hasRem = rem.remaining && rem.remaining.length>0;
-  const user=ebExtractUser(o.notes), composed=ebCompose(o.items||[], o.notes);
+  // On a failed card prefer the username that was actually used (stored in the
+  // approved order), so "Complete remaining" keeps it instead of blanking the field
+  // — the buyer may have given it by reply, not at checkout.
+  const user = (isFail && rem.user) ? rem.user : ebExtractUser(o.notes);
+  const composed=ebCompose(o.items||[], o.notes);
   const sp = ebSplit(composed);
   const outsourced = sp.out;                     // 5B+ Sheckles / gamepasses — you fulfil these
   const eldoLinks = outsourced.map(l=>({line:l, url:ebEldoradoFor(l)})).filter(x=>x.url);
@@ -1290,7 +1294,7 @@ function ebBuildCard(o, st, skey){
   });
   const cBtn=box.querySelector('.eb-complete');
   if(cBtn) cBtn.addEventListener('click', async e=>{
-    const u=(rem.user||uEl.value.trim().replace(/^@/,''));
+    const u=(uEl.value.trim().replace(/^@/,'')||rem.user);   // field wins if you edited it
     if(!u){ stEl.textContent='⚠ No username'; return; }
     e.target.disabled=true; stEl.textContent='⏳ Sending remaining…';
     try{
