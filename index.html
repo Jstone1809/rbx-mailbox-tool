@@ -241,6 +241,12 @@
     border:1px solid rgba(170,120,255,.35);border-radius:8px;
     padding:7px 10px;margin:6px 0;font-size:13px;line-height:1.5}
   .eb-outsourced b{color:#e2d0ff}
+  .eb-eldo{margin:8px 0}
+  .eb-buyeldo{display:block;width:100%;background:#f5b942;color:#1a1205;border:none;
+    font-weight:800;font-size:13px;padding:10px 12px;margin-bottom:6px}
+  .eb-buyeldo:hover{background:#ffc84d}
+  .eb-buyeldo.done{background:var(--leaf);color:#08160c}
+  .eb-eldo-hint{font-size:11.5px;color:var(--muted);text-align:center}
   .eb-ask{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
     font-size:12px;font-weight:600;padding:6px 12px;margin-top:6px}
   .eb-ask:hover{color:var(--text);border-color:var(--leaf)}
@@ -389,7 +395,14 @@ const ITEMS = [
   {label:'Poison Apple Seed',   code:'Poison Apple', max:20},
   {label:'Pomegranate Seed',    code:'Pomegranate', max:20},
   {label:'Rainbow Seed',        code:'Rainbow'},
-  {label:'Rainbow Carpet',      code:'Rainbow Carpet', manual:true, max:1},
+  {label:'Rainbow Carpet',      code:'Rainbow Carpet', manual:true, max:1,
+   eldorado:'https://www.eldorado.gg/order-summary/e749f92a-3201-4376-8043-08decb98d7bd?quantity=1&category=CustomItem&offerPosition=2&gameId=430&guaranteedDeliveryTime=Minute20&disableGuestCheckout=false'},
+  {label:'Vine Wrapper',        code:'Vine Wrapper', manual:true, max:1,
+   eldorado:'https://www.eldorado.gg/order-summary/25acdfc8-7278-4833-0ff2-08decb98d368?quantity=1&category=CustomItem&offerPosition=1&gameId=430&guaranteedDeliveryTime=Minute20&disableGuestCheckout=false'},
+  {label:'Power Hose',          code:'Power Hose', manual:true, max:1,
+   eldorado:'https://www.eldorado.gg/order-summary/8c202f73-148e-4cef-a7af-08decdd31763?quantity=1&category=CustomItem&offerPosition=1&gameId=430&guaranteedDeliveryTime=Minute20&disableGuestCheckout=false'},
+  {label:'Grappling Hook',      code:'Grappling Hook', manual:true, max:1,
+   eldorado:'https://www.eldorado.gg/order-summary/7ac16a39-697f-4fd8-943b-08dede4d1526?quantity=1&category=CustomItem&offerPosition=3&gameId=430&guaranteedDeliveryTime=Minute20&disableGuestCheckout=false'},
   {label:'Raccoon',             code:'Raccoon', max:20},
   {label:'Robin',               code:'Robin', max:20},
   {label:'Rocket Pop Seed',     code:'Rocket Pop', qtyOptions:[1,10,25,50,100,250,500,1000]},
@@ -991,6 +1004,13 @@ function ebMatchBundle(text){
 // the buyer's receipt. Change the number to move the Sheckles cut-off.
 const OUTSOURCE_MIN_B = 5;
 const MANUAL_LABELS = ITEMS.filter(i=>i.manual).map(i=>i.label.toLowerCase());
+// Find the Eldorado checkout link for an outsourced line, if it's a gamepass we
+// have a link for. Matches the line ("Rainbow Carpet x1") against the item label.
+function ebEldoradoFor(line){
+  const t = String(line).toLowerCase().replace(/\s*x\s*\d+\s*$/,'').trim();
+  const it = ITEMS.find(i => i.eldorado && (t===i.label.toLowerCase() || t.includes(i.label.toLowerCase())));
+  return it ? it.eldorado : null;
+}
 function ebSheckB(line){
   let m = String(line).match(/^\s*([\d.]+)\s*B\s+Sheckles\s*$/i);
   if(m) return parseFloat(m[1]);
@@ -1204,13 +1224,17 @@ function ebBuildCard(o, st, skey){
   const hasRem = rem.remaining && rem.remaining.length>0;
   const user=ebExtractUser(o.notes), composed=ebCompose(o.items||[], o.notes);
   const sp = ebSplit(composed);
-  const outsourced = sp.out;                     // 5B+ Sheckles — you fulfil these elsewhere
+  const outsourced = sp.out;                     // 5B+ Sheckles / gamepasses — you fulfil these
+  const eldoLinks = outsourced.map(l=>({line:l, url:ebEldoradoFor(l)})).filter(x=>x.url);
   const deliverText = sp.deliver.join('\n');     // what the bot actually sends
   const nothingToSend = outsourced.length>0 && sp.deliver.length===0;
   box.innerHTML = ebMetaHtml(o)
     + (isFail?`<div class="eb-fail">⚠ Failed: ${esc(String(o.message||'delivery did not complete'))}</div>`:'')
     + (hasRem?`<div class="eb-remnote">↩ Still to send: ${esc(rem.remaining.join(', '))}</div>`:'')
     + (outsourced.length?`<div class="eb-outsourced">⚡ Outsourced — the bot will NOT send: <b>${esc(outsourced.join(', '))}</b></div>`:'')
+    + (eldoLinks.length?`<div class="eb-eldo">${eldoLinks.map((x,i)=>
+        `<button class="btn eb-buyeldo" type="button" data-i="${i}">🛒 Buy ${esc(x.line)} on Eldorado</button>`).join('')}
+        <div class="eb-eldo-hint">Copies the username, opens the checkout — then paste into the field &amp; Pay now.</div></div>`:'')
     + `<label>Roblox username</label>
       <input class="eb-user" value="${esc(user)}" placeholder="username" autocomplete="off" spellcheck="false">
       <button class="btn eb-ask" type="button">✉ Ask buyer for username</button>
@@ -1227,6 +1251,16 @@ function ebBuildCard(o, st, skey){
       <span class="eb-status"></span>`;
   const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), stEl=box.querySelector('.eb-status');
   iEl.addEventListener('blur',()=>{ iEl.innerHTML=ebHighlight(iEl.innerText); });
+  box.querySelectorAll('.eb-buyeldo').forEach(btn=>btn.addEventListener('click', async e=>{
+    const u=uEl.value.trim().replace(/^@/,'');
+    if(!u){ stEl.textContent='⚠ Enter the username first'; return; }
+    const link=eldoLinks[Number(e.currentTarget.dataset.i)].url;
+    // Eldorado expects the @, matching its @johndoe placeholder.
+    await copyText(e.currentTarget, '@'+u);
+    e.currentTarget.innerHTML='✓ Username copied — opening…';
+    window.open(link, '_blank', 'noopener');
+    setTimeout(()=>{ stEl.textContent='Paste the username on the Eldorado page, then Pay now.'; }, 300);
+  }));
   const askBtn=box.querySelector('.eb-ask');
   const cpBtn=box.querySelector('.eb-copymsg');
   if(cpBtn) cpBtn.addEventListener('click', e=>{
