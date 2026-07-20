@@ -1021,10 +1021,10 @@ function ebMatchBundle(text){
   return best;
 }
 // ---- Outsourced / manual items ---------------------------------------------
-// The bot must never try to send these — big Sheckles (fulfilled elsewhere) and
-// gamepass items like Rainbow Carpet (done by hand) — but they still belong on
-// the buyer's receipt. Change the number to move the Sheckles cut-off.
-const OUTSOURCE_MIN_B = 5;
+// The bot must never try to send gamepass items like Rainbow Carpet (done by
+// hand) — but they still belong on the buyer's receipt. Sheckles are all bot-sent
+// now (no size-based outsourcing).
+const OUTSOURCE_MIN_B = 5;   // (legacy) retained for reference; no longer used for Sheckles
 const MANUAL_LABELS = ITEMS.filter(i=>i.manual).map(i=>i.label.toLowerCase());
 // Find the Eldorado checkout link for an outsourced line, if it's a gamepass we
 // have a link for. Matches the line ("Rainbow Carpet x1") against the item label.
@@ -1045,8 +1045,8 @@ function ebIsManual(line){
   return MANUAL_LABELS.some(l => t===l || t.includes(l));
 }
 function ebIsOutsourced(line){
-  const b = ebSheckB(line);
-  if(b !== null && b >= OUTSOURCE_MIN_B) return true;
+  // Only gamepass / manual items are outsourced now — all Sheckles are bot-sent
+  // (<1B on main, 1B+ on the Sheckles accounts).
   return ebIsManual(line);
 }
 function ebSplit(text){
