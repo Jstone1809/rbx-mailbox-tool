@@ -247,6 +247,11 @@
   .eb-buyeldo:hover{background:#ffc84d}
   .eb-buyeldo.done{background:var(--leaf);color:#08160c}
   .eb-eldo-hint{font-size:11.5px;color:var(--muted);text-align:center}
+  .cmd-lane{display:flex;align-items:center;gap:6px;margin:0 0 8px}
+  .cmd-lane-lbl{font-size:12px;color:var(--muted);margin-right:2px}
+  .cmd-lane-btn{background:var(--panel2,#1a2320);color:var(--muted);border:1px solid var(--line,#2a3a33);
+    border-radius:7px;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer}
+  .cmd-lane-btn.active{background:var(--leaf,#3ad07a);color:#08160c;border-color:var(--leaf,#3ad07a)}
   .eb-ask{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
     font-size:12px;font-weight:600;padding:6px 12px;margin-top:6px}
   .eb-ask:hover{color:var(--text);border-color:var(--leaf)}
@@ -284,6 +289,11 @@
     <div class="preview-head">
       <h2>🤖 Bot Console</h2>
       <div class="cmd-counts" id="cmdCounts"></div>
+    </div>
+    <div class="cmd-lane" id="cmdLaneRow">
+      <span class="cmd-lane-lbl">Run on:</span>
+      <button class="cmd-lane-btn active" type="button" data-lane="main">Main</button>
+      <button class="cmd-lane-btn" type="button" data-lane="sheckles">Sheckles</button>
     </div>
     <div class="cmd-grid" id="cmdGrid"></div>
     <pre class="cmd-out" id="cmdOut">Run a command to see the bot's reply here.</pre>
@@ -869,9 +879,21 @@ const CMDS = [
 ];
 let cmdPollMs=0, cmdPollTimer=null, cmdFastUntil=0;
 
+let cmdLane = 'main';    // which emulator the console targets
+function cmdInitLane(){
+  const row=document.getElementById('cmdLaneRow');
+  if(!row) return;
+  row.querySelectorAll('.cmd-lane-btn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      cmdLane=b.dataset.lane;
+      row.querySelectorAll('.cmd-lane-btn').forEach(x=>x.classList.toggle('active', x===b));
+    });
+  });
+}
 function cmdRenderButtons(){
   const g=document.getElementById('cmdGrid');
   if(g.childElementCount) return;
+  cmdInitLane();
   CMDS.forEach(d=>{
     const b=document.createElement('button');
     b.className='btn'+(d.danger?' danger':''); b.type='button'; b.textContent=d.l;
@@ -887,7 +909,7 @@ async function runCmd(cmd, btn){
   const lbl=btn.textContent; btn.disabled=true; btn.textContent='⏳ '+cmd;
   try{
     await fetch(`${RELAY.url}/cmd?key=${encodeURIComponent(RELAY.secret)}`,{
-      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cmd})});
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cmd, lane:cmdLane})});
     cmdFastUntil=Date.now()+150000;      // watch closely for ~2.5 min
     cmdSchedule(); cmdFetch();
   }catch(e){ document.getElementById('cmdOut').textContent='⚠ Network error sending '+cmd; }
