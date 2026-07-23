@@ -968,11 +968,29 @@ function ebExtractUser(notes){
   if(m && /[A-Za-z]/.test(m[1])) return m[1];
   return '';
 }
+// The personalisation note can cover SEVERAL line items at once, each introduced
+// by its own "Item ID: <id>". Return only the slice belonging to THIS line item.
+// Without this, a single-variation listing (no variation of its own) picks up a
+// DIFFERENT line's "Item=..." and the wrong item gets sent.
+function ebNoteSegmentFor(li, notes){
+  const n = String(notes||'');
+  if(!/item\s*id\s*:/i.test(n)) return n;        // single-item note — use it whole
+  const id = String(li.legacyItemId||'').trim();
+  // Split into "Item ID: <id> …" chunks and keep the one naming this line item.
+  const parts = n.split(/(?=item\s*id\s*:)/i);
+  if(id){
+    const mine = parts.find(p => p.replace(/\s+/g,'').includes('ItemID:'+id) ||
+                                 new RegExp('item\\s*id\\s*:\\s*'+id+'\\b','i').test(p));
+    if(mine) return mine;
+  }
+  return '';                                     // no segment for this line -> use its title
+}
 // What the buyer actually bought: the chosen variation if present, else the
-// "Item=..." value from the personalisation note, else fall back to the title.
+// "Item=..." value from THIS line's personalisation note, else fall back to the title.
 function ebItemSource(li, notes){
   if(li.variation && li.variation.trim()) return li.variation.trim();
-  const m = (notes||'').match(/item\s*=\s*(.+?)(?:\s+(?:texto|texte|testo|tekst|text)\s*:|$)/i);
+  const seg = ebNoteSegmentFor(li, notes);
+  const m = seg.match(/item\s*=\s*(.+?)(?:\s+(?:texto|texte|testo|tekst|text)\s*:|$)/i);
   if(m) return m[1].trim();
   return li.title||'';
 }
@@ -1212,8 +1230,21 @@ function ebBuildCard(o, st, skey){
   }
   if(st==='completed'){
     const disp=o.dispatch||'none';
+    const gp = Array.isArray(o.manualPending) ? o.manualPending : [];
     let block;
-    if(disp==='requested'){
+    if(gp.length){
+      // Bot part delivered; a gamepass still needs gifting by hand. The order is
+      // deliberately NOT dispatched until you confirm the gift.
+      const gpLinks = gp.map(l=>({line:l, url:ebEldoradoFor(l)})).filter(x=>x.url);
+      block=`<div class="eb-done">✓ Items delivered to the mailbox.</div>
+        <div class="eb-outsourced">🎁 Gift by hand: <b>${esc(gp.join(', '))}</b><br>
+          Buyer has been told it's coming. Dispatch is on hold until you confirm.</div>`
+        + (gpLinks.length?`<div class="eb-eldo">${gpLinks.map((x,i)=>
+            `<button class="btn eb-buyeldo" type="button" data-i="${i}">🛒 Buy ${esc(x.line)} on Eldorado</button>`).join('')}
+            <div class="eb-eldo-hint">Copies the username, opens the checkout — then paste into the field &amp; Pay now.</div></div>`:'')
+        + `<div class="ebay-actions"><button class="btn btn-send eb-gpdone" type="button">🎁 Gamepass gifted — dispatch</button>
+        <button class="btn btn-clear eb-hide" type="button">Hide</button></div>`;
+    }else if(disp==='requested'){
       block=`<div class="eb-done">✓ Completed — delivered.</div><div class="eb-processing">📦 Marking dispatched on eBay…</div>`;
     }else if(disp==='failed'){
       block=`<div class="eb-done">✓ Completed — delivered.</div>
@@ -1227,6 +1258,26 @@ function ebBuildCard(o, st, skey){
     }
     box.innerHTML=ebMetaHtml(o)+block+`<span class="eb-status"></span>`;
     const stEl=box.querySelector('.eb-status');
+    // Eldorado buy buttons on a gamepass-pending card
+    const gpList = Array.isArray(o.manualPending) ? o.manualPending : [];
+    const gpBuy = gpList.map(l=>({line:l, url:ebEldoradoFor(l)})).filter(x=>x.url);
+    box.querySelectorAll('.eb-buyeldo').forEach(btn=>btn.addEventListener('click', e=>{
+      const x = gpBuy[+e.currentTarget.dataset.i]; if(!x) return;
+      const u = ebExtractUser(o.notes) || (String(o.delivered||'').split('\n')[0]||'').replace(/^@/,'');
+      try{ navigator.clipboard.writeText('@'+u); }catch(err){}
+      window.open(x.url,'_blank');
+      stEl.textContent='📋 Username copied — paste it at checkout.';
+    }));
+    const gpBtn=box.querySelector('.eb-gpdone');
+    if(gpBtn) gpBtn.addEventListener('click', async e=>{
+      if(!confirm('Confirm the gamepass has been gifted? This marks the order dispatched on eBay.')) return;
+      e.target.disabled=true; stEl.textContent='⏳ Dispatching…';
+      try{
+        await fetch(`${RELAY.url}/ebay/gamepass-done?key=${encodeURIComponent(RELAY.secret)}`,{
+          method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId})});
+        ebayFetch();
+      }catch(err){ stEl.textContent='⚠ Network error'; e.target.disabled=false; }
+    });
     const dBtn=box.querySelector('.eb-dispatch');
     if(dBtn) dBtn.addEventListener('click', async e=>{
       e.target.disabled=true; stEl.textContent='⏳ Sending to eBay…';
