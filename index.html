@@ -956,15 +956,15 @@ function ebExtractUser(notes){
   if(!notes) return '';
   // eBay localises the personalisation label: Text (EN/DE), Texto (ES/PT),
   // Texte (FR), Testo (IT), Tekst (NL/PL). Longest first so "Texto" wins over "Text".
-  let m = notes.match(/\b(?:texto|texte|testo|tekst|text)\s*:\s*([A-Za-z0-9_]{3,20})/i);
+  let m = notes.match(/\b(?:texto|texte|testo|tekst|text)\s*:\s*([A-Za-z0-9_]{3,32})/i);
   if(m) return m[1];
-  m = notes.match(/@([A-Za-z0-9_]{3,20})/);
+  m = notes.match(/@([A-Za-z0-9_]{3,32})/);
   if(m) return m[1];
-  m = notes.match(/roblox\s*(?:user(?:name)?)?\s*[:\-]?\s*([A-Za-z0-9_]{3,20})/i);
+  m = notes.match(/roblox\s*(?:user(?:name)?)?\s*[:\-]?\s*([A-Za-z0-9_]{3,32})/i);
   if(m) return m[1];
   // Unknown language: the username is normally the LAST "label: value" in the note.
   // Require a letter so we never mistake an item/order number for a username.
-  m = notes.match(/:\s*([A-Za-z0-9_]{3,20})\s*$/);
+  m = notes.match(/:\s*([A-Za-z0-9_]{3,32})\s*$/);
   if(m && /[A-Za-z]/.test(m[1])) return m[1];
   return '';
 }
