@@ -440,7 +440,11 @@ const ITEMS = [
   {label:"Dragon's Breath + Moon Bloom Seed",              bundle:["Dragon's Breath Seed","Moon Bloom Seed"],                    qtyOptions:[1,3,5,10]},
   {label:"Dragon's Breath + Hypno Bloom Seed",             bundle:["Dragon's Breath Seed","Hypno Bloom Seed"],                   qtyOptions:[1,3,5,10]},
   {label:"Dragon's Breath + Moon Bloom + Hypno Bloom Seed",bundle:["Dragon's Breath Seed","Moon Bloom Seed","Hypno Bloom Seed"], qtyOptions:[1,3,5,10]},
-  {label:"Super Sprinkler + Super Watering Can",           bundle:["Super Sprinkler","Super Watering Can"],                      qtyOptions:[10,25,50,100,250,500,1000]}
+  {label:"Super Sprinkler + Super Watering Can",           bundle:["Super Sprinkler","Super Watering Can"],                      qtyOptions:[10,25,50,100,250,500,1000]},
+  {label:"Eclipse Bloom Set",                              bundle:["Sun Bloom Seed","Moon Bloom Seed","Super Watering Can","Super Sprinkler"], qtyOptions:[1,3,5,10]},
+  {label:"Star Fruit + Dragon's Breath Seed",              bundle:["Star Fruit Seed","Dragon's Breath Seed"],                    qtyOptions:[1,3,5,10]},
+  {label:"Sun Bloom + Moon Bloom Seed",                    bundle:["Sun Bloom Seed","Moon Bloom Seed"],                          qtyOptions:[1,3,5,10]},
+  {label:"All Super Seeds",                                bundle:["Star Fruit Seed","Dragon's Breath Seed","Sun Bloom Seed","Moon Bloom Seed","Hypno Bloom Seed"], qtyOptions:[1,3,5,10,25,50,100]}
 ];
 const QTY_OPTIONS  = ['1','2','3','5','10','20','25','50','100','250','500','1000'];
 
@@ -1037,7 +1041,24 @@ function ebMapTitle(title, qty){
 // return that bundle so we can expand it into every component. Prefers the
 // bundle with the most components (so the 3-item bundle beats the 2-item one).
 function ebMatchBundle(text){
-  const t=(text||'').toLowerCase();
+  const t=(text||'').toLowerCase().replace(/\s*x\s*\d+\s*$/,'').trim();
+  // Exact label match (the multi-variation dropdown gives just the bundle name).
+  for(const it of ITEMS){
+    if(it.bundle && it.label.toLowerCase()===t) return it;
+  }
+  // Label appears WITHIN the text — standalone listings wrap it, and the title may
+  // add "Bundle"/"Set" ("...| All Super Seeds Bundle | GAG2..."). Prefer the
+  // longest matching label so "All Super Seeds" isn't beaten by a shorter one.
+  let byName=null;
+  for(const it of ITEMS){
+    if(!it.bundle) continue;
+    const lbl=it.label.toLowerCase();
+    const alias=new RegExp('\\b'+lbl.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?:\\s+(?:bundle|set|pack))?\\b');
+    if(alias.test(t) && (!byName || lbl.length>byName.label.length)) byName=it;
+  }
+  if(byName) return byName;
+  // Otherwise: match by content — the variation lists the components
+  // (e.g. "Star Fruit + Dragon's Breath Seed").
   let best=null;
   for(const it of ITEMS){
     if(!it.bundle) continue;
@@ -1091,7 +1112,16 @@ function ebCompose(items, notes){
       src.split('+').forEach(part=>{ if(part.trim()) lines.push(ebMapTitle(part.trim(), li.qty)); });
     } else {
       const bundle = ebMatchBundle(src);
-      if(bundle) bundle.bundle.forEach(cl => lines.push(ebMapTitle(cl, li.qty)));  // named bundle, no per-item qty
+      if(bundle){
+        // A name-matched bundle may carry its quantity in the text ("All Super
+        // Seeds x25", or a title "...Bundle x3 | GAG2..."). Read the label and take
+        // the xN that follows it, else any xN, else the line quantity.
+        const lbl = bundle.label.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+        const after = src.toLowerCase().match(new RegExp(lbl+'(?:\\s+(?:bundle|set|pack))?\\s*x\\s*(\\d+)'));
+        const anyx = src.match(/x\s*(\d+)/i);
+        const bq = after ? Number(after[1]) : (anyx ? Number(anyx[1]) : li.qty);
+        bundle.bundle.forEach(cl => lines.push(ebMapTitle(cl, bq)));
+      }
       else lines.push(ebMapTitle(src, li.qty));
     }
   });
