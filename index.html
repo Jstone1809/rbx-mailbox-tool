@@ -847,6 +847,7 @@ async function syncItems(){
   const compact = ITEMS.map(i => {
     const o = i.bundle ? {label:i.label, bundle:i.bundle} : {label:i.label};
     if(i.manual) o.manual = true;
+    if(i.fall) o.fall = true;          // Fall Harvest -> routed to the dimension emulator
     return o;
   });
   try{
