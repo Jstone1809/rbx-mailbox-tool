@@ -441,6 +441,7 @@ const ITEMS = [
   {label:'Robin',               code:'Robin', max:20},
   {label:'Rocket Pop Seed',     code:'Rocket Pop', qtyOptions:[1,10,25,50,100,250,500,1000]},
   {label:'Sheckles (M)',        code:'SHECKLES', qtyOptions:[1,5,10,20,25,50,100,250,500,750,1000,5000,10000]},
+  {label:'Leaves (M)',          code:'LEAVES', fall:true, qtyOptions:[100,250,500,1000]},
   {label:'Star Fruit Seed',     code:'Star Fruit', max:20},
   {label:'Sun Bloom Seed',      code:'Sun Bloom', max:20},
   {label:'Sunflower Seed',      code:'Sunflower', max:20},
@@ -526,10 +527,11 @@ function expandRow(o){
 
 function pieceLine(label, qty, hl){
   const code = codeFor(label);
-  if(code === 'SHECKLES'){
+  if(code === 'SHECKLES' || code === 'LEAVES'){
+    const unit = code === 'LEAVES' ? 'Leaves' : 'Sheckles';
     const n = +qty;
     const sh = (isFinite(n) && n >= 1000) ? (n/1000)+'B' : qty+'M';
-    return hl ? `<span class="hl">${esc(sh)}</span> Sheckles` : `${sh} Sheckles`;
+    return hl ? `<span class="hl">${esc(sh)}</span> ${unit}` : `${sh} ${unit}`;
   }
   return hl ? `${esc(label)} x<span class="hl">${esc(qty)}</span>` : `${label} x${qty}`;
 }
@@ -568,7 +570,7 @@ function applyQtyConstraints(o){
   else if(vals.includes(cur)) keep = cur;
   else keep = vals[0];                       // jump to min (or 1) when current no longer fits
   // Sheckles presets show as 1M / 5M … 1B (value stays the millions number).
-  const sheckLabel = (it && it.code === 'SHECKLES')
+  const sheckLabel = (it && (it.code === 'SHECKLES' || it.code === 'LEAVES'))
     ? (v => { const n = +v; return n >= 1000 ? (n/1000) + 'B' : n + 'M'; })
     : null;
   o.qtySel.innerHTML = buildOptions(vals, keep === 'custom' ? null : keep, sheckLabel);
@@ -1080,6 +1082,13 @@ function ebMapTitle(title, qty){
     let mB = t.match(/([\d.]+)\s*b\b/), mM = t.match(/([\d.]+)\s*m\b/);
     if(mB){ const n=Math.round(parseFloat(mB[1])*lineQty*1000)/1000; return `${n}B Sheckles`; }
     if(mM){ const n=Math.round(parseFloat(mM[1])*lineQty*1000)/1000; return `${n}M Sheckles`; }
+  }
+  if(t.includes('leaves') || t.includes('leaf')){
+    // Leaves: the Fall Harvest currency — same maths as Sheckles, sent from the
+    // fall emulator. 1 Leaf = 1 Sheckle in fruit value.
+    let mB = t.match(/([\d.]+)\s*b\b/), mM = t.match(/([\d.]+)\s*m\b/);
+    if(mB){ const n=Math.round(parseFloat(mB[1])*lineQty*1000)/1000; return `${n}B Leaves`; }
+    if(mM){ const n=Math.round(parseFloat(mM[1])*lineQty*1000)/1000; return `${n}M Leaves`; }
   }
   // Pick the best matching item. A FULL label match ("ghost pepper pack") must beat
   // a base match ("ghost pepper" from "Ghost Pepper Seed") even when both are the
