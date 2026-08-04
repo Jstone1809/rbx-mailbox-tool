@@ -459,6 +459,14 @@ const ITEMS = [
   {label:'Turkey',              code:'Turkey', fall:true, max:20},
   {label:'Hedgehog',            code:'Hedgehog', fall:true, max:20},
   {label:'Dog',                 code:'Dog', fall:true, max:20},
+  {label:'Shadow Dragon',       code:'Shadow Dragon', fall:true, max:20},
+  {label:'Big Wolf',            code:'Big Wolf', fall:true, max:20},
+  {label:'Big Fox',             code:'Big Fox', fall:true, max:20},
+  {label:'Big Swan',            code:'Big Swan', fall:true, max:20},
+  {label:'Big Squirrel',        code:'Big Squirrel', fall:true, max:20},
+  {label:'Big Turkey',          code:'Big Turkey', fall:true, max:20},
+  {label:'Big Hedgehog',        code:'Big Hedgehog', fall:true, max:20},
+  {label:'Big Dog',             code:'Big Dog', fall:true, max:20},
   // Fall Harvest seeds (also fall lane).
   {label:'Maple Mushroom Seed', code:'Maple Mushroom', fall:true, qtyOptions:[100,500,1000]},
   {label:'Maple Bamboo Seed',   code:'Maple Bamboo', fall:true, qtyOptions:[100,500,1000,5000]},
@@ -467,6 +475,13 @@ const ITEMS = [
   {label:'Maple Acorn Seed',    code:'Maple Acorn', fall:true, qtyOptions:[1,10,50,100]},
   {label:'Atlantic Giant Pumpkin Seed', code:'Atlantic Giant Pumpkin', fall:true, qtyOptions:[1,10,50,100]},
   {label:'Maple Dragon Fruit Seed', code:'Maple Dragon Fruit', fall:true, qtyOptions:[1,10,50,100]},
+  // Maple Rainbow/Gold: the eBay label is distinct (routes to fall + matches the
+  // variation), but in-game on the fall channel these are claimed as plain "Rainbow
+  // Seed"/"Gold Seed" — so the delivery CODE is the base name. No clash with the
+  // main-lane Gold/Rainbow because those aren't fall:true and send from a different
+  // emulator whose inventory doesn't hold these.
+  {label:'Maple Rainbow Seed', code:'Rainbow Seed', fall:true, qtyOptions:[10,100,500,1000]},
+  {label:'Maple Gold Seed',    code:'Gold Seed', fall:true, qtyOptions:[10,100,500,1000]},
   {label:'Super Syrup Sprinkler',     code:'Super Syrup Sprinkler', fall:true, qtyOptions:[1,10,25,50,100,250,500,1000]},
   {label:'Super Syrup Watering Can',  code:'Super Syrup Watering Can', fall:true, qtyOptions:[1,10,25,50,100,250,500,1000]},
   // Bundles (kept last so they sort below normal items in the dropdown).
