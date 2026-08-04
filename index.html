@@ -1458,6 +1458,7 @@ function ebBuildCard(o, st, skey){
   const nothingToSend = outsourced.length>0 && sp.deliver.length===0;
   box.innerHTML = ebMetaHtml(o)
     + (o.holdDispatch && (o.sheckOutsourcedB>0) ?`<div class="eb-holddispatch">⏸️ Sent 10B via the Sheckles lane. You still owe <b>${esc(String(o.sheckOutsourcedB))}B Sheckles</b> — send that manually, then click <b>Mark dispatched</b> below. (Dispatch is held until you do.)</div>`:'')
+    + (o.holdDispatch && (o.leavesOutsourcedM>0) ?`<div class="eb-holddispatch">⏸️ ${o.leavesFullyOutsourced?'This Leaves order is fully outsourced':'Sent 100M via the fall lane'} — you still owe <b>${esc(o.leavesOutsourcedM>=1000?(Math.round(o.leavesOutsourcedM/10)/100)+'B':o.leavesOutsourcedM+'M')} Leaves</b>. Send it manually, then click <b>Mark dispatched</b> below. (Dispatch is held until you do.)</div>`:'')
     + (o.giftCapped?`<div class="eb-giftcap">🎁 The sending account hit its limit of 5 gifts/day to @${esc(user||'buyer')}. Send the rest from a DIFFERENT lane/account (each account gets its own 5), or wait until tomorrow.</div>`:'')
     + (isFail?`<div class="eb-fail">⚠ Failed: ${esc(String(o.message||'delivery did not complete'))}</div>`:'')
     + (hasRem?`<div class="eb-remnote">↩ Still to send: ${esc(rem.remaining.join(', '))}</div>`:'')
