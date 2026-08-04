@@ -263,6 +263,8 @@
     border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px;line-height:1.4}
   .eb-giftcap{background:#2a1c3a;border:1px solid #9b6bd8;color:#d7b8ff;
     border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px;line-height:1.4}
+  .eb-holddispatch{background:#10263a;border:1px solid #4a90d8;color:#a9d4ff;
+    border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px;line-height:1.4}
   .eb-copymsg.needs-send{color:#ffd77a;border-color:#b8860b;background:#2a2410;font-weight:600}
 </style>
 </head>
@@ -1280,7 +1282,7 @@ function ebayRender(orders){
     seen.add(String(o.orderId));
     const st=o.status||'new';
     const stuckTag = (st==='processing' && (!o.processingAt || Date.now()-o.processingAt>180000)) ? ':stuck' : '';
-    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + stuckTag + (o.confirmFailed?':cf':'') + (o.giftCapped?':gc':'') + ':r'+ebReplyList(o).join('|').length;
+    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + stuckTag + (o.confirmFailed?':cf':'') + (o.giftCapped?':gc':'') + (o.holdDispatch?':hd':'') + ':r'+ebReplyList(o).join('|').length;
     const existing=document.getElementById(ebIdSafe(o.orderId));
     if(existing && existing.dataset.status===skey) return;   // unchanged — leave it (keeps typed input)
     const el=ebBuildCard(o, st, skey);
@@ -1443,6 +1445,7 @@ function ebBuildCard(o, st, skey){
   const deliverText = sp.deliver.join('\n');     // what the bot actually sends
   const nothingToSend = outsourced.length>0 && sp.deliver.length===0;
   box.innerHTML = ebMetaHtml(o)
+    + (o.holdDispatch && (o.sheckOutsourcedB>0) ?`<div class="eb-holddispatch">⏸️ Sent 10B via the Sheckles lane. You still owe <b>${esc(String(o.sheckOutsourcedB))}B Sheckles</b> — send that manually, then click <b>Mark dispatched</b> below. (Dispatch is held until you do.)</div>`:'')
     + (o.giftCapped?`<div class="eb-giftcap">🎁 The sending account hit its limit of 5 gifts/day to @${esc(user||'buyer')}. Send the rest from a DIFFERENT lane/account (each account gets its own 5), or wait until tomorrow.</div>`:'')
     + (isFail?`<div class="eb-fail">⚠ Failed: ${esc(String(o.message||'delivery did not complete'))}</div>`:'')
     + (hasRem?`<div class="eb-remnote">↩ Still to send: ${esc(rem.remaining.join(', '))}</div>`:'')
