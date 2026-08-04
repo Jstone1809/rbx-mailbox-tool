@@ -1347,6 +1347,16 @@ function orderCompleteMessage(user, itemLines, fast){
     msg += '\n\nOrder Complete:\n' + items.join('\n');
     if(user && user!=='user_insert') msg += `\nSent to @${user}`;
   }
+  // Sheckles/Leaves are delivered as crops the buyer sells in-game for the currency.
+  const low = items.join('\n').toLowerCase();
+  const hasSheck = low.includes('sheckle');
+  const hasLeaves = low.includes('leaves') || low.includes('leaf');
+  if(hasSheck || hasLeaves){
+    const what = (hasSheck && hasLeaves) ? 'Sheckles and Leaves' : (hasLeaves ? 'Leaves' : 'Sheckles');
+    msg += `\n\nPlease note: your ${what} have been delivered as CROPS in your in-game mailbox. `
+      + `Claim them, then SELL the crops in-game to receive your ${what}. `
+      + `The sale value adds up to the amount you ordered. \ud83c\udf31`;
+  }
   return msg;
 }
 function ebBuiltMessage(o, user, itemsText){
