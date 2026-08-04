@@ -261,6 +261,8 @@
   .eb-copymsg.done{color:var(--leaf);border-color:var(--leaf)}
   .eb-confirm-warn{background:#3a2a10;border:1px solid #b8860b;color:#ffd77a;
     border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px;line-height:1.4}
+  .eb-giftcap{background:#2a1c3a;border:1px solid #9b6bd8;color:#d7b8ff;
+    border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px;line-height:1.4}
   .eb-copymsg.needs-send{color:#ffd77a;border-color:#b8860b;background:#2a2410;font-weight:600}
 </style>
 </head>
@@ -281,6 +283,12 @@
           <span class="auto-dot"></span>
           <span>🤖 Auto-send</span>
           <span class="auto-state" id="autoState">OFF</span>
+        </label>
+        <label class="auto-toggle" title="When ON, pre-sale 'Hi' messages are answered every 5 min (instead of every 30). Turn on when you're away so buyers aren't left waiting.">
+          <input type="checkbox" id="awayMode">
+          <span class="auto-dot"></span>
+          <span>🚶 Away</span>
+          <span class="auto-state" id="awayState">OFF</span>
         </label>
         <button class="btn btn-copy" id="ebayRefresh" type="button">↻ Refresh</button>
       </div>
@@ -902,6 +910,22 @@ document.getElementById('autoSend').addEventListener('change', async e=>{
     if(on) syncItems();
   }catch(err){ autoRender(!on); }
 });
+function awayRender(on){
+  const cb=document.getElementById('awayMode');
+  if(!cb) return;
+  cb.checked=!!on;
+  cb.closest('.auto-toggle').classList.toggle('on', !!on);
+  const s=document.getElementById('awayState');
+  if(s) s.textContent = on ? 'ON' : 'OFF';
+}
+document.getElementById('awayMode').addEventListener('change', async e=>{
+  const on=e.target.checked;
+  awayRender(on);
+  try{
+    await fetch(`${RELAY.url}/away?key=${encodeURIComponent(RELAY.secret)}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({on})});
+  }catch(err){ awayRender(!on); }
+});
 
 // ===== Bot Console =========================================================
 // Buttons post a command onto the same relay queue the listener already polls,
@@ -979,7 +1003,7 @@ async function cmdFetch(){
   try{
     const res=await fetch(`${RELAY.url}/state?key=${encodeURIComponent(RELAY.secret)}`);
     const d=await res.json();
-    cmdRenderCounts(d.counts); cmdRenderLog(d.log); autoRender(d.auto);
+    cmdRenderCounts(d.counts); cmdRenderLog(d.log); autoRender(d.auto); awayRender(d.away);
   }catch(e){ /* keep last view */ }
 }
 function cmdSchedule(){
@@ -1232,7 +1256,7 @@ function ebayRender(orders){
     seen.add(String(o.orderId));
     const st=o.status||'new';
     const stuckTag = (st==='processing' && (!o.processingAt || Date.now()-o.processingAt>180000)) ? ':stuck' : '';
-    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + stuckTag + (o.confirmFailed?':cf':'') + ':r'+ebReplyList(o).join('|').length;
+    const skey = st + (st==='completed' ? ':'+(o.dispatch||'none') : '') + stuckTag + (o.confirmFailed?':cf':'') + (o.giftCapped?':gc':'') + ':r'+ebReplyList(o).join('|').length;
     const existing=document.getElementById(ebIdSafe(o.orderId));
     if(existing && existing.dataset.status===skey) return;   // unchanged — leave it (keeps typed input)
     const el=ebBuildCard(o, st, skey);
@@ -1395,6 +1419,7 @@ function ebBuildCard(o, st, skey){
   const deliverText = sp.deliver.join('\n');     // what the bot actually sends
   const nothingToSend = outsourced.length>0 && sp.deliver.length===0;
   box.innerHTML = ebMetaHtml(o)
+    + (o.giftCapped?`<div class="eb-giftcap">🎁 The sending account hit its limit of 5 gifts/day to @${esc(user||'buyer')}. Send the rest from a DIFFERENT lane/account (each account gets its own 5), or wait until tomorrow.</div>`:'')
     + (isFail?`<div class="eb-fail">⚠ Failed: ${esc(String(o.message||'delivery did not complete'))}</div>`:'')
     + (hasRem?`<div class="eb-remnote">↩ Still to send: ${esc(rem.remaining.join(', '))}</div>`:'')
     + (outsourced.length?`<div class="eb-outsourced">⚡ Outsourced — the bot will NOT send: <b>${esc(outsourced.join(', '))}</b></div>`:'')
