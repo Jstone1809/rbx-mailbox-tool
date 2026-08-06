@@ -1357,8 +1357,10 @@ function orderCompleteMessage(user, itemLines, fast){
       + `Claim them, then SELL the crops in-game to receive your ${what}. `
       + `The sale value adds up to the amount you ordered. \ud83c\udf31`;
   }
-  // Eclipse Bloom Set: include the craft-it-yourself instructions.
-  const isEclipse = low.includes('eclipse bloom set') || (low.includes('sun bloom') && low.includes('moon bloom'));
+  // Eclipse Bloom Set: include the craft-it-yourself instructions — ONLY when the
+  // set was actually ordered (its name appears), never just because both blooms are
+  // present (other bundles like "All Super Seeds" also contain both blooms).
+  const isEclipse = low.includes('eclipse bloom set');
   if(isEclipse){
     msg += '\n\n\ud83c\udf17 Eclipse Bloom Set — how to craft your Eclipse Bloom:\n'
       + '1. Plant the Sun Bloom and the Moon Bloom.\n'
