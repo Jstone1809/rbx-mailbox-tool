@@ -490,6 +490,18 @@ const ITEMS = [
   {label:'Maple Acorn Seed',    code:'Maple Acorn', fall:true, qtyOptions:[1,10,50,100]},
   {label:'Atlantic Giant Pumpkin Seed', code:'Atlantic Giant Pumpkin', fall:true, qtyOptions:[1,10,50,100]},
   {label:'Maple Dragon Fruit Seed', code:'Maple Dragon Fruit', fall:true, qtyOptions:[1,10,50,100]},
+  // New fall seeds. The "Maple" ones share a name with existing MAIN-lane seeds
+  // (Venom Spitter / Poison Apple / Pomegranate / Sunflower), so the label keeps the
+  // Maple prefix to stay distinct and route to the fall lane. The code is the Maple
+  // name; the Lua also falls back to the un-prefixed name when looking up the fall
+  // emulator's inventory, so this works whichever way the game names them in-game.
+  {label:'Romanesco Seed',      code:'Romanesco', fall:true, qtyOptions:[1,3,5,10]},
+  {label:'Plum Seed',           code:'Plum', fall:true, qtyOptions:[1,3,5,10]},
+  {label:'Honeysuckle Seed',    code:'Honeysuckle', fall:true, qtyOptions:[1,3,5,10]},
+  {label:'Maple Venom Spitter Seed', code:'Maple Venom Spitter', fall:true, qtyOptions:[1,3,5,10]},
+  {label:'Maple Sunflower Seed', code:'Maple Sunflower', fall:true, qtyOptions:[1,3,5,10]},
+  {label:'Maple Poison Apple Seed', code:'Maple Poison Apple', fall:true, qtyOptions:[1,10,50,100]},
+  {label:'Maple Pomegranate Seed', code:'Maple Pomegranate', fall:true, qtyOptions:[1,10,50,100]},
   // Maple Rainbow/Gold: the eBay label is distinct (routes to fall + matches the
   // variation), but in-game on the fall channel these are claimed as plain "Rainbow
   // Seed"/"Gold Seed" — so the delivery CODE is the base name. No clash with the
