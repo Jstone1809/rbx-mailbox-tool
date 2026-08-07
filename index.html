@@ -467,21 +467,28 @@ const ITEMS = [
   {label:'Venom Spitter Seed',  code:'Venom Spitter', max:20},
   {label:'Venus Fly Trap Seed', code:'Venus Fly Trap', max:20},
   // Fall Harvest pets — sent only from the dimension-parked emulator (lane=fall).
-  {label:'Wolf',                code:'Wolf', fall:true, max:20},
-  {label:'Fox',                 code:'Fox', fall:true, max:20},
-  {label:'Swan',                code:'Swan', fall:true, max:20},
-  {label:'Squirrel',            code:'Squirrel', fall:true, max:20},
-  {label:'Turkey',              code:'Turkey', fall:true, max:20},
-  {label:'Hedgehog',            code:'Hedgehog', fall:true, max:20},
-  {label:'Dog',                 code:'Dog', fall:true, max:20},
-  {label:'Shadow Dragon',       code:'Shadow Dragon', fall:true, max:20},
+  {label:'Wolf',                code:'Wolf', fall:true, qtyOptions:[1,3,5]},
+  {label:'Fox',                 code:'Fox', fall:true, qtyOptions:[1,3,5]},
+  {label:'Swan',                code:'Swan', fall:true, qtyOptions:[1,3,5]},
+  {label:'Squirrel',            code:'Squirrel', fall:true, qtyOptions:[1,3,5]},
+  {label:'Turkey',              code:'Turkey', fall:true, qtyOptions:[1,3,5]},
+  {label:'Hedgehog',            code:'Hedgehog', fall:true, qtyOptions:[1,3,5]},
+  {label:'Dog',                 code:'Dog', fall:true, qtyOptions:[1,3,5]},
+  {label:'Shadow Dragon',       code:'Shadow Dragon', fall:true, qtyOptions:[1,3,5,10]},
   {label:'Big Wolf',            code:'Big Wolf', fall:true, max:20},
+  {label:'Mega Wolf',         code:'Mega Wolf', fall:true, max:20},
   {label:'Big Fox',             code:'Big Fox', fall:true, max:20},
+  {label:'Mega Fox',            code:'Mega Fox', fall:true, max:20},
   {label:'Big Swan',            code:'Big Swan', fall:true, max:20},
+  {label:'Mega Swan',         code:'Mega Swan', fall:true, max:20},
   {label:'Big Squirrel',        code:'Big Squirrel', fall:true, max:20},
+  {label:'Mega Squirrel',     code:'Mega Squirrel', fall:true, max:20},
   {label:'Big Turkey',          code:'Big Turkey', fall:true, max:20},
+  {label:'Mega Turkey',       code:'Mega Turkey', fall:true, max:20},
   {label:'Big Hedgehog',        code:'Big Hedgehog', fall:true, max:20},
+  {label:'Mega Hedgehog',     code:'Mega Hedgehog', fall:true, max:20},
   {label:'Big Dog',             code:'Big Dog', fall:true, max:20},
+  {label:'Mega Dog',          code:'Mega Dog', fall:true, max:20},
   // Fall Harvest seeds (also fall lane).
   {label:'Maple Mushroom Seed', code:'Maple Mushroom', fall:true, qtyOptions:[100,500,1000]},
   {label:'Maple Bamboo Seed',   code:'Maple Bamboo', fall:true, qtyOptions:[100,500,1000,5000]},
@@ -1351,10 +1358,22 @@ const EB_MSG_TAIL_SLOW = 'Have a great day!';
 // One shared builder so the manual copy buttons and the eBay cards always produce
 // the exact same message the bot sends.
 function orderCompleteMessage(user, itemLines, fast){
-  let msg = 'Thanks for your order! Your item(s) have been sent to your mailbox by your garden '
-    + '\u2014 please open and claim \ud83d\ude42 ' + (fast?EB_MSG_TAIL_FAST:EB_MSG_TAIL_SLOW);
   const items = (itemLines||[]).map(s=>String(s).trim())
     .filter(s=>s && !s.startsWith('#') && !/item_insert/i.test(s));
+  // Gamepasses are gifted straight into the in-game inventory, never the mailbox.
+  const GAMEPASS = ['rainbow carpet','vine wrapper','power hose','grappling hook'];
+  const baseName = s => s.replace(/\s*x\s*\d+\s*$/i,'').trim().toLowerCase();
+  const gp = items.filter(s=>GAMEPASS.includes(baseName(s)));
+  const mail = items.filter(s=>!GAMEPASS.includes(baseName(s)));
+  let msg;
+  if(gp.length && !mail.length){
+    msg = 'Thanks for your order! Your gamepass has been gifted to you \u2014 it\u2019s added directly '
+      + 'to your inventory in-game, so it won\u2019t appear in your mailbox. You may need to rejoin '
+      + 'or restart the game to see it. If you could leave a good review it would be amazing \u263a\ufe0f';
+  } else {
+    msg = 'Thanks for your order! Your item(s) have been sent to your mailbox by your garden '
+      + '\u2014 please open and claim \ud83d\ude42 ' + (fast?EB_MSG_TAIL_FAST:EB_MSG_TAIL_SLOW);
+  }
   if(items.length){
     msg += '\n\nOrder Complete:\n' + items.join('\n');
     if(user && user!=='user_insert') msg += `\nSent to @${user}`;
@@ -1379,6 +1398,14 @@ function orderCompleteMessage(user, itemLines, fast){
       + '2. Use the Super Sprinkler and Super Watering Can on them to grow them instantly.\n'
       + '3. Using a trowel, move one plant on top of the other \u2014 you\u2019ll then get the option '
       + 'to merge them into the Eclipse Bloom. \ud83c\udf31';
+  }
+  // Mixed order: the opener covered the mailbox items, so call out the gamepasses.
+  if(gp.length && mail.length){
+    const names = gp.map(s=>s.replace(/\s*x\s*\d+\s*$/i,'').trim()).join(', ');
+    const many = gp.length>1;
+    msg += `\n\nPlease note: ${names} ${many?'are gamepasses':'is a gamepass'} \u2014 `
+      + `${many?'they have':'it has'} been gifted directly to your in-game inventory rather than `
+      + `your mailbox. You may need to rejoin or restart the game to see ${many?'them':'it'}.`;
   }
   return msg;
 }
@@ -1416,16 +1443,25 @@ function ebBuildCard(o, st, skey){
     const gp = Array.isArray(o.manualPending) ? o.manualPending : [];
     let block;
     if(gp.length){
-      // Bot part delivered; a gamepass still needs gifting by hand. The order is
-      // deliberately NOT dispatched until you confirm the gift.
+      // Bot part delivered; something still needs doing by hand — either a gamepass
+      // to gift, or an outsourced Sheckles/Leaves remainder to send. The order is
+      // deliberately NOT dispatched until you confirm. Word it for what's actually
+      // pending, so a Leaves order doesn't say "gamepass".
+      const isCur = s => /\b(sheckles|leaves|leaf)\b/i.test(String(s));
+      const curOnly = gp.every(isCur);
+      const gpOnly  = gp.every(s=>!isCur(s));
+      const doLabel = curOnly ? '💰 Sent manually — dispatch'
+                    : gpOnly  ? '🎁 Gamepass gifted — dispatch'
+                              : '📦 Outsourced order done — dispatch';
+      const headLabel = curOnly ? '💰 Send by hand' : gpOnly ? '🎁 Gift by hand' : '📦 Complete by hand';
       const gpLinks = gp.map(l=>({line:l, url:ebEldoradoFor(l)})).filter(x=>x.url);
       block=`<div class="eb-done">✓ Items delivered to the mailbox.</div>
-        <div class="eb-outsourced">🎁 Gift by hand: <b>${esc(gp.join(', '))}</b><br>
+        <div class="eb-outsourced">${headLabel}: <b>${esc(gp.join(', '))}</b><br>
           Buyer has been told it's coming. Dispatch is on hold until you confirm.</div>`
         + (gpLinks.length?`<div class="eb-eldo">${gpLinks.map((x,i)=>
             `<button class="btn eb-buyeldo" type="button" data-i="${i}">🛒 Buy ${esc(x.line)} on Eldorado</button>`).join('')}
             <div class="eb-eldo-hint">Copies the username, opens the checkout — then paste into the field &amp; Pay now.</div></div>`:'')
-        + `<div class="ebay-actions"><button class="btn btn-send eb-gpdone" type="button">🎁 Gamepass gifted — dispatch</button>
+        + `<div class="ebay-actions"><button class="btn btn-send eb-gpdone" type="button" data-kind="${curOnly?'currency':(gpOnly?'gamepass':'mixed')}">${doLabel}</button>
         <button class="btn btn-clear eb-hide" type="button">Hide</button></div>`;
     }else if(disp==='requested'){
       block=`<div class="eb-done">✓ Completed — delivered.</div><div class="eb-processing">📦 Marking dispatched on eBay…</div>`;
@@ -1453,7 +1489,13 @@ function ebBuildCard(o, st, skey){
     }));
     const gpBtn=box.querySelector('.eb-gpdone');
     if(gpBtn) gpBtn.addEventListener('click', async e=>{
-      if(!confirm('Confirm the gamepass has been gifted? This marks the order dispatched on eBay.')) return;
+      const kind = e.target.dataset.kind || 'gamepass';
+      const q = kind==='currency'
+        ? 'Confirm you have sent the outstanding amount manually? This marks the order dispatched on eBay.'
+        : kind==='mixed'
+        ? 'Confirm the outsourced part of this order is complete? This marks the order dispatched on eBay.'
+        : 'Confirm the gamepass has been gifted? This marks the order dispatched on eBay.';
+      if(!confirm(q)) return;
       e.target.disabled=true; stEl.textContent='⏳ Dispatching…';
       try{
         await fetch(`${RELAY.url}/ebay/gamepass-done?key=${encodeURIComponent(RELAY.secret)}`,{
