@@ -105,6 +105,8 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 
 /* tables --------------------------------------------------------------- */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tbl-scroll{max-height:560px;overflow-y:auto}
+.tbl-scroll thead th{position:sticky;top:0;background:var(--panel);z-index:1}
 table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
 th,td{padding:9px 11px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
 th:first-child,td:first-child{text-align:left}
