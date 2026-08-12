@@ -26,7 +26,7 @@
 
   <div class="card">
     <h2>Where the money goes</h2>
-    <p class="note">Each bar is one day's revenue split into its parts &mdash; they sum to the whole, which a line chart could not show.</p>
+    <p class="note">Each bar is one day's revenue split into its parts &mdash; they sum to the whole, which a line chart could not show. <b>Click any day for the item-by-item breakdown.</b></p>
     <div class="legend">
       <span><i style="background:var(--s1)"></i>Profit</span>
       <span><i style="background:var(--s3)"></i>Item cost</span>
@@ -51,6 +51,8 @@
     <figure><svg id="chartMargin" role="img" aria-label="Profit margin per day"></svg></figure>
   </div>
 
+  <div id="detail"></div>
+
   <div class="card">
     <h2>By game</h2>
     <p class="note">Revenue and item cost per game over the selected period.</p>
@@ -66,11 +68,57 @@
 </div>
 
 <script type="module">
-import { lineChart, stackedBars, gbp, num, shortDate } from './charts.js';
+import { lineChart, stackedBars, markSelected, gbp, num, shortDate } from './charts.js';
 
 const SRC = 'data/pnl_data.json';
 const RANGES = [{d:7,l:'7 days'},{d:14,l:'14 days'},{d:30,l:'30 days'},{d:0,l:'All'}];
-let DATA = null, range = 14;
+let DATA = null, range = 14, picked = null;
+
+/* Ad spend is a campaign-level cost eBay never attributes to an item, so the
+   per-item rows carry revenue and item cost only. The day's ad spend is shown
+   as its own line rather than spread across items, which would invent a
+   precision the data does not have. */
+function showDay(date){
+  picked = date;
+  const host = document.getElementById('detail');
+  const rows = (DATA.items||[]).filter(i=>i.date===date)
+                               .sort((a,b)=>(b.revenue-b.cogs)-(a.revenue-a.cogs));
+  const d = (DATA.days||[]).find(x=>x.date===date);
+  if(!rows.length || !d){ host.innerHTML=''; return; }
+
+  const rev=rows.reduce((a,r)=>a+r.revenue,0), cogs=rows.reduce((a,r)=>a+r.cogs,0);
+  const gross=rev-cogs, net=gross-d.ads;
+
+  host.innerHTML = `<div class="card" id="detailCard">
+    <h2>${new Date(date+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}
+      <button id="closeDetail" style="float:right;font:inherit;font-size:12px;background:none;
+        border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:4px 12px;cursor:pointer">close</button></h2>
+    <p class="note">${rows.length} item${rows.length===1?'':'s'} sold across ${num(d.orders)} order${d.orders===1?'':'s'}.
+      Sorted by gross profit. Ad spend is a campaign cost, so it is not split across items.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Item</th><th>Game</th><th>Units</th><th>Sold at</th><th>Revenue</th><th>Cost</th><th>Gross</th><th>Margin</th></tr></thead>
+      <tbody>${rows.map(r=>{
+        const g=r.revenue-r.cogs, m=r.revenue?g/r.revenue*100:0;
+        return `<tr><td>${r.item.length>44?r.item.slice(0,44)+'…':r.item}${r.costed?'':' <span class="pill bad">no cost</span>'}</td>
+          <td><span class="pill">${r.game}</span></td><td>${num(r.units)}</td><td>${gbp(r.sold_at)}</td>
+          <td>${gbp(r.revenue)}</td><td>${gbp(r.cogs)}</td>
+          <td class="${g>0?'good':'bad'}">${gbp(g)}</td>
+          <td class="${m>=40?'good':(m<15?'bad':'')}">${m.toFixed(1)}%</td></tr>`;}).join('')}
+      </tbody>
+      <tfoot>
+        <tr><td colspan="4">Totals</td><td>${gbp(rev)}</td><td>${gbp(cogs)}</td>
+            <td class="${gross>0?'good':'bad'}">${gbp(gross)}</td><td>${rev?(gross/rev*100).toFixed(1):'0.0'}%</td></tr>
+        <tr><td colspan="6">Ad spend for the day${d.has_ads?'':' (no data)'}</td>
+            <td colspan="2">−${gbp(d.ads)}</td></tr>
+        <tr><td colspan="6">Net profit</td>
+            <td colspan="2" class="${net>0?'good':'bad'}">${gbp(net)}</td></tr>
+      </tfoot></table></div></div>`;
+
+  document.getElementById('closeDetail').onclick = () => {
+    picked = null; host.innerHTML = ''; render();
+  };
+  document.getElementById('detailCard').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
 
 const inRange = days => {
   if(!range || !days.length) return days;
@@ -107,19 +155,19 @@ function render(){
     {name:'Profit',    color:'var(--s1)', get:d=>mProfit.get(d)},
     {name:'Item cost', color:'var(--s3)', get:d=>mCogs.get(d)},
     {name:'Ad spend',  color:'var(--s2)', get:d=>mAds.get(d)},
-  ], {axis:v=>'£'+Math.round(v), label:v=>gbp(v)}, {h:280});
+  ], {axis:v=>'£'+Math.round(v), label:v=>gbp(v)}, {h:280, onPick:showDay});
 
   const mRev = new Map(days.map(d=>[d.date, d.revenue]));
   const mPr  = new Map(days.map(d=>[d.date, profitOf(d)]));
   lineChart(document.getElementById('chartMoney'), D, [
     {name:'Revenue', color:'var(--s2)', get:d=>mRev.get(d)},
     {name:'Profit',  color:'var(--s1)', get:d=>mPr.get(d)},
-  ], {axis:v=>'£'+Math.round(v), label:v=>gbp(v)});
+  ], {axis:v=>'£'+Math.round(v), label:v=>gbp(v)}, {onPick:showDay});
 
   const mMar = new Map(days.map(d=>[d.date, d.revenue ? profitOf(d)/d.revenue*100 : 0]));
   lineChart(document.getElementById('chartMargin'), D,
     [{name:'Margin', color:'var(--s1)', get:d=>mMar.get(d)}],
-    {axis:v=>v.toFixed(0)+'%', label:v=>v.toFixed(1)+'%'});
+    {axis:v=>v.toFixed(0)+'%', label:v=>v.toFixed(1)+'%'}, {onPick:showDay});
 
   const games = (DATA.games || []).filter(g=>g.revenue>0);
   document.getElementById('byGame').innerHTML =
@@ -133,10 +181,19 @@ function render(){
   document.getElementById('byDay').innerHTML =
     `<thead><tr><th>Date</th><th>Orders</th><th>Units</th><th>Revenue</th><th>Cost</th><th>Ads</th><th>Profit</th><th>Margin</th></tr></thead><tbody>`+
     days.slice().reverse().map(d=>{const p=profitOf(d), m=d.revenue?p/d.revenue*100:0;
-      return `<tr><td>${shortDate(d.date)}${d.has_ads?'':' *'}</td><td>${num(d.orders)}</td>
+      return `<tr data-date="${d.date}" style="cursor:pointer" title="click for the breakdown">
+        <td>${shortDate(d.date)}${d.has_ads?'':' *'}</td><td>${num(d.orders)}</td>
         <td>${num(d.units)}</td><td>${gbp(d.revenue)}</td><td>${gbp(d.cogs)}</td>
         <td>${gbp(d.ads)}</td><td class="${p>0?'good':'bad'}">${gbp(p)}</td>
         <td>${m.toFixed(1)}%</td></tr>`;}).join('')+`</tbody>`;
+
+  // keep the charts and the open panel pointing at the same day
+  if(picked && D.includes(picked)){
+    ['chartStack','chartMoney','chartMargin'].forEach(id=>
+      markSelected(document.getElementById(id), D, picked));
+  } else if(picked){
+    picked = null; document.getElementById('detail').innerHTML = '';
+  }
 
   const noAd = days.filter(d=>!d.has_ads).length;
   const notices = [];
@@ -163,6 +220,13 @@ function render(){
   document.getElementById('updated').textContent =
     DATA.generated ? 'Generated ' + DATA.generated.replace('T',' ').replace('Z',' UTC') : '';
 }
+
+// Delegated once, not per render — re-binding inside render() would stack a
+// duplicate listener every time the range changed.
+document.getElementById('byDay').addEventListener('click', e=>{
+  const tr = e.target.closest('tr[data-date]');
+  if(tr) showDay(tr.dataset.date);
+});
 
 document.getElementById('ranges').innerHTML = RANGES.map(r=>
   `<button data-d="${r.d}" aria-pressed="${r.d===range}">${r.l}</button>`).join('');
