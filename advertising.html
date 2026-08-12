@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Advertising Dashboard</title>
+<style>
+:root{
+  --page:#f9f9f7; --surface:#fcfcfb; --line:#e5e5e1;
+  --ink:#1a1a19; --ink-2:#5c5c58; --ink-3:#8a8a84;
+  --s1:#2a78d6;            /* spend  */
+  --s2:#eb6834;            /* sales  */
+  --good:#0ca30c; --bad:#d03b3b;
+  --grid:#ececE8;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --page:#0d0d0d; --surface:#1a1a19; --line:#33332f;
+    --ink:#f2f2ef; --ink-2:#b0b0a8; --ink-3:#7c7c76;
+    --s1:#3987e5; --s2:#d95926;
+    --good:#0ca30c; --bad:#e66767;
+    --grid:#2a2a27;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:24px 18px 64px}
+header{display:flex; flex-wrap:wrap; gap:12px; align-items:baseline; justify-content:space-between; margin-bottom:4px}
+h1{font-size:22px; margin:0; letter-spacing:-.01em}
+.sub{color:var(--ink-3); font-size:13px; margin:2px 0 20px}
+.controls{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px}
+.controls button{
+  font:inherit; font-size:13px; padding:6px 13px; border-radius:999px; cursor:pointer;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2);
+}
+.controls button[aria-pressed="true"]{background:var(--ink); color:var(--page); border-color:var(--ink)}
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:22px}
+.tile{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 16px}
+.tile .k{font-size:12px; color:var(--ink-3); letter-spacing:.02em; text-transform:uppercase}
+.tile .v{font-size:26px; font-weight:600; letter-spacing:-.02em; margin-top:4px; font-variant-numeric:tabular-nums}
+.tile .d{font-size:12px; color:var(--ink-3); margin-top:2px; font-variant-numeric:tabular-nums}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px 16px 8px; margin-bottom:18px}
+.card h2{font-size:14px; margin:0 0 2px; font-weight:600}
+.card .note{font-size:12px; color:var(--ink-3); margin:0 0 12px}
+.legend{display:flex; gap:16px; font-size:12px; color:var(--ink-2); margin:0 0 6px 0}
+.legend i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:-1px}
+figure{margin:0}
+svg{display:block; width:100%; height:auto; overflow:visible}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:13px; font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px; text-align:right; border-bottom:1px solid var(--line); white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-size:11px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-3); font-weight:600}
+tbody tr:last-child td{border-bottom:none}
+tfoot td{font-weight:600; border-top:2px solid var(--line); border-bottom:none}
+.mkt{display:inline-block; font-size:11px; padding:1px 6px; border-radius:4px; border:1px solid var(--line); color:var(--ink-2); margin-right:8px}
+.caveat{font-size:12px; color:var(--ink-2); background:var(--surface); border:1px solid var(--line);
+        border-left:3px solid var(--s2); border-radius:8px; padding:12px 14px; margin-bottom:18px}
+.caveat b{color:var(--ink)}
+details{margin-bottom:18px}
+summary{cursor:pointer; font-size:13px; color:var(--ink-2); padding:6px 0}
+.tip{position:fixed; pointer-events:none; opacity:0; transition:opacity .08s;
+     background:var(--ink); color:var(--page); font-size:12px; padding:7px 10px; border-radius:7px;
+     white-space:nowrap; z-index:9; font-variant-numeric:tabular-nums; box-shadow:0 3px 12px rgba(0,0,0,.18)}
+.tip b{font-weight:600}
+.empty{color:var(--ink-3); padding:28px 0; text-align:center; font-size:14px}
+</style>
+</head>
+<body data-palette="#2a78d6,#eb6834">
+<div class="wrap">
+  <header>
+    <h1>Advertising Dashboard</h1>
+    <span class="sub" id="updated"></span>
+  </header>
+  <p class="sub">Promoted Listings Priority &mdash; eBay UK &amp; US. Figures are eBay's own, from the scheduled campaign report.</p>
+
+  <div class="controls" id="ranges" role="group" aria-label="Date range"></div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="card">
+    <h2>Spend and sales</h2>
+    <p class="note">Both in billing currency (GBP), so they share one axis.</p>
+    <div class="legend">
+      <span><i style="background:var(--s1)"></i>Ad spend</span>
+      <span><i style="background:var(--s2)"></i>Sales</span>
+    </div>
+    <figure><svg id="chartMoney" role="img" aria-label="Ad spend and sales per day"></svg></figure>
+  </div>
+
+  <div class="card">
+    <h2>Return on ad spend</h2>
+    <p class="note">Sales divided by spend, recomputed from daily totals.</p>
+    <figure><svg id="chartRoas" role="img" aria-label="ROAS per day"></svg></figure>
+  </div>
+
+  <div class="card">
+    <h2>By campaign</h2>
+    <p class="note">Sorted by spend. ROAS is period sales &divide; period spend.</p>
+    <div class="tbl-wrap"><table id="byCampaign"></table></div>
+  </div>
+
+  <details>
+    <summary>Daily figures as a table</summary>
+    <div class="card" style="margin-top:8px">
+      <div class="tbl-wrap"><table id="byDay"></table></div>
+    </div>
+  </details>
+
+  <div class="caveat">
+    <b>UK and US ROAS are not the same measure.</b> eBay's UK export divides by ad fees
+    <i>excluding VAT</i>; the US export includes <i>halo sales</i> &mdash; anything bought within
+    30 days of clicking an ad in that campaign. US ROAS is structurally flattered.
+    Compare each marketplace against its own history, not against the other.
+  </div>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+const CSV = 'data/priority_history.csv';
+const RANGES = [ {d:7,l:'7 days'}, {d:14,l:'14 days'}, {d:30,l:'30 days'}, {d:0,l:'All'} ];
+let ROWS = [], range = 7;
+
+const money = n => '£' + n.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+const num   = n => n.toLocaleString('en-GB');
+const shortDate = s => { const d=new Date(s+'T00:00:00'); return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}); };
+
+function parseCSV(text){
+  const lines = text.trim().split(/\r?\n/);
+  const head = lines[0].split(',');
+  return lines.slice(1).map(line=>{
+    // No quoted commas in this file, but campaign names can contain them, so
+    // split on commas outside quotes.
+    const cells = line.match(/("([^"]|"")*"|[^,]*)(,|$)/g).slice(0,head.length)
+      .map(c=>c.replace(/,$/,'').replace(/^"|"$/g,'').replace(/""/g,'"'));
+    const o={}; head.forEach((h,i)=>o[h]=cells[i]??'');
+    ['impressions','clicks','sold'].forEach(k=>o[k]=parseInt(o[k]||0,10));
+    ['ad_fees','sales'].forEach(k=>o[k]=parseFloat(o[k]||0));
+    return o;
+  }).filter(r=>r.date);
+}
+
+function inRange(rows){
+  if(!range) return rows;
+  const all=[...new Set(rows.map(r=>r.date))].sort();
+  if(!all.length) return rows;
+  const last=new Date(all[all.length-1]+'T00:00:00');
+  const cut=new Date(last); cut.setDate(cut.getDate()-(range-1));
+  const cutS=cut.toISOString().slice(0,10);
+  return rows.filter(r=>r.date>=cutS);
+}
+
+function byDate(rows){
+  const m=new Map();
+  rows.forEach(r=>{
+    const a=m.get(r.date)||{date:r.date,fees:0,sales:0,clicks:0,sold:0,impressions:0};
+    a.fees+=r.ad_fees; a.sales+=r.sales; a.clicks+=r.clicks; a.sold+=r.sold; a.impressions+=r.impressions;
+    m.set(r.date,a);
+  });
+  return [...m.values()].sort((a,b)=>a.date<b.date?-1:1);
+}
+
+/* ---------- charts: plain inline SVG, no libraries ---------- */
+const NS='http://www.w3.org/2000/svg';
+const el=(n,a={})=>{const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); return e;};
+const tip=document.getElementById('tip');
+function showTip(html,x,y){ tip.innerHTML=html; tip.style.opacity=1;
+  const r=tip.getBoundingClientRect();
+  tip.style.left=Math.min(Math.max(8,x-r.width/2),innerWidth-r.width-8)+'px';
+  tip.style.top=Math.max(8,y-r.height-14)+'px'; }
+const hideTip=()=>tip.style.opacity=0;
+
+function lineChart(svg, days, series, fmt){
+  svg.innerHTML='';
+  const W=880, H=260, P={t:16,r:18,b:30,l:52};
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  if(!days.length){ svg.appendChild(el('text',{x:W/2,y:H/2,'text-anchor':'middle',fill:'var(--ink-3)'})).textContent='No data'; return; }
+
+  const max=Math.max(...series.flatMap(s=>days.map(d=>s.get(d))),0)*1.15 || 1;
+  const iw=W-P.l-P.r, ih=H-P.t-P.b;
+  const X=i=>P.l+(days.length===1?iw/2:i*iw/(days.length-1));
+  const Y=v=>P.t+ih-(v/max)*ih;
+
+  for(let g=0; g<=4; g++){                       // recessive grid + axis labels
+    const v=max*g/4, y=Y(v);
+    svg.appendChild(el('line',{x1:P.l,x2:W-P.r,y1:y,y2:y,stroke:'var(--grid)','stroke-width':1}));
+    const t=el('text',{x:P.l-8,y:y+4,'text-anchor':'end',fill:'var(--ink-3)','font-size':11});
+    t.textContent=fmt.axis(v); svg.appendChild(t);
+  }
+  days.forEach((d,i)=>{
+    if(days.length>12 && i%Math.ceil(days.length/8)!==0 && i!==days.length-1) return;
+    const t=el('text',{x:X(i),y:H-P.b+18,'text-anchor':'middle',fill:'var(--ink-3)','font-size':11});
+    t.textContent=shortDate(d); svg.appendChild(t);
+  });
+
+  series.forEach(s=>{
+    const pts=days.map((d,i)=>[X(i),Y(s.get(d))]);
+    svg.appendChild(el('path',{d:'M'+pts.map(p=>p.join(' ')).join(' L '),fill:'none',
+      stroke:s.color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
+    pts.forEach(p=>{                              // 2px surface ring so marks never merge
+      svg.appendChild(el('circle',{cx:p[0],cy:p[1],r:4.5,fill:s.color,stroke:'var(--surface)','stroke-width':2}));
+    });
+    const last=pts[pts.length-1];                 // selective direct label: final point only
+    const t=el('text',{x:last[0]-6,y:last[1]-12,'text-anchor':'end',fill:'var(--ink-2)','font-size':11,'font-weight':600});
+    t.textContent=fmt.label(s.get(days[days.length-1])); svg.appendChild(t);
+  });
+
+  const cross=el('line',{y1:P.t,y2:P.t+ih,stroke:'var(--ink-3)','stroke-width':1,'stroke-dasharray':'3 3',opacity:0});
+  svg.appendChild(cross);
+  const hit=el('rect',{x:P.l,y:P.t,width:iw,height:ih,fill:'transparent'});
+  svg.appendChild(hit);
+  hit.addEventListener('pointermove',ev=>{
+    const bb=svg.getBoundingClientRect();
+    const i=Math.round(((ev.clientX-bb.left)/bb.width*W-P.l)/(iw/Math.max(1,days.length-1)));
+    const k=Math.max(0,Math.min(days.length-1,i));
+    cross.setAttribute('x1',X(k)); cross.setAttribute('x2',X(k)); cross.setAttribute('opacity',1);
+    showTip(`<b>${shortDate(days[k])}</b><br>`+series.map(s=>`${s.name} ${fmt.label(s.get(days[k]))}`).join('<br>'),
+            ev.clientX, ev.clientY);
+  });
+  hit.addEventListener('pointerleave',()=>{cross.setAttribute('opacity',0); hideTip();});
+}
+
+function render(){
+  const rows=inRange(ROWS), days=byDate(rows);
+  const D=days.map(d=>d.date);
+  const get=(k)=>new Map(days.map(d=>[d.date,d[k]]));
+
+  const T=days.reduce((a,d)=>({fees:a.fees+d.fees,sales:a.sales+d.sales,clicks:a.clicks+d.clicks,
+    sold:a.sold+d.sold,impressions:a.impressions+d.impressions}),{fees:0,sales:0,clicks:0,sold:0,impressions:0});
+  const roas=T.fees?T.sales/T.fees:0;
+
+  document.getElementById('tiles').innerHTML=[
+    ['Ad spend',money(T.fees),`${days.length} day${days.length===1?'':'s'}`],
+    ['Sales',money(T.sales),''],
+    ['ROAS',roas.toFixed(2),roas>=3?'healthy':(roas>=1?'thin':'losing money')],
+    ['Clicks',num(T.clicks),T.impressions?`${(T.clicks/T.impressions*100).toFixed(2)}% CTR`:''],
+    ['Items sold',num(T.sold),T.clicks?`${(T.sold/T.clicks*100).toFixed(1)}% conv.`:''],
+  ].map(([k,v,d])=>`<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join('');
+
+  const feeMap=get('fees'), saleMap=get('sales');
+  lineChart(document.getElementById('chartMoney'), D, [
+    {name:'Spend', color:'var(--s1)', get:d=>feeMap.get(d)||0},
+    {name:'Sales', color:'var(--s2)', get:d=>saleMap.get(d)||0},
+  ], {axis:v=>'£'+Math.round(v), label:v=>money(v)});
+
+  const roasMap=new Map(days.map(d=>[d.date, d.fees ? d.sales/d.fees : 0]));
+  lineChart(document.getElementById('chartRoas'), D, [
+    {name:'ROAS', color:'var(--s1)', get:d=>roasMap.get(d)||0},
+  ], {axis:v=>v.toFixed(1), label:v=>v.toFixed(2)});
+
+  // by campaign
+  const cm=new Map();
+  rows.forEach(r=>{
+    const k=r.marketplace+'|'+r.campaign_id;
+    const a=cm.get(k)||{mkt:r.marketplace,name:r.campaign_name,impressions:0,clicks:0,sold:0,fees:0,sales:0};
+    a.impressions+=r.impressions; a.clicks+=r.clicks; a.sold+=r.sold; a.fees+=r.ad_fees; a.sales+=r.sales;
+    cm.set(k,a);
+  });
+  const camps=[...cm.values()].sort((a,b)=>b.fees-a.fees);
+  document.getElementById('byCampaign').innerHTML=
+    `<thead><tr><th>Campaign</th><th>Impr.</th><th>Clicks</th><th>Sold</th><th>Spend</th><th>Sales</th><th>ROAS</th></tr></thead><tbody>`+
+    camps.map(c=>{const r=c.fees?c.sales/c.fees:0; return `<tr><td><span class="mkt">${c.mkt}</span>${c.name}</td>
+      <td>${num(c.impressions)}</td><td>${num(c.clicks)}</td><td>${num(c.sold)}</td>
+      <td>${money(c.fees)}</td><td>${money(c.sales)}</td>
+      <td style="color:${c.fees&&r<1?'var(--bad)':(r>=3?'var(--good)':'inherit')}">${c.fees?r.toFixed(2):'—'}</td></tr>`;}).join('')+
+    `</tbody><tfoot><tr><td>Total</td><td>${num(T.impressions)}</td><td>${num(T.clicks)}</td><td>${num(T.sold)}</td>
+     <td>${money(T.fees)}</td><td>${money(T.sales)}</td><td>${roas.toFixed(2)}</td></tr></tfoot>`;
+
+  document.getElementById('byDay').innerHTML=
+    `<thead><tr><th>Date</th><th>Impr.</th><th>Clicks</th><th>Sold</th><th>Spend</th><th>Sales</th><th>ROAS</th></tr></thead><tbody>`+
+    days.slice().reverse().map(d=>`<tr><td>${shortDate(d.date)}</td><td>${num(d.impressions)}</td><td>${num(d.clicks)}</td>
+      <td>${num(d.sold)}</td><td>${money(d.fees)}</td><td>${money(d.sales)}</td>
+      <td>${d.fees?(d.sales/d.fees).toFixed(2):'—'}</td></tr>`).join('')+`</tbody>`;
+
+  const all=[...new Set(ROWS.map(r=>r.date))].sort();
+  document.getElementById('updated').textContent = all.length? 'Data to '+shortDate(all[all.length-1]) : '';
+}
+
+document.getElementById('ranges').innerHTML=RANGES.map(r=>
+  `<button data-d="${r.d}" aria-pressed="${r.d===range}">${r.l}</button>`).join('');
+document.getElementById('ranges').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  range=+b.dataset.d;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed', x===b));
+  render();
+});
+
+fetch(CSV+'?t='+Date.now()).then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })
+  .then(t=>{ ROWS=parseCSV(t); render(); })
+  .catch(e=>{ document.querySelector('.wrap').insertAdjacentHTML('beforeend',
+    `<div class="empty">Could not load <code>${CSV}</code> (${e.message}).</div>`); });
+</script>
+</body>
+</html>
