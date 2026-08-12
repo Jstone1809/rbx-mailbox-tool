@@ -74,6 +74,11 @@ const SRC = 'data/pnl_data.json';
 const RANGES = [{d:7,l:'7 days'},{d:14,l:'14 days'},{d:30,l:'30 days'},{d:0,l:'All'}];
 let DATA = null, range = 14, picked = null;
 
+/* A price in the currency it was listed in. Revenue and cost are always GBP
+   because eBay converts before paying out; only 'sold at' is native. */
+const listed = (v, ccy) => (ccy === 'USD' ? '$' : '£')
+  + (v || 0).toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
+
 /* Ad spend is a campaign-level cost eBay never attributes to an item, so the
    per-item rows carry revenue and item cost only. The day's ad spend is shown
    as its own line rather than spread across items, which would invent a
@@ -94,23 +99,31 @@ function showDay(date){
       <button id="closeDetail" style="float:right;font:inherit;font-size:12px;background:none;
         border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:4px 12px;cursor:pointer">close</button></h2>
     <p class="note">${rows.length} item${rows.length===1?'':'s'} sold across ${num(d.orders)} order${d.orders===1?'':'s'}.
-      Sorted by gross profit. Ad spend is a campaign cost, so it is not split across items.</p>
+      Sorted by gross profit. 'Sold at' is in the currency it was listed in; revenue and cost
+      are GBP, since eBay converts before paying out. Ad spend is a campaign cost, so it is
+      not split across items.</p>
     <div class="tbl-wrap"><table>
-      <thead><tr><th>Item</th><th>Game</th><th>Units</th><th>Sold at</th><th>Revenue</th><th>Cost</th><th>Gross</th><th>Margin</th></tr></thead>
+      <thead><tr><th>Item</th><th>Game</th><th>Site</th><th>Units</th><th>Sold at</th><th>Revenue</th><th>Cost</th><th>Gross</th><th>Margin</th></tr></thead>
       <tbody>${rows.map(r=>{
         const g=r.revenue-r.cogs, m=r.revenue?g/r.revenue*100:0;
-        return `<tr><td>${r.item.length>44?r.item.slice(0,44)+'…':r.item}${r.costed?'':' <span class="pill bad">no cost</span>'}</td>
-          <td><span class="pill">${r.game}</span></td><td>${num(r.units)}</td><td>${gbp(r.sold_at)}</td>
+        // 'Sold at' is the price in the LISTING currency, so it carries its own
+        // symbol. Revenue, cost and gross are always GBP — eBay converts before
+        // paying out, so mixing a $ price into those columns would be wrong.
+        const sold = listed(r.sold_at, r.currency);
+        return `<tr><td>${r.item.length>42?r.item.slice(0,42)+'…':r.item}${r.costed?'':' <span class="pill bad">no cost</span>'}</td>
+          <td><span class="pill">${r.game}</span></td>
+          <td><span class="pill">${r.currency==='USD'?'US':'UK'}</span></td>
+          <td>${num(r.units)}</td><td>${sold}</td>
           <td>${gbp(r.revenue)}</td><td>${gbp(r.cogs)}</td>
           <td class="${g>0?'good':'bad'}">${gbp(g)}</td>
           <td class="${m>=40?'good':(m<15?'bad':'')}">${m.toFixed(1)}%</td></tr>`;}).join('')}
       </tbody>
       <tfoot>
-        <tr><td colspan="4">Totals</td><td>${gbp(rev)}</td><td>${gbp(cogs)}</td>
+        <tr><td colspan="5">Totals</td><td>${gbp(rev)}</td><td>${gbp(cogs)}</td>
             <td class="${gross>0?'good':'bad'}">${gbp(gross)}</td><td>${rev?(gross/rev*100).toFixed(1):'0.0'}%</td></tr>
-        <tr><td colspan="6">Ad spend for the day${d.has_ads?'':' (no data)'}</td>
+        <tr><td colspan="7">Ad spend for the day${d.has_ads?'':' (no data)'}</td>
             <td colspan="2">−${gbp(d.ads)}</td></tr>
-        <tr><td colspan="6">Net profit</td>
+        <tr><td colspan="7">Net profit</td>
             <td colspan="2" class="${net>0?'good':'bad'}">${gbp(net)}</td></tr>
       </tfoot></table></div></div>`;
 
