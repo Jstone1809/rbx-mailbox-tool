@@ -53,19 +53,40 @@ function frame(svg, days, H, P, max, fmt, compact) {
   return { W, iw, ih, X, Y };
 }
 
-function hover(svg, days, P, geo, rows) {
+function hover(svg, days, P, geo, rows, onPick) {
   const cross = el('line', { y1: P.t, y2: P.t + geo.ih, stroke: 'var(--muted)', 'stroke-width': 1, 'stroke-dasharray': '3 3', opacity: 0 });
   svg.appendChild(cross);
   const hit = el('rect', { x: P.l, y: P.t, width: geo.iw, height: geo.ih, fill: 'transparent' });
+  if (onPick) hit.setAttribute('style', 'cursor:pointer');
   svg.appendChild(hit);
-  hit.addEventListener('pointermove', ev => {
+  const indexAt = ev => {
     const bb = svg.getBoundingClientRect();
     const i = Math.round(((ev.clientX - bb.left) / bb.width * geo.W - P.l) / (geo.iw / Math.max(1, days.length - 1)));
-    const k = Math.max(0, Math.min(days.length - 1, i));
+    return Math.max(0, Math.min(days.length - 1, i));
+  };
+  hit.addEventListener('pointermove', ev => {
+    const k = indexAt(ev);
     cross.setAttribute('x1', geo.X(k)); cross.setAttribute('x2', geo.X(k)); cross.setAttribute('opacity', 1);
-    showTip(`<b>${shortDate(days[k])}</b><br>` + rows(days[k]), ev.clientX, ev.clientY);
+    showTip(`<b>${shortDate(days[k])}</b><br>` + rows(days[k])
+      + (onPick ? '<br><span style="color:var(--muted)">click for the breakdown</span>' : ''),
+      ev.clientX, ev.clientY);
   });
   hit.addEventListener('pointerleave', () => { cross.setAttribute('opacity', 0); hideTip(); });
+  if (onPick) hit.addEventListener('click', ev => onPick(days[indexAt(ev)]));
+}
+
+/* Marks the selected day so the chart and the detail panel agree. */
+export function markSelected(svg, days, date) {
+  const old = svg.querySelector('.sel-marker');
+  if (old) old.remove();
+  const i = days.indexOf(date);
+  if (i < 0 || !svg._geo) return;
+  const { geo, P, H } = svg._geo;
+  const m = el('rect', {
+    class: 'sel-marker', x: geo.X(i) - 1, y: P.t, width: 2, height: geo.ih,
+    fill: 'var(--leaf)', opacity: 0.55
+  });
+  svg.insertBefore(m, svg.firstChild);
 }
 
 export function lineChart(svg, days, series, fmt, opt = {}) {
@@ -75,6 +96,7 @@ export function lineChart(svg, days, series, fmt, opt = {}) {
   const H = opt.h || 260, P = { t: 16, r: 20, b: 30, l: compact ? 48 : 56 };
   const max = Math.max(...series.flatMap(s => days.map(d => s.get(d) || 0)), 0) * 1.15 || 1;
   const geo = frame(svg, days, H, P, max, fmt, compact);
+  svg._geo = { geo, P, H };
 
   series.forEach(s => {
     const pts = days.map((d, i) => [geo.X(i), geo.Y(s.get(d) || 0)]);
@@ -91,7 +113,7 @@ export function lineChart(svg, days, series, fmt, opt = {}) {
     t.textContent = fmt.label(s.get(days[days.length - 1]) || 0); svg.appendChild(t);
   });
 
-  hover(svg, days, P, geo, d => series.map(s => `${s.name} ${fmt.label(s.get(d) || 0)}`).join('<br>'));
+  hover(svg, days, P, geo, d => series.map(s => `${s.name} ${fmt.label(s.get(d) || 0)}`).join('<br>'), opt.onPick);
 }
 
 /* Stacked bars: the parts must SUM to the whole, which is why COGS + ads +
@@ -103,6 +125,7 @@ export function stackedBars(svg, days, series, fmt, opt = {}) {
   const totals = days.map(d => series.reduce((a, s) => a + Math.max(0, s.get(d) || 0), 0));
   const max = Math.max(...totals, 0) * 1.15 || 1;
   const geo = frame(svg, days, H, P, max, fmt, false);
+  svg._geo = { geo, P, H };
   const bw = Math.max(6, Math.min(38, geo.iw / days.length - 8));
 
   days.forEach((d, i) => {
@@ -120,5 +143,5 @@ export function stackedBars(svg, days, series, fmt, opt = {}) {
     });
   });
 
-  hover(svg, days, P, geo, d => series.map(s => `${s.name} ${fmt.label(s.get(d) || 0)}`).join('<br>'));
+  hover(svg, days, P, geo, d => series.map(s => `${s.name} ${fmt.label(s.get(d) || 0)}`).join('<br>'), opt.onPick);
 }
