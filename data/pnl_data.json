@@ -1,0 +1,389 @@
+{
+ "generated": "2026-08-12T15:30:18Z",
+ "method": "cost ratio applied to the actual sale price",
+ "excluded_non_roblox": 8786.87,
+ "days": [
+  {
+   "date": "2026-07-14",
+   "revenue": 485.71,
+   "cogs": 159.52,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 59,
+   "units": 83,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-15",
+   "revenue": 278.35,
+   "cogs": 41.39,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 48,
+   "units": 74,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-16",
+   "revenue": 318.9,
+   "cogs": 70.84,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 46,
+   "units": 72,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-17",
+   "revenue": 410.91,
+   "cogs": 77.33,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 48,
+   "units": 90,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-18",
+   "revenue": 482.99,
+   "cogs": 124.42,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 69,
+   "units": 112,
+   "nocost_revenue": 10.39
+  },
+  {
+   "date": "2026-07-19",
+   "revenue": 332.87,
+   "cogs": 145.36,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 52,
+   "units": 79,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-20",
+   "revenue": 214.18,
+   "cogs": 74.65,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 31,
+   "units": 46,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-21",
+   "revenue": 306.37,
+   "cogs": 124.76,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 48,
+   "units": 73,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-22",
+   "revenue": 257.58,
+   "cogs": 55.3,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 46,
+   "units": 77,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-23",
+   "revenue": 245.92,
+   "cogs": 84.16,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 36,
+   "units": 50,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-24",
+   "revenue": 245.77,
+   "cogs": 56.89,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 49,
+   "units": 71,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-25",
+   "revenue": 235.31,
+   "cogs": 91.72,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 42,
+   "units": 55,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-26",
+   "revenue": 388.79,
+   "cogs": 122.09,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 52,
+   "units": 93,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-27",
+   "revenue": 566.93,
+   "cogs": 197.81,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 60,
+   "units": 88,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-28",
+   "revenue": 400.57,
+   "cogs": 103.61,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 65,
+   "units": 86,
+   "nocost_revenue": 14.98
+  },
+  {
+   "date": "2026-07-29",
+   "revenue": 217.7,
+   "cogs": 53.14,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 38,
+   "units": 51,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-30",
+   "revenue": 296.18,
+   "cogs": 131.85,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 34,
+   "units": 71,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-07-31",
+   "revenue": 218.67,
+   "cogs": 61.15,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 43,
+   "units": 59,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-01",
+   "revenue": 420.07,
+   "cogs": 120.44,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 69,
+   "units": 108,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-02",
+   "revenue": 303.02,
+   "cogs": 103.56,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 50,
+   "units": 83,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-03",
+   "revenue": 570.14,
+   "cogs": 153.79,
+   "ads": 62.34,
+   "has_ads": true,
+   "orders": 80,
+   "units": 113,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-04",
+   "revenue": 557.23,
+   "cogs": 130.73,
+   "ads": 71.1,
+   "has_ads": true,
+   "orders": 85,
+   "units": 111,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-05",
+   "revenue": 333.76,
+   "cogs": 87.21,
+   "ads": 55.0,
+   "has_ads": true,
+   "orders": 58,
+   "units": 95,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-06",
+   "revenue": 460.2,
+   "cogs": 136.37,
+   "ads": 52.1,
+   "has_ads": true,
+   "orders": 51,
+   "units": 82,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-07",
+   "revenue": 457.88,
+   "cogs": 132.2,
+   "ads": 58.67,
+   "has_ads": true,
+   "orders": 64,
+   "units": 104,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-08",
+   "revenue": 447.64,
+   "cogs": 121.03,
+   "ads": 79.64,
+   "has_ads": true,
+   "orders": 63,
+   "units": 118,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-09",
+   "revenue": 243.66,
+   "cogs": 115.86,
+   "ads": 68.28,
+   "has_ads": true,
+   "orders": 42,
+   "units": 53,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-10",
+   "revenue": 300.3,
+   "cogs": 144.11,
+   "ads": 60.25,
+   "has_ads": true,
+   "orders": 42,
+   "units": 56,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-11",
+   "revenue": 153.99,
+   "cogs": 45.51,
+   "ads": 59.12,
+   "has_ads": true,
+   "orders": 35,
+   "units": 47,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-08-12",
+   "revenue": 110.54,
+   "cogs": 69.63,
+   "ads": 7.72,
+   "has_ads": true,
+   "orders": 10,
+   "units": 16,
+   "nocost_revenue": 0.0
+  }
+ ],
+ "games": [
+  {
+   "game": "Grow a Garden 2",
+   "revenue": 6650.88,
+   "cogs": 1233.43,
+   "units": 1730
+  },
+  {
+   "game": "Blox Fruits",
+   "revenue": 1189.39,
+   "cogs": 806.87,
+   "units": 109
+  },
+  {
+   "game": "FISCH",
+   "revenue": 1105.58,
+   "cogs": 156.96,
+   "units": 239
+  },
+  {
+   "game": "Rivals",
+   "revenue": 490.1,
+   "cogs": 366.86,
+   "units": 82
+  },
+  {
+   "game": "Grow a Garden",
+   "revenue": 436.63,
+   "cogs": 368.69,
+   "units": 84
+  },
+  {
+   "game": "Steal A Brainrot",
+   "revenue": 301.58,
+   "cogs": 151.33,
+   "units": 50
+  },
+  {
+   "game": "Escape Tsunami For Brainrots",
+   "revenue": 60.98,
+   "cogs": 42.74,
+   "units": 13
+  },
+  {
+   "game": "Kick a Lucky Block",
+   "revenue": 12.8,
+   "cogs": 3.8,
+   "units": 3
+  },
+  {
+   "game": "Plants Vs Brainrots",
+   "revenue": 11.38,
+   "cogs": 5.61,
+   "units": 5
+  },
+  {
+   "game": "SAILOR PIECE",
+   "revenue": 2.81,
+   "cogs": 0.16,
+   "units": 1
+  }
+ ],
+ "needs_price": [
+  {
+   "item": "\u2705100M/S+ RANDOM BRAINROT |\ud83d\udcb0STEAL A BRAINROT\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f$10",
+   "revenue": 10.39,
+   "units": 4,
+   "sold_at": 3.0
+  },
+  {
+   "item": "\u27051B/S+ RANDOM BRAINROT |\ud83d\udcb0STEAL A BRAINROT\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f$1B/S",
+   "revenue": 8.57,
+   "units": 1,
+   "sold_at": 9.95
+  },
+  {
+   "item": "\u2705750M/S+ RANDOM BRAINROT |\ud83d\udcb0STEAL A BRAINROT\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f$75",
+   "revenue": 6.41,
+   "units": 1,
+   "sold_at": 7.45
+  }
+ ]
+}
