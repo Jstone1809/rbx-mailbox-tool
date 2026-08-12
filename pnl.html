@@ -51,12 +51,20 @@
     <figure><svg id="chartMargin" role="img" aria-label="Profit margin per day"></svg></figure>
   </div>
 
+  <div id="overrides"></div>
   <div id="detail"></div>
 
   <div class="card">
     <h2>By game</h2>
     <p class="note">Revenue and item cost per game over the selected period.</p>
     <div class="tbl-wrap"><table id="byGame"></table></div>
+  </div>
+
+  <div class="card">
+    <h2>Every item sold</h2>
+    <p class="note" id="byItemNote"></p>
+    <div class="controls" id="itemSort" style="justify-content:flex-start;margin-bottom:12px"></div>
+    <div class="tbl-wrap tbl-scroll"><table id="byItem"></table></div>
   </div>
 
   <details>
@@ -72,12 +80,68 @@ import { lineChart, stackedBars, markSelected, gbp, num, shortDate } from './cha
 
 const SRC = 'data/pnl_data.json';
 const RANGES = [{d:7,l:'7 days'},{d:14,l:'14 days'},{d:30,l:'30 days'},{d:0,l:'All'}];
-let DATA = null, range = 14, picked = null;
+let DATA = null, range = 14, picked = null, itemSort = 'gross';
 
 /* A price in the currency it was listed in. Revenue and cost are always GBP
    because eBay converts before paying out; only 'sold at' is native. */
 const listed = (v, ccy) => (ccy === 'USD' ? '$' : '£')
   + (v || 0).toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+/* ---- manual cost overrides -------------------------------------------------
+   This page is static, so it cannot write to price_overrides.json. Costs entered
+   here live in THIS BROWSER only and are applied on the fly, which makes the
+   effect visible immediately. To make them permanent, copy the generated block
+   into ebay-tools/price_overrides.json and the next report picks them up.
+
+   An override is a cost per unit in GBP, applied as cost x units. That is
+   deliberately simpler than the ratio method the report uses by default: you are
+   stating a known cost, so it is used as stated rather than scaled.            */
+const OV_KEY = 'pnl_cost_overrides';
+let OV = {};
+try { OV = JSON.parse(localStorage.getItem(OV_KEY) || '{}'); } catch(e) { OV = {}; }
+const saveOv = () => localStorage.setItem(OV_KEY, JSON.stringify(OV));
+const hasOv  = r => Object.prototype.hasOwnProperty.call(OV, r.item);
+const effCogs = r => hasOv(r) ? OV[r.item] * r.units : r.cogs;
+
+function editCost(itemName, currentPerUnit){
+  const cur = OV[itemName] != null ? OV[itemName] : (currentPerUnit || 0);
+  const inp = prompt(`Cost per unit in GBP for:\n\n${itemName}\n\n`
+    + `Leave blank to remove an override.`, cur ? cur.toFixed(2) : '');
+  if(inp === null) return;
+  if(inp.trim() === ''){ delete OV[itemName]; }
+  else {
+    const v = parseFloat(inp.replace(/[^0-9.]/g,''));
+    if(isNaN(v) || v < 0){ alert('Enter a number, e.g. 1.25'); return; }
+    OV[itemName] = v;
+  }
+  saveOv(); render();
+}
+
+function ovBanner(){
+  const keys = Object.keys(OV);
+  const host = document.getElementById('overrides');
+  if(!keys.length){ host.innerHTML = ''; return; }
+  const json = keys.sort().map(k=>`    ${JSON.stringify(k)}: { "cost": ${OV[k].toFixed(2)} }`).join(',\n');
+  host.innerHTML = `<div class="caveat"><b>${keys.length} manual cost${keys.length===1?'':'s'}
+    applied in this browser only.</b> Every figure above reflects them, but they are not saved
+    to the project. Paste this into <code>ebay-tools/price_overrides.json</code> under
+    <code>by_ebay_name</code> to make them permanent:
+    <pre style="margin:10px 0 0;padding:11px;background:var(--panel-2);border:1px solid var(--line);
+      border-radius:10px;overflow-x:auto;font-size:11.5px;color:var(--code)">${json}</pre>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="copyOv" style="font:inherit;font-size:12px;background:var(--leaf-deep);color:#04180d;
+        border:none;border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:600">Copy</button>
+      <button id="clearOv" style="font:inherit;font-size:12px;background:none;color:var(--muted);
+        border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer">Clear all</button>
+    </div></div>`;
+  document.getElementById('copyOv').onclick = e => {
+    navigator.clipboard.writeText(json).then(()=>{ e.target.textContent='Copied';
+      setTimeout(()=>e.target.textContent='Copy', 1400); });
+  };
+  document.getElementById('clearOv').onclick = () => {
+    if(confirm('Remove all manual costs entered in this browser?')){ OV = {}; saveOv(); render(); }
+  };
+}
 
 /* Ad spend is a campaign-level cost eBay never attributes to an item, so the
    per-item rows carry revenue and item cost only. The day's ad spend is shown
@@ -91,7 +155,7 @@ function showDay(date){
   const d = (DATA.days||[]).find(x=>x.date===date);
   if(!rows.length || !d){ host.innerHTML=''; return; }
 
-  const rev=rows.reduce((a,r)=>a+r.revenue,0), cogs=rows.reduce((a,r)=>a+r.cogs,0);
+  const rev=rows.reduce((a,r)=>a+r.revenue,0), cogs=rows.reduce((a,r)=>a+effCogs(r),0);
   const gross=rev-cogs, net=gross-d.ads;
 
   host.innerHTML = `<div class="card" id="detailCard">
@@ -105,16 +169,17 @@ function showDay(date){
     <div class="tbl-wrap"><table>
       <thead><tr><th>Item</th><th>Game</th><th>Site</th><th>Units</th><th>Sold at</th><th>Revenue</th><th>Cost</th><th>Gross</th><th>Margin</th></tr></thead>
       <tbody>${rows.map(r=>{
-        const g=r.revenue-r.cogs, m=r.revenue?g/r.revenue*100:0;
+        const c=effCogs(r), g=r.revenue-c, m=r.revenue?g/r.revenue*100:0;
         // 'Sold at' is the price in the LISTING currency, so it carries its own
         // symbol. Revenue, cost and gross are always GBP — eBay converts before
         // paying out, so mixing a $ price into those columns would be wrong.
         const sold = listed(r.sold_at, r.currency);
-        return `<tr><td>${r.item.length>42?r.item.slice(0,42)+'…':r.item}${r.costed?'':' <span class="pill bad">no cost</span>'}</td>
+        return `<tr data-item="${encodeURIComponent(r.item)}" data-unit="${r.units?c/r.units:0}" style="cursor:cell" title="double-click to set the cost">
+          <td>${r.item.length>42?r.item.slice(0,42)+'…':r.item}${r.costed||hasOv(r)?'':' <span class="pill bad">no cost</span>'}${hasOv(r)?' <span class="pill good">manual</span>':''}</td>
           <td><span class="pill">${r.game}</span></td>
           <td><span class="pill">${r.currency==='USD'?'US':'UK'}</span></td>
           <td>${num(r.units)}</td><td>${sold}</td>
-          <td>${gbp(r.revenue)}</td><td>${gbp(r.cogs)}</td>
+          <td>${gbp(r.revenue)}</td><td>${gbp(c)}</td>
           <td class="${g>0?'good':'bad'}">${gbp(g)}</td>
           <td class="${m>=40?'good':(m<15?'bad':'')}">${m.toFixed(1)}%</td></tr>`;}).join('')}
       </tbody>
@@ -133,6 +198,67 @@ function showDay(date){
   document.getElementById('detailCard').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
+/* Every item sold in the selected range, one row per item per marketplace.
+   Grouped by (item, currency) rather than item alone: the same product sells at
+   £7.95 in the UK and $10.45 in the US, and averaging those together would be a
+   number that means nothing. 'Sold at' is the unit-weighted average price in its
+   own currency, since a price can move within the window. */
+function renderItems(dates){
+  const inWin = new Set(dates);
+  const agg = new Map();
+  (DATA.items||[]).forEach(r=>{
+    if(!inWin.has(r.date)) return;
+    const k = r.item + ' ' + (r.currency||'GBP');
+    const a = agg.get(k) || {item:r.item, currency:r.currency||'GBP', game:r.game,
+                             units:0, revenue:0, cogs:0, soldSum:0, costed:true, days:0};
+    a.units += r.units; a.revenue += r.revenue; a.cogs += effCogs(r);
+    a.soldSum += (r.sold_at||0) * r.units;
+    a.days += 1;
+    if(!r.costed && !hasOv(r)) a.costed = false;
+    if(hasOv(r)) a.manual = true;
+    agg.set(k, a);
+  });
+
+  let rows = [...agg.values()];
+  const key = itemSort;
+  rows.sort((a,b)=>{
+    if(key==='revenue') return b.revenue - a.revenue;
+    if(key==='units')   return b.units - a.units;
+    if(key==='margin'){
+      const ma = a.revenue?(a.revenue-a.cogs)/a.revenue:0, mb = b.revenue?(b.revenue-b.cogs)/b.revenue:0;
+      return mb - ma;
+    }
+    return (b.revenue-b.cogs) - (a.revenue-a.cogs);   // gross profit
+  });
+
+  const T = rows.reduce((a,r)=>({u:a.u+r.units, rev:a.rev+r.revenue, cogs:a.cogs+r.cogs}),
+                        {u:0,rev:0,cogs:0});
+  document.getElementById('byItemNote').textContent =
+    `${rows.length} item/marketplace combination${rows.length===1?'':'s'} across ${dates.length} day${dates.length===1?'':'s'}. `
+    + `'Sold at' is the unit-weighted average in its listing currency; revenue and cost are GBP. `
+    + `Ad spend is a campaign cost and is not split across items, so these are GROSS figures.`;
+
+  document.getElementById('byItem').innerHTML =
+    `<thead><tr><th>Item</th><th>Game</th><th>Site</th><th>Units</th><th>Sold at</th>
+      <th>Revenue</th><th>Cost</th><th>Gross</th><th>Margin</th></tr></thead><tbody>`+
+    rows.map(r=>{
+      const g = r.revenue - r.cogs, m = r.revenue ? g/r.revenue*100 : 0;
+      const avg = r.units ? r.soldSum/r.units : 0;
+      return `<tr data-item="${encodeURIComponent(r.item)}" data-unit="${r.units?r.cogs/r.units:0}" style="cursor:cell" title="double-click to set the cost">
+        <td>${r.item.length>44?r.item.slice(0,44)+'…':r.item}${r.costed?'':' <span class="pill bad">no cost</span>'}${r.manual?' <span class="pill good">manual</span>':''}</td>
+        <td><span class="pill">${r.game||'—'}</span></td>
+        <td><span class="pill">${r.currency==='USD'?'US':'UK'}</span></td>
+        <td>${num(r.units)}</td><td>${listed(avg, r.currency)}</td>
+        <td>${gbp(r.revenue)}</td><td>${gbp(r.cogs)}</td>
+        <td class="${g>0?'good':'bad'}">${gbp(g)}</td>
+        <td class="${m>=40?'good':(m<15?'bad':'')}">${m.toFixed(1)}%</td></tr>`;
+    }).join('')+
+    `</tbody><tfoot><tr><td colspan="3">Total</td><td>${num(T.u)}</td><td></td>
+      <td>${gbp(T.rev)}</td><td>${gbp(T.cogs)}</td>
+      <td class="${T.rev-T.cogs>0?'good':'bad'}">${gbp(T.rev-T.cogs)}</td>
+      <td>${T.rev?((T.rev-T.cogs)/T.rev*100).toFixed(1):'0.0'}%</td></tr></tfoot>`;
+}
+
 const inRange = days => {
   if(!range || !days.length) return days;
   const cut = new Date(days[days.length-1].date + 'T00:00:00');
@@ -142,6 +268,16 @@ const inRange = days => {
 };
 
 function render(){
+  // With a manual cost in play the day totals must be rebuilt from the item
+  // rows, otherwise the charts and tiles would keep showing the sheet's COGS
+  // while the tables below showed yours.
+  if(Object.keys(OV).length){
+    const byDate = new Map();
+    (DATA.items||[]).forEach(r=>byDate.set(r.date, (byDate.get(r.date)||0) + effCogs(r)));
+    (DATA.days||[]).forEach(d=>{ if(byDate.has(d.date)) d.cogs = byDate.get(d.date); });
+  } else if(DATA._origCogs){
+    (DATA.days||[]).forEach(d=>{ if(DATA._origCogs[d.date]!=null) d.cogs = DATA._origCogs[d.date]; });
+  }
   const days = inRange(DATA.days || []);
   const D = days.map(d => d.date);
   const profitOf = d => d.revenue - d.cogs - d.ads;
@@ -208,6 +344,9 @@ function render(){
     picked = null; document.getElementById('detail').innerHTML = '';
   }
 
+  renderItems(D);
+  ovBanner();
+
   const noAd = days.filter(d=>!d.has_ads).length;
   const notices = [];
   notices.push(`<div class="caveat"><b>COGS method:</b> ${DATA.method}.
@@ -234,6 +373,24 @@ function render(){
     DATA.generated ? 'Generated ' + DATA.generated.replace('T',' ').replace('Z',' UTC') : '';
 }
 
+
+const SORTS = [{k:'gross',l:'Gross profit'},{k:'revenue',l:'Revenue'},
+               {k:'units',l:'Units'},{k:'margin',l:'Margin %'}];
+document.getElementById('itemSort').innerHTML = SORTS.map(s=>
+  `<button data-k="${s.k}" aria-pressed="${s.k===itemSort}">${s.l}</button>`).join('');
+document.getElementById('itemSort').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  itemSort = b.dataset.k;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed', x===b));
+  render();
+});
+
+document.addEventListener('dblclick', e=>{
+  const tr = e.target.closest('tr[data-item]');
+  if(!tr) return;
+  editCost(decodeURIComponent(tr.dataset.item), parseFloat(tr.dataset.unit)||0);
+});
+
 // Delegated once, not per render — re-binding inside render() would stack a
 // duplicate listener every time the range changed.
 document.getElementById('byDay').addEventListener('click', e=>{
@@ -251,7 +408,7 @@ document.getElementById('ranges').addEventListener('click',e=>{
 });
 
 fetch(SRC+'?t='+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
-  .then(j=>{DATA=j;render();})
+  .then(j=>{DATA=j; DATA._origCogs=Object.fromEntries((j.days||[]).map(d=>[d.date,d.cogs])); render();})
   .catch(e=>document.querySelector('.wrap').insertAdjacentHTML('beforeend',
     `<div class="empty">Could not load <code>${SRC}</code> (${e.message}).</div>`));
 </script>
