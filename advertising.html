@@ -59,6 +59,13 @@ th{font-size:11px; text-transform:uppercase; letter-spacing:.03em; color:var(--i
 tbody tr:last-child td{border-bottom:none}
 tfoot td{font-weight:600; border-top:2px solid var(--line); border-bottom:none}
 .mkt{display:inline-block; font-size:11px; padding:1px 6px; border-radius:4px; border:1px solid var(--line); color:var(--ink-2); margin-right:8px}
+.section{font-size:16px; margin:26px 0 10px; font-weight:600}
+.multiples{display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px; margin-bottom:18px}
+.mini{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 14px 6px}
+.mini h3{font-size:13px; margin:0 0 2px; font-weight:600; display:flex; align-items:center; gap:6px}
+.mini .stats{display:flex; gap:14px; font-size:12px; color:var(--ink-3); margin:0 0 8px; flex-wrap:wrap;
+             font-variant-numeric:tabular-nums}
+.mini .stats b{color:var(--ink); font-weight:600}
 .caveat{font-size:12px; color:var(--ink-2); background:var(--surface); border:1px solid var(--line);
         border-left:3px solid var(--s2); border-radius:8px; padding:12px 14px; margin-bottom:18px}
 .caveat b{color:var(--ink)}
@@ -98,6 +105,12 @@ summary{cursor:pointer; font-size:13px; color:var(--ink-2); padding:6px 0}
     <p class="note">Sales divided by spend, recomputed from daily totals.</p>
     <figure><svg id="chartRoas" role="img" aria-label="ROAS per day"></svg></figure>
   </div>
+
+  <h2 class="section">Each campaign</h2>
+  <p class="sub" style="margin-top:-10px">One panel per campaign, newest on the right.
+     Each panel has its own vertical scale so a small campaign stays readable &mdash;
+     compare the totals, not the steepness.</p>
+  <div class="multiples" id="campaignCharts"></div>
 
   <div class="card">
     <h2>By campaign</h2>
@@ -175,9 +188,10 @@ function showTip(html,x,y){ tip.innerHTML=html; tip.style.opacity=1;
   tip.style.top=Math.max(8,y-r.height-14)+'px'; }
 const hideTip=()=>tip.style.opacity=0;
 
-function lineChart(svg, days, series, fmt){
+function lineChart(svg, days, series, fmt, opt={}){
   svg.innerHTML='';
-  const W=880, H=260, P={t:16,r:18,b:30,l:52};
+  const compact=!!opt.compact;
+  const W=880, H=opt.h||260, P={t:16,r:18,b:30,l:compact?46:52};
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   if(!days.length){ svg.appendChild(el('text',{x:W/2,y:H/2,'text-anchor':'middle',fill:'var(--ink-3)'})).textContent='No data'; return; }
 
@@ -186,14 +200,16 @@ function lineChart(svg, days, series, fmt){
   const X=i=>P.l+(days.length===1?iw/2:i*iw/(days.length-1));
   const Y=v=>P.t+ih-(v/max)*ih;
 
-  for(let g=0; g<=4; g++){                       // recessive grid + axis labels
-    const v=max*g/4, y=Y(v);
+  const gridN=compact?3:4;
+  for(let g=0; g<=gridN; g++){                   // recessive grid + axis labels
+    const v=max*g/gridN, y=Y(v);
     svg.appendChild(el('line',{x1:P.l,x2:W-P.r,y1:y,y2:y,stroke:'var(--grid)','stroke-width':1}));
     const t=el('text',{x:P.l-8,y:y+4,'text-anchor':'end',fill:'var(--ink-3)','font-size':11});
     t.textContent=fmt.axis(v); svg.appendChild(t);
   }
+  const every=compact?4:8;
   days.forEach((d,i)=>{
-    if(days.length>12 && i%Math.ceil(days.length/8)!==0 && i!==days.length-1) return;
+    if(days.length>every && i%Math.ceil(days.length/every)!==0 && i!==days.length-1) return;
     const t=el('text',{x:X(i),y:H-P.b+18,'text-anchor':'middle',fill:'var(--ink-3)','font-size':11});
     t.textContent=shortDate(d); svg.appendChild(t);
   });
@@ -203,7 +219,8 @@ function lineChart(svg, days, series, fmt){
     svg.appendChild(el('path',{d:'M'+pts.map(p=>p.join(' ')).join(' L '),fill:'none',
       stroke:s.color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
     pts.forEach(p=>{                              // 2px surface ring so marks never merge
-      svg.appendChild(el('circle',{cx:p[0],cy:p[1],r:4.5,fill:s.color,stroke:'var(--surface)','stroke-width':2}));
+      svg.appendChild(el('circle',{cx:p[0],cy:p[1],r:compact?4:4.5,fill:s.color,
+        stroke:'var(--surface)','stroke-width':2}));
     });
     const last=pts[pts.length-1];                 // selective direct label: final point only
     const t=el('text',{x:last[0]-6,y:last[1]-12,'text-anchor':'end',fill:'var(--ink-2)','font-size':11,'font-weight':600});
@@ -252,6 +269,43 @@ function render(){
   lineChart(document.getElementById('chartRoas'), D, [
     {name:'ROAS', color:'var(--s1)', get:d=>roasMap.get(d)||0},
   ], {axis:v=>v.toFixed(1), label:v=>v.toFixed(2)});
+
+  // one panel per campaign id — a campaign can run on both marketplaces, so its
+  // rows are summed and the marketplaces it ran on are shown as badges.
+  const byId=new Map();
+  rows.forEach(r=>{
+    const a=byId.get(r.campaign_id)||{id:r.campaign_id,name:r.campaign_name,mkts:new Set(),
+      day:new Map(),impressions:0,clicks:0,sold:0,fees:0,sales:0};
+    a.mkts.add(r.marketplace);
+    a.impressions+=r.impressions; a.clicks+=r.clicks; a.sold+=r.sold;
+    a.fees+=r.ad_fees; a.sales+=r.sales;
+    const d=a.day.get(r.date)||{fees:0,sales:0};
+    d.fees+=r.ad_fees; d.sales+=r.sales; a.day.set(r.date,d);
+    if(r.campaign_name) a.name=r.campaign_name;
+    byId.set(r.campaign_id,a);
+  });
+  const panels=[...byId.values()].sort((a,b)=>b.fees-a.fees);
+  const host=document.getElementById('campaignCharts');
+  host.innerHTML=panels.map((c,i)=>{
+    const r=c.fees?c.sales/c.fees:0;
+    const col=c.fees&&r<1?'var(--bad)':(r>=3?'var(--good)':'inherit');
+    return `<div class="mini">
+      <h3>${[...c.mkts].map(m=>`<span class="mkt">${m}</span>`).join('')}${c.name}</h3>
+      <div class="stats">
+        <span>spend <b>${money(c.fees)}</b></span>
+        <span>sales <b>${money(c.sales)}</b></span>
+        <span>ROAS <b style="color:${col}">${c.fees?r.toFixed(2):'—'}</b></span>
+        <span>sold <b>${num(c.sold)}</b></span>
+      </div>
+      <figure><svg id="mini${i}" role="img" aria-label="Spend and sales for ${c.name}"></svg></figure>
+    </div>`;
+  }).join('');
+  panels.forEach((c,i)=>{
+    lineChart(document.getElementById('mini'+i), D, [
+      {name:'Spend', color:'var(--s1)', get:d=>(c.day.get(d)||{}).fees||0},
+      {name:'Sales', color:'var(--s2)', get:d=>(c.day.get(d)||{}).sales||0},
+    ], {axis:v=>'£'+Math.round(v), label:v=>money(v)}, {h:190, compact:true});
+  });
 
   // by campaign
   const cm=new Map();
