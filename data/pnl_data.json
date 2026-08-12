@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-12T15:30:18Z",
+ "generated": "2026-08-12T15:35:11Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 8786.87,
  "days": [
@@ -295,21 +295,21 @@
   },
   {
    "date": "2026-08-12",
-   "revenue": 110.54,
-   "cogs": 69.63,
+   "revenue": 119.02,
+   "cogs": 72.33,
    "ads": 7.72,
    "has_ads": true,
-   "orders": 10,
-   "units": 16,
+   "orders": 11,
+   "units": 17,
    "nocost_revenue": 0.0
   }
  ],
  "games": [
   {
    "game": "Grow a Garden 2",
-   "revenue": 6650.88,
-   "cogs": 1233.43,
-   "units": 1730
+   "revenue": 6659.36,
+   "cogs": 1236.13,
+   "units": 1731
   },
   {
    "game": "Blox Fruits",
