@@ -1,0 +1,140 @@
+/* site.css — shared look for the RBX tool pages.
+   Palette and type lifted from index.html so the dashboards read as the same
+   site as the mailbox sender rather than bolted on.
+
+   Chart series colours are NOT the raw site accents. The site's #3fd07a leaf and
+   #ffcb45 gold sit too light for a dark chart surface and are only ΔE 7.2 apart
+   under protanopia — close enough to be unreadable for a red-blind viewer. These
+   three are the same hues snapped into the dark-mode lightness band, ordered so
+   green and gold are never adjacent. Validated against the #13241a panel: all
+   six checks pass. Re-validate before changing them. */
+:root{
+  --bg:#0e1a12;
+  --panel:#13241a;
+  --panel-2:#0b150f;
+  --line:#234433;
+  --text:#e8f5ec;
+  --muted:#8fb39c;
+  --leaf:#3fd07a;
+  --leaf-deep:#1f9d57;
+  --gold:#ffcb45;
+  --code:#bdf0cf;
+
+  --s1:#2eab66;   /* green — profit / sales */
+  --s2:#4d94e0;   /* blue  — spend / ads    */
+  --s3:#b8861a;   /* gold  — COGS           */
+  --danger:#ff6b6b;
+  --grid:#1c3324;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #18452b 0%, transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+  color:var(--text);
+  min-height:100vh;
+  padding:24px 16px 64px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1100px;margin:0 auto}
+header{text-align:center;margin-bottom:22px}
+.badge{
+  display:inline-block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--leaf);border:1px solid var(--line);border-radius:999px;
+  padding:6px 14px;margin-bottom:14px;
+}
+h1{
+  font-size:30px;font-weight:800;line-height:1.1;
+  background:linear-gradient(90deg,#ff6b6b,#ffcb45,#3fd07a,#4dabf7,#b197fc);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.sub{color:var(--muted);font-size:14px;margin-top:8px}
+
+/* nav ------------------------------------------------------------------ */
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0 24px}
+nav a{
+  font-size:13px;color:var(--muted);text-decoration:none;padding:8px 16px;
+  border:1px solid var(--line);border-radius:999px;background:var(--panel-2);
+  transition:border-color .15s,color .15s,background .15s;
+}
+nav a:hover{border-color:var(--leaf);color:var(--leaf)}
+nav a[aria-current="page"]{background:var(--leaf-deep);color:#04180d;border-color:transparent;font-weight:600}
+
+/* cards ---------------------------------------------------------------- */
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:18px;
+  padding:20px 22px;margin-bottom:18px;
+}
+.card h2{font-size:15px;margin:0 0 3px;font-weight:700}
+.card .note{font-size:12px;color:var(--muted);margin:0 0 14px}
+.section{font-size:17px;margin:26px 0 10px;font-weight:700}
+
+/* controls ------------------------------------------------------------- */
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;justify-content:center}
+.controls button{
+  font:inherit;font-size:13px;padding:8px 16px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:var(--panel-2);color:var(--muted);
+  transition:border-color .15s,color .15s,background .15s;
+}
+.controls button:hover{border-color:var(--leaf);color:var(--leaf)}
+.controls button[aria-pressed="true"]{
+  background:var(--leaf-deep);color:#04180d;border-color:transparent;font-weight:600;
+}
+
+/* stat tiles ----------------------------------------------------------- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 17px}
+.tile .k{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.tile .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-top:5px;font-variant-numeric:tabular-nums}
+.tile .d{font-size:12px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums}
+.tile.good .v{color:var(--leaf)}
+.tile.bad .v{color:var(--danger)}
+
+/* charts --------------------------------------------------------------- */
+figure{margin:0}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.legend{display:flex;gap:18px;font-size:12px;color:var(--muted);margin:0 0 8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.multiples{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px;margin-bottom:18px}
+.mini{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 15px 6px}
+.mini h3{font-size:13px;margin:0 0 4px;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mini .stats{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:0 0 10px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.mini .stats b{color:var(--text);font-weight:700}
+
+/* tables --------------------------------------------------------------- */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 11px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--panel-2)}
+tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:none}
+.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;
+      border:1px solid var(--line);color:var(--muted);margin-right:8px;background:var(--panel-2)}
+.good{color:var(--leaf)}
+.bad{color:var(--danger)}
+
+/* notices -------------------------------------------------------------- */
+.caveat{
+  font-size:12.5px;color:var(--muted);background:var(--panel);border:1px solid var(--line);
+  border-left:3px solid var(--gold);border-radius:14px;padding:14px 16px;margin-bottom:18px;line-height:1.55;
+}
+.caveat b{color:var(--text)}
+.caveat.warn{border-left-color:var(--danger)}
+details{margin-bottom:18px}
+summary{cursor:pointer;font-size:13px;color:var(--muted);padding:8px 0}
+summary:hover{color:var(--leaf)}
+.empty{color:var(--muted);padding:30px 0;text-align:center;font-size:14px}
+code{font-family:ui-monospace,Consolas,monospace;color:var(--code);font-size:12px}
+
+/* tooltip -------------------------------------------------------------- */
+.tip{
+  position:fixed;pointer-events:none;opacity:0;transition:opacity .08s;
+  background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+  font-size:12px;padding:8px 11px;border-radius:10px;white-space:nowrap;z-index:9;
+  font-variant-numeric:tabular-nums;box-shadow:0 6px 20px rgba(0,0,0,.45);
+}
+.tip b{font-weight:700;color:var(--leaf)}
