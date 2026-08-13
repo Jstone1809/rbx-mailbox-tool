@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-13T12:38:42Z",
+ "generated": "2026-08-13T12:48:48Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 8786.87,
  "days": [
@@ -206,7 +206,7 @@
   {
    "date": "2026-08-04",
    "revenue": 557.23,
-   "cogs": 130.25,
+   "cogs": 125.15,
    "ads": 71.1,
    "has_ads": true,
    "orders": 85,
@@ -226,7 +226,7 @@
   {
    "date": "2026-08-06",
    "revenue": 460.2,
-   "cogs": 136.43,
+   "cogs": 126.6,
    "ads": 52.1,
    "has_ads": true,
    "orders": 51,
@@ -236,7 +236,7 @@
   {
    "date": "2026-08-07",
    "revenue": 457.88,
-   "cogs": 131.92,
+   "cogs": 127.99,
    "ads": 58.67,
    "has_ads": true,
    "orders": 64,
@@ -246,7 +246,7 @@
   {
    "date": "2026-08-08",
    "revenue": 447.64,
-   "cogs": 120.82,
+   "cogs": 116.06,
    "ads": 79.64,
    "has_ads": true,
    "orders": 63,
@@ -256,7 +256,7 @@
   {
    "date": "2026-08-09",
    "revenue": 243.66,
-   "cogs": 115.87,
+   "cogs": 112.76,
    "ads": 68.28,
    "has_ads": true,
    "orders": 42,
@@ -266,7 +266,7 @@
   {
    "date": "2026-08-10",
    "revenue": 300.3,
-   "cogs": 144.07,
+   "cogs": 143.51,
    "ads": 60.25,
    "has_ads": true,
    "orders": 42,
@@ -276,7 +276,7 @@
   {
    "date": "2026-08-11",
    "revenue": 153.99,
-   "cogs": 45.51,
+   "cogs": 44.07,
    "ads": 59.12,
    "has_ads": true,
    "orders": 35,
@@ -286,7 +286,7 @@
   {
    "date": "2026-08-12",
    "revenue": 199.68,
-   "cogs": 98.87,
+   "cogs": 98.02,
    "ads": 7.72,
    "has_ads": true,
    "orders": 23,
@@ -295,21 +295,21 @@
   },
   {
    "date": "2026-08-13",
-   "revenue": 173.49,
-   "cogs": 77.12,
+   "revenue": 191.51,
+   "cogs": 78.57,
    "ads": 0.0,
    "has_ads": false,
-   "orders": 23,
-   "units": 28,
+   "orders": 24,
+   "units": 32,
    "nocost_revenue": 0.0
   }
  ],
  "games": [
   {
    "game": "Grow a Garden 2",
-   "revenue": 6487.59,
-   "cogs": 1218.15,
-   "units": 1692
+   "revenue": 6505.61,
+   "cogs": 1190.02,
+   "units": 1696
   },
   {
    "game": "Blox Fruits",
@@ -13023,7 +13023,7 @@
    "units": 2,
    "sold_at": 25.95,
    "revenue": 45.18,
-   "cogs": 5.63,
+   "cogs": 0.53,
    "costed": true
   },
   {
@@ -14607,7 +14607,7 @@
    "units": 5,
    "sold_at": 34.65,
    "revenue": 71.08,
-   "cogs": 9.51,
+   "cogs": 0.9,
    "costed": true
   },
   {
@@ -14739,7 +14739,7 @@
    "units": 1,
    "sold_at": 17.25,
    "revenue": 9.59,
-   "cogs": 1.35,
+   "cogs": 0.13,
    "costed": true
   },
   {
@@ -15366,7 +15366,7 @@
    "units": 2,
    "sold_at": 11.95,
    "revenue": 13.2,
-   "cogs": 1.88,
+   "cogs": 0.18,
    "costed": true
   },
   {
@@ -15377,7 +15377,7 @@
    "units": 1,
    "sold_at": 14.95,
    "revenue": 13.01,
-   "cogs": 2.41,
+   "cogs": 0.19,
    "costed": true
   },
   {
@@ -16136,7 +16136,7 @@
    "units": 3,
    "sold_at": 11.95,
    "revenue": 20.25,
-   "cogs": 2.81,
+   "cogs": 0.27,
    "costed": true
   },
   {
@@ -16180,7 +16180,7 @@
    "units": 1,
    "sold_at": 14.95,
    "revenue": 12.96,
-   "cogs": 2.41,
+   "cogs": 0.19,
    "costed": true
   },
   {
@@ -16994,7 +16994,7 @@
    "units": 1,
    "sold_at": 14.95,
    "revenue": 12.92,
-   "cogs": 2.41,
+   "cogs": 0.19,
    "costed": true
   },
   {
@@ -17060,7 +17060,7 @@
    "units": 1,
    "sold_at": 8.95,
    "revenue": 7.69,
-   "cogs": 0.97,
+   "cogs": 0.09,
    "costed": true
   },
   {
@@ -17654,7 +17654,7 @@
    "units": 2,
    "sold_at": 3.95,
    "revenue": 4.05,
-   "cogs": 0.62,
+   "cogs": 0.06,
    "costed": true
   },
   {
@@ -18072,7 +18072,7 @@
    "units": 1,
    "sold_at": 5.95,
    "revenue": 5.05,
-   "cogs": 0.96,
+   "cogs": 0.08,
    "costed": true
   },
   {
@@ -18226,7 +18226,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.24,
-   "cogs": 0.31,
+   "cogs": 0.03,
    "costed": true
   },
   {
@@ -18248,7 +18248,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.03,
-   "cogs": 0.31,
+   "cogs": 0.03,
    "costed": true
   },
   {
@@ -18534,7 +18534,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.33,
-   "cogs": 0.93,
+   "cogs": 0.07,
    "costed": true
   },
   {
@@ -18737,6 +18737,17 @@
   },
   {
    "date": "2026-08-13",
+   "item": "Atlantic Giant Pumpkin Seed x100",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 2,
+   "sold_at": 5.95,
+   "revenue": 10.08,
+   "cogs": 3.3,
+   "costed": true
+  },
+  {
+   "date": "2026-08-13",
    "item": "Heavy Duty Bundle",
    "game": "Rivals",
    "currency": "USD",
@@ -18792,13 +18803,24 @@
   },
   {
    "date": "2026-08-13",
-   "item": "Atlantic Giant Pumpkin Seed x100",
+   "item": "Shadow Dragon x3",
    "game": "Grow a Garden 2",
    "currency": "GBP",
    "units": 1,
    "sold_at": 5.95,
-   "revenue": 4.93,
-   "cogs": 1.65,
+   "revenue": 5.15,
+   "cogs": 0.08,
+   "costed": true
+  },
+  {
+   "date": "2026-08-13",
+   "item": "Super Syrup Sprinkler + Watering Can x100",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 5.95,
+   "revenue": 5.15,
+   "cogs": 0.59,
    "costed": true
   },
   {
@@ -18809,7 +18831,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.44,
-   "cogs": 0.93,
+   "cogs": 0.07,
    "costed": true
   },
   {
@@ -18869,6 +18891,17 @@
   },
   {
    "date": "2026-08-13",
+   "item": "Maple Rainbow Seed x100",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.56,
+   "cogs": 0.27,
+   "costed": true
+  },
+  {
+   "date": "2026-08-13",
    "item": "Song of the Deep Relic",
    "game": "FISCH",
    "currency": "GBP",
@@ -18908,7 +18941,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.03,
-   "cogs": 0.31,
+   "cogs": 0.03,
    "costed": true
   },
   {
