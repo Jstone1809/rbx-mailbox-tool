@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-13T06:00:34Z",
+ "generated": "2026-08-13T09:04:04Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 8786.87,
  "days": [
@@ -295,21 +295,21 @@
   },
   {
    "date": "2026-08-13",
-   "revenue": 62.98,
-   "cogs": 28.11,
+   "revenue": 73.82,
+   "cogs": 30.42,
    "ads": 0.0,
    "has_ads": false,
-   "orders": 9,
-   "units": 13,
+   "orders": 12,
+   "units": 16,
    "nocost_revenue": 0.0
   }
  ],
  "games": [
   {
    "game": "Grow a Garden 2",
-   "revenue": 6454.22,
-   "cogs": 1214.46,
-   "units": 1686
+   "revenue": 6461.13,
+   "cogs": 1216.37,
+   "units": 1688
   },
   {
    "game": "Blox Fruits",
@@ -319,9 +319,9 @@
   },
   {
    "game": "FISCH",
-   "revenue": 1081.34,
-   "cogs": 154.73,
-   "units": 233
+   "revenue": 1085.27,
+   "cogs": 155.12,
+   "units": 234
   },
   {
    "game": "Rivals",
@@ -18726,6 +18726,17 @@
   },
   {
    "date": "2026-08-13",
+   "item": "Atlantic Giant Pumpkin Seed x100",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 5.95,
+   "revenue": 4.93,
+   "cogs": 1.65,
+   "costed": true
+  },
+  {
+   "date": "2026-08-13",
    "item": "Shadow Dragon x3",
    "game": "Grow a Garden 2",
    "currency": "USD",
@@ -18733,6 +18744,17 @@
    "sold_at": 7.95,
    "revenue": 4.44,
    "cogs": 0.93,
+   "costed": true
+  },
+  {
+   "date": "2026-08-13",
+   "item": "Exalted Relic x100",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 7.3,
+   "revenue": 3.93,
+   "cogs": 0.4,
    "costed": true
   },
   {
@@ -18777,6 +18799,17 @@
    "sold_at": 3.95,
    "revenue": 2.02,
    "cogs": 0.39,
+   "costed": true
+  },
+  {
+   "date": "2026-08-13",
+   "item": "\ud83e\udeb4Grow a Garden 2 | Maple Rainbow Seed x100 | GAG2 | Fall Harvest | Fas",
+   "game": "Grow a Garden 2",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 3.95,
+   "revenue": 1.98,
+   "cogs": 0.26,
    "costed": true
   },
   {
