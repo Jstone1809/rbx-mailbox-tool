@@ -544,7 +544,13 @@ const ITEMS = [
   {label:"Star Fruit + Dragon's Breath Seed",              bundle:["Star Fruit Seed","Dragon's Breath Seed"],                    qtyOptions:[1,3,5,10]},
   {label:"Sun Bloom + Moon Bloom Seed",                    bundle:["Sun Bloom Seed","Moon Bloom Seed"],                          qtyOptions:[1,3,5,10]},
   {label:"All Super Seeds",                                bundle:["Star Fruit Seed","Dragon's Breath Seed","Sun Bloom Seed","Moon Bloom Seed","Hypno Bloom Seed"], qtyOptions:[1,3,5,10,25,50,100]},
-  {label:"Everything Bundle",                              bundle:["Sheckles (M)*1000","Raccoon","Unicorn","Firefly","Bald Eagle","Bear","Golden Dragonfly","Star Fruit Seed","Dragon's Breath Seed","Sun Bloom Seed","Moon Bloom Seed","Hypno Bloom Seed","Super Sprinkler*10","Super Watering Can*10"], qtyOptions:[1,3,5]},
+  // HELD until the Worker is running build "bundle-qty-v1" (see patch_worker.py).
+  // The "*N" multiplier is understood here but NOT by the deployed Worker, which
+  // would read "Sheckles (M)*1000" as "Sheckles (M) x1" and auto-send 1M instead of
+  // 1B — with known:true, so nothing would stop it. While this line stays commented
+  // an Everything Bundle order simply waits for manual approval, which is safe.
+  // Deploy the patched Worker, confirm /version reads bundle-qty-v1, then uncomment.
+  // {label:"Everything Bundle",                           bundle:["Sheckles (M)*1000","Raccoon","Unicorn","Firefly","Bald Eagle","Bear","Golden Dragonfly","Star Fruit Seed","Dragon's Breath Seed","Sun Bloom Seed","Moon Bloom Seed","Hypno Bloom Seed","Super Sprinkler*10","Super Watering Can*10"], qtyOptions:[1,3,5]},
   {label:"Pet Bundle",                                     bundle:["Raccoon","Unicorn","Firefly","Bald Eagle","Bear","Golden Dragonfly"], qtyOptions:[1,3,5]},
   {label:"Big Pet Bundle",                                 bundle:["Big Bee","Big Robin","Big Deer","Big Turtle","Big Owl","Big Bunny","Big Frog"], qtyOptions:[1,3,5]},
   {label:"Premium Pet Bundle",                             bundle:["Black Dragon","Ice Serpent","Raccoon"],                      qtyOptions:[1,3,5]},
@@ -969,6 +975,10 @@ async function syncItems(){
     const o = i.bundle ? {label:i.label, bundle:i.bundle} : {label:i.label};
     if(i.manual) o.manual = true;
     if(i.fall) o.fall = true;          // Fall Harvest -> routed to the dimension emulator
+    // The Worker needs the code to format currency. Sheckles/Leaves are counted in
+    // millions, so a bundle component of 1000 must come out as "1B Sheckles", not
+    // "Sheckles (M) x1000" — and without the code the Worker can only guess from text.
+    if(i.code) o.code = i.code;
     return o;
   });
   try{
