@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-14T06:00:36Z",
+ "generated": "2026-08-14T08:00:56Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 9754.39,
  "days": [
@@ -277,7 +277,7 @@
    "date": "2026-08-12",
    "revenue": 199.68,
    "cogs": 98.02,
-   "ads": 7.72,
+   "ads": 12.47,
    "has_ads": true,
    "orders": 23,
    "units": 33,
@@ -287,29 +287,29 @@
    "date": "2026-08-13",
    "revenue": 373.96,
    "cogs": 174.51,
-   "ads": 0.0,
-   "has_ads": false,
+   "ads": 32.34,
+   "has_ads": true,
    "orders": 45,
    "units": 74,
    "nocost_revenue": 0.0
   },
   {
    "date": "2026-08-14",
-   "revenue": 2.62,
-   "cogs": 0.59,
+   "revenue": 7.39,
+   "cogs": 2.24,
    "ads": 0.0,
    "has_ads": false,
-   "orders": 2,
-   "units": 2,
+   "orders": 3,
+   "units": 3,
    "nocost_revenue": 0.0
   }
  ],
  "games": [
   {
    "game": "Grow a Garden 2",
-   "revenue": 6318.79,
-   "cogs": 1174.2,
-   "units": 1650
+   "revenue": 6323.56,
+   "cogs": 1175.85,
+   "units": 1651
   },
   {
    "game": "Blox Fruits",
@@ -18733,6 +18733,17 @@
    "sold_at": 1.25,
    "revenue": 0.0,
    "cogs": 0.0,
+   "costed": true
+  },
+  {
+   "date": "2026-08-14",
+   "item": "Atlantic Giant Pumpkin Seed x100",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 5.95,
+   "revenue": 4.77,
+   "cogs": 1.65,
    "costed": true
   },
   {
