@@ -377,6 +377,532 @@
   <p class="foot">Highlighted values update as you type.</p>
 </div>
 
+<!-- The mailbox send logic, embedded so the site can hand you a COMPLETE
+     runnable script (config + logic) to paste into Delta on iOS, where
+     there is no listener pushing payload.lua. type="text/plain" means the
+     browser never executes it; we just read .textContent. -->
+<script id="sendLua" type="text/plain">
+pcall(function() writefile("send_started.txt", "1") end)
+local C = getgenv().MailboxConfig or {}
+local RS = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Net = require(RS:WaitForChild("SharedModules"):WaitForChild("Networking"))
+local PS = require(RS:WaitForChild("ClientModules"):WaitForChild("PlayerStateClient"))
+local LP = Players.LocalPlayer
+
+-- Anti-AFK: the emulator sits idle between orders, so Roblox's ~20-min idle timer
+-- kicks it. Simulate a tiny bit of input to reset that timer.
+--
+-- NOTE: this uses VirtualUser, which some game anti-cheats specifically watch for
+-- (a normal client never calls it). If you're seeing game-specific kicks (error
+-- 267), turn this OFF first to rule it out:  getgenv().MailboxAntiAfk = false
+-- OFF BY DEFAULT. This used VirtualUser to stop idle kicks, but VirtualUser is a
+-- signature game anti-cheats watch for, and the fall lane started getting
+-- game-issued kicks (error 267) during idle gaps when this was the ONLY thing
+-- running. Idle kicks are handled fine by the listener's Reconnect-and-retry,
+-- so this is not worth the risk. Set getgenv().MailboxAntiAfk = true to re-enable.
+if getgenv().MailboxAntiAfk == true and not getgenv().__mailboxAntiAfk then
+getgenv().__mailboxAntiAfk = true
+local VirtualUser = game:GetService("VirtualUser")
+local function nudge()
+pcall(function()
+VirtualUser:CaptureController()
+VirtualUser:ClickButton2(Vector2.new())
+end)
+end
+pcall(function()
+LP.Idled:Connect(nudge)              -- fires right before the idle kick
+end)
+task.spawn(function()
+local every = tonumber(getgenv().AntiAfkSeconds) or 600   -- 10 min heartbeat
+while task.wait(every) do
+nudge()
+end
+end)
+print("[Mailbox] anti-AFK installed (heartbeat " .. (tonumber(getgenv().AntiAfkSeconds) or 600) .. "s)")
+end
+
+local DAILY_LIMIT = tonumber(getgenv().DailyLimit) or 50
+-- Sheckles gift pacing. The game rate-limits gifts; these are tuned to outlast a
+-- longer-than-expected cooldown so a big order doesn't die after a couple of
+-- batches. All overridable via getgenv() without re-embedding the script.
+local SHECK_BATCH_GAP  = tonumber(getgenv().SheckBatchGap)  or 20   -- wait between OK batches (was 15)
+local SHECK_RETRY_BASE = tonumber(getgenv().SheckRetryBase) or 30   -- first retry wait after a reject
+local SHECK_RETRY_STEP = tonumber(getgenv().SheckRetryStep) or 15   -- add per additional failure
+local SHECK_RETRY_MAX  = tonumber(getgenv().SheckRetryMax)  or 90   -- cap on a single retry wait
+-- The game blocks gifts after ~100 fruit per session. Once we're at/above this
+-- and a few retries have failed, treat it as the wall (pause for Jamie) instead
+-- of retrying for minutes. Margin below 100 in case the exact cap wobbles.
+local GIFT_WALL       = tonumber(getgenv().GiftWall)      or 96   -- fruit count that trips the wall check
+local GIFT_WALL_TRIES = tonumber(getgenv().GiftWallTries) or 3    -- rejects at the wall before we stop
+-- GAG2 limits each SENDING account to 5 gifts per day to any one player. One gift
+-- can still hold many item stacks, so we pack orders into as few gifts as possible.
+-- If a single account still needs more than this many gifts for one buyer, we stop
+-- and alert Jamie — the rest can go from a DIFFERENT account (each has its own 5),
+-- or the next day. Tunable via getgenv().RecipientGiftMax.
+local RECIPIENT_GIFT_MAX = tonumber(getgenv().RecipientGiftMax) or 5
+local USED_TODAY = tonumber((getgenv().SendCounts or {})[tostring(LP.Name):lower()]) or 0
+local FVC; do local ok, m = pcall(function() return require(RS.SharedModules.FruitValueCalc) end); if ok then FVC = m end end
+local STACK = {Sprinklers=1,WateringCans=1,Mushrooms=1,Gnomes=1,Raccoons=1,Crates=1,SeedPacks=1,Trowels=1,Props=1,Seeds=1,HarvestedFruits=1,Flashbangs=1,EmptyPots=1}
+local function getInv()
+local ok, r = pcall(function() return PS:WaitForLocalReplica(5) end)
+return ok and r and r.Data and type(r.Data.Inventory) == "table" and r.Data.Inventory
+end
+local function collectFruits(name, count)
+local lp = Players.LocalPlayer
+local ids = {}
+local function scan(container)
+if not container then return end
+for _, c in ipairs(container:GetChildren()) do
+if #ids >= count then return end
+if c:GetAttribute("FruitProxy") == true or c:GetAttribute("HarvestedFruit") == true then
+local fname = c:GetAttribute("Fruit") or c:GetAttribute("FruitName")
+local id = c:GetAttribute("Id")
+if fname == name and id then ids[#ids + 1] = id end
+end
+end
+end
+scan(lp.Backpack)
+scan(lp.Character)
+return ids
+end
+local function valueFruit(o)
+local a = o:GetAttributes()
+if not FVC then return 0 end
+local ok, v = pcall(FVC, a.FruitName or a.Fruit, a.SizeMultiplier, a.Mutation, LP, a.DecayAlpha)
+return (ok and tonumber(v)) or 0
+end
+local function pickByValue(target)
+local fr = {}
+local function scan(c) if c then for _, o in ipairs(c:GetChildren()) do
+if o:GetAttribute("HarvestedFruit") == true or o:GetAttribute("FruitProxy") == true then
+local id = o:GetAttribute("Id")
+if id then fr[#fr + 1] = { id = id, v = valueFruit(o) } end
+end
+end end end
+scan(LP.Backpack); scan(LP.Character)
+table.sort(fr, function(x, y) return x.v < y.v end)   -- smallest first = least overshoot
+local ids, sum = {}, 0
+for _, f in ipairs(fr) do
+if sum >= target then break end
+if f.v > 0 then ids[#ids + 1] = f.id; sum += f.v end
+end
+return ids, sum
+end
+local function pickBatch(remaining, maxN)
+local fr = {}
+local function scan(c) if c then for _, o in ipairs(c:GetChildren()) do
+if o:GetAttribute("HarvestedFruit") == true or o:GetAttribute("FruitProxy") == true then
+local id = o:GetAttribute("Id")
+-- Capture the fruit's NAME too, so the buyer can be told exactly which crops
+-- they received and need to sell (a bare "delivered as CROPS" isn't checkable).
+if id then fr[#fr + 1] = { id = id, v = valueFruit(o), name = tostring(o.Name) } end
+end
+end end end
+scan(LP.Backpack); scan(LP.Character)
+table.sort(fr, function(x, y) return x.v < y.v end)
+local ids, sum, names = {}, 0, {}
+for _, f in ipairs(fr) do
+if sum >= remaining or #ids >= maxN then break end
+if f.v > 0 then
+ids[#ids + 1] = f.id
+sum += f.v
+local nm = f.name or "Fruit"
+names[nm] = (names[nm] or 0) + 1
+end
+end
+return ids, sum, names
+end
+local function claimInbox()
+-- CONFIRMED by a live remote scan: Net.Mailbox has Claim, ClaimAll, ClaimAllProgress
+-- and ClaimAllFinished. ClaimAll empties the whole mailbox in ONE call — far faster
+-- than firing Claim per item — and ClaimAllFinished tells us when it's actually done,
+-- so we don't guess with a fixed sleep. Falls back to the per-item loop if anything
+-- is missing (e.g. after a game update renames things).
+local ALLOW_CLAIM_ALL = (getgenv().MailboxClaimAll ~= false)   -- set false to force per-item
+if ALLOW_CLAIM_ALL and type(Net.Mailbox) == "table" then
+local remote = Net.Mailbox.ClaimAll
+if remote and type(remote.Fire) == "function" then
+-- Listen for completion before firing, so we can't miss a fast finish.
+local done = false
+local conn
+pcall(function()
+local fin = Net.Mailbox.ClaimAllFinished
+if fin and fin.OnClientEvent then
+conn = fin.OnClientEvent:Connect(function() done = true end)
+end
+end)
+local ok = pcall(function() return remote:Fire() end)
+if ok then
+-- Wait for ClaimAllFinished, capped so a missing event can't hang the send.
+local waited = 0
+while not done and waited < 8 do
+task.wait(0.2); waited = waited + 0.2
+end
+if conn then pcall(function() conn:Disconnect() end) end
+task.wait(0.3)                  -- let claimed items settle into the backpack
+return -1                       -- -1 signals "claimed via Claim All" (count unknown)
+end
+if conn then pcall(function() conn:Disconnect() end) end
+end
+end
+-- Fallback: list the mailbox and claim each item individually.
+local ok, inbox = pcall(function() return Net.Mailbox.List:Fire() end)
+if not ok or type(inbox) ~= "table" then return 0 end
+local c = 0
+for mailId in pairs(inbox) do
+local cok = pcall(function() return Net.Mailbox.Claim:Fire(mailId) end)
+if cok then c += 1 end
+task.wait(0.3)
+end
+return c
+end
+local function buildOrder(inv, items)
+local entries, sheckle, short = {}, nil, {}
+for name, amt in items do
+local want = math.max(1, math.floor(tonumber(amt) or 1))
+-- SHECKLES and LEAVES are both currencies delivered as fruit-value (1 unit = 1
+-- fruit-value point). LEAVES is the Fall Harvest currency; mechanically identical,
+-- just labelled differently and sent from the fall emulator's own fruit stock.
+if name == "SHECKLES" or name == "LEAVES" then
+sheckle = { reqM = want, target = want * 1000000, currency = (name == "LEAVES") and "Leaves" or "Sheckles" }
+else
+local origWant = want
+local fruitName = type(name) == "string" and name:match("^FRUIT::(.+)$")
+if fruitName then
+local got = 0
+for _, id in ipairs(collectFruits(fruitName, want)) do
+entries[#entries + 1] = { Category = "HarvestedFruits", ItemKey = id, Count = 1, disp = fruitName }
+got += 1
+end
+if got < origWant then short[fruitName] = (short[fruitName] or 0) + (origWant - got) end
+else
+local matched = 0
+-- Prefixes aren't part of the pet name — the game stores a plain Name plus
+-- attributes like Size="Big" or Mutation="Rainbow"/"Mega". Strip the prefix(es)
+-- and match on those fields, so a plain "Ice Serpent" never ships a Rainbow/Mega
+-- one (and vice-versa). Prefixes may appear in any order/combination.
+local petName, wantBig, wantRainbow, wantMega = name, false, false, false
+-- Only strip Big/Rainbow/Mega as PET mutation prefixes — never from a seed. On the
+-- Fall Harvest channel, Maple Rainbow/Gold seeds are claimed simply as "Rainbow Seed"
+-- / "Gold Seed"; those must fall through to the seed matcher, NOT be read as a
+-- "Rainbow"-mutation pet named "Seed". A pet ends in an animal name, a seed in "Seed".
+if type(name) == "string" and not name:lower():match("seed%s*$") then
+local changed = true
+while changed do
+changed = false
+local b = petName:match("^[Bb]ig%s+(.+)$")
+if b then petName, wantBig, changed = b, true, true end
+local r = petName:match("^[Rr]ainbow%s+(.+)$")
+if r then petName, wantRainbow, changed = r, true, true end
+local m = petName:match("^[Mm]ega%s+(.+)$")
+if m then petName, wantMega, changed = m, true, true end
+end
+end
+if type(inv.Pets) == "table" then
+for key, p in inv.Pets do
+if want <= 0 then break end
+-- CONFIRMED by a live inventory dump — variants live in TWO separate fields:
+--   Size : "Big" or "Huge"   (Huge is what the UI calls "Mega")
+--   Type : "Rainbow"
+-- They roll independently, so a pet can be Size="Huge" AND Type="Rainbow".
+-- Plain pets have neither field set.
+local _sz = tostring(p.Size or "")
+local _ty = tostring(p.Type or "")
+local isMega = (_sz == "Huge") or (_sz == "Mega")
+local isBig = (_sz == "Big")
+local isRainbow = (_ty == "Rainbow")
+if type(p) == "table" and p.Id and not p.Equipped
+and (tostring(p.Name):gsub("%s",""):lower()) == (tostring(petName):gsub("%s",""):lower())
+and (isBig == wantBig)
+and (isRainbow == wantRainbow)
+and (isMega == wantMega) then
+entries[#entries + 1] = { Category = "Pets", ItemKey = key, Count = 1, disp = name }
+want -= 1
+matched += 1
+end
+end
+end
+local stackAdded = 0
+if want > 0 and not wantBig and not wantRainbow and not wantMega then
+-- Resolve the real inventory key for this seed/item. The game may store it under
+-- a slightly different name than our code uses — e.g. "Amber Cranberry Seed" vs
+-- "Amber Cranberry", or different casing. Try exact, +/- " Seed", then a
+-- case/space-insensitive scan so a naming mismatch doesn't look like "out of stock".
+local function resolveKey(t)
+if type(t[name]) == "number" then return name end
+local alt = name:match("^(.-)%s+[Ss]eed$")          -- name without trailing "Seed"
+if alt and type(t[alt]) == "number" then return alt end
+local withSeed = name .. " Seed"                     -- name WITH "Seed"
+if type(t[withSeed]) == "number" then return withSeed end
+-- Some fall seeds are ordered as "Maple X" (to stay distinct from the main-lane
+-- "X") but claim in-game under the plain name — as Maple Gold/Rainbow do. So if
+-- the Maple name doesn't match, try again without the prefix. Safe: these items
+-- only ever run on the fall emulator, so this can't pick up a main-lane seed.
+local noMaple = name:match("^[Mm]aple%s+(.+)$")
+if noMaple then
+if type(t[noMaple]) == "number" then return noMaple end
+local nmAlt = noMaple:match("^(.-)%s+[Ss]eed$")
+if nmAlt and type(t[nmAlt]) == "number" then return nmAlt end
+local nmWith = noMaple .. " Seed"
+if type(t[nmWith]) == "number" then return nmWith end
+end
+local target = name:gsub("%s",""):lower()
+local targetNoSeed = target:gsub("seed$","")
+local targetNoMaple = target:gsub("^maple","")
+local targetNoMapleNoSeed = targetNoMaple:gsub("seed$","")
+for k, v in t do
+if type(v) == "number" then
+local kk = tostring(k):gsub("%s",""):lower()
+if kk == target or kk == targetNoSeed or kk:gsub("seed$","") == targetNoSeed
+or kk == targetNoMaple or kk:gsub("seed$","") == targetNoMapleNoSeed then
+return k
+end
+end
+end
+return nil
+end
+for cat, t in inv do
+if cat ~= "Pets" and type(t) == "table" then
+local realKey = resolveKey(t)
+if realKey and type(t[realKey]) == "number" and t[realKey] > 0 then
+local c = math.min(want, t[realKey])
+stackAdded = c
+-- The game rejects a single gifted stack above ~5000, so split large
+-- quantities into 5000-max chunks; the send loop gifts each chunk separately.
+local left = c
+while left > 0 do
+local chunk = math.min(left, 5000)
+entries[#entries + 1] = { Category = cat, ItemKey = realKey, Count = chunk, disp = name }
+left = left - chunk
+end
+break
+end
+end
+end
+end
+-- Requested more than we could cover from inventory: record the shortfall so
+-- it's reported as a FAIL (never silently "Confirmed" for fewer than ordered).
+local added = matched + stackAdded
+if added < origWant then short[name] = (short[name] or 0) + (origWant - added) end
+end
+end
+end
+return entries, sheckle, short
+end
+getgenv().mailboxSendOnce = function()
+local function result(s) pcall(function() writefile("send_result.txt", s) end) end
+-- Heartbeat: overwrite after each batch so the listener knows we're still
+-- working and keeps waiting for big sends instead of timing out early.
+local function progress(n) pcall(function() writefile("send_progress.txt", tostring(n)) end) end
+local users, items = C.MAIL_USERNAME or {}, C.MAIL_ITEM_NAME or {}
+if #users == 0 or not next(items) then result("FAIL|Empty config - nothing sent.") return warn("[Mailbox] empty config") end
+local inv = getInv()
+if not inv then result("FAIL|Could not read inventory.") return warn("[Mailbox] no inventory") end
+local entries, sheckle, short = buildOrder(inv, items)
+local summary, failed = {}, {}   -- summary = actually-sent (Confirmed); failed = not sent
+if #entries == 0 and not sheckle then result("FAIL|Nothing matched to send.") return warn("[Mailbox] nothing to send") end
+local target = tostring(users[math.random(#users)])
+local note = C.MAIL_NOTE
+if not note or note == "" then
+local parts = {}
+for name, amt in items do
+local q = math.max(1, math.floor(tonumber(amt) or 1))
+if name == "SHECKLES" or name == "LEAVES" then
+local unit = (name == "LEAVES") and " Leaves" or " Sheckles"
+parts[#parts + 1] = (q >= 1000 and (q / 1000) .. "B" or q .. "M") .. unit
+else
+parts[#parts + 1] = tostring(name) .. " x" .. q
+end
+end
+note = "Order: " .. table.concat(parts, ", ")
+end
+local ok, uid, err = pcall(function() return Net.Mailbox.LookupPlayer:Fire(target) end)
+if not ok or type(uid) ~= "number" or uid <= 0 then result("FAIL|Could not find @" .. target .. ".") return warn("[Mailbox] lookup:", err) end
+local sent, i, batches, hitLimit = 0, 1, 0, false
+local recipientCapped = false
+local mailboxFull = false
+while i <= #entries do
+if USED_TODAY + batches >= DAILY_LIMIT then hitLimit = true break end
+if batches >= RECIPIENT_GIFT_MAX then recipientCapped = true break end  -- 5-gift/buyer/day cap
+-- Put up to 20 DISTINCT item stacks in one gift. If the same item appears
+-- again (a split large quantity), start a fresh gift so no stack is over the cap.
+local batch, seen, j = {}, {}, i
+while j <= #entries and #batch < 20 do
+local e = entries[j]
+local key = tostring(e.Category) .. "|" .. tostring(e.ItemKey)
+if seen[key] then break end
+seen[key] = true
+batch[#batch + 1] = e
+j = j + 1
+end
+local sok, success, reason = pcall(function() return Net.Mailbox.SendBatch:Fire(uid, batch, note) end)
+if sok and success then
+sent += #batch batches += 1
+for _, e in ipairs(batch) do summary[e.disp] = (summary[e.disp] or 0) + e.Count end
+else
+for _, e in ipairs(batch) do failed[e.disp] = (failed[e.disp] or 0) + e.Count end
+-- Read WHY the gift was rejected. If the game says the recipient has hit their
+-- daily gift limit (5 gifts per day that THIS account can send to one player —
+-- other accounts / lanes each have their own separate 5),
+-- flag it so we report it clearly instead of a vague "out of stock" guess.
+local rtext = ""
+if type(reason) == "string" then rtext = reason
+elseif type(reason) == "table" then rtext = tostring(reason.message or reason.reason or reason.error or reason.Message or "")
+elseif type(success) == "string" then rtext = success end
+rtext = rtext:lower()
+if rtext:find("gift") and (rtext:find("limit") or rtext:find("maximum") or rtext:find("per day") or rtext:find("daily") or rtext:find("5")) then
+recipientCapped = true
+break                       -- buyer is already at their 5-gift daily cap
+elseif rtext:find("full") or rtext:find("inbox") or rtext:find("mailbox is") then
+mailboxFull = true
+break                       -- buyer's mailbox is full
+end
+end
+progress(batches)
+i = j
+if i <= #entries then task.wait(15) end
+end
+if sheckle then
+if batches > 0 then task.wait(15) end   -- gift cooldown after the pets/items gift
+local goal, val, fcount, guard, fails = sheckle.target * 1.05, 0, 0, 0, 0   -- +5% buffer for in-game price drift
+local fruitSent = {}         -- fruit name -> how many sent (told to the buyer)
+local stopReason = ""
+local lastReason = ""        -- last rejection reason string the game returned, if any
+while val < goal do
+guard += 1
+if guard > 150 then break end
+if USED_TODAY + batches >= DAILY_LIMIT then hitLimit = true stopReason = "limit" break end
+if batches >= RECIPIENT_GIFT_MAX then stopReason = "recipient_giftcap" break end  -- 5/buyer/day
+claimInbox()                 -- pull in fruit that arrived since last batch
+task.wait(1)                 -- let claimed fruit land in the backpack
+local ids, bval, bnames = pickBatch(goal - val, 20)
+if #ids == 0 then stopReason = "nofruit" break end  -- nothing left to send
+local batch = {}
+for _, id in ipairs(ids) do batch[#batch + 1] = { Category = "HarvestedFruits", ItemKey = id, Count = 1 } end
+local sok, success, reason = pcall(function() return Net.Mailbox.SendBatch:Fire(uid, batch, note) end)
+if sok and success then
+val += bval fcount += #ids batches += 1 fails = 0
+for nm, c in pairs(bnames or {}) do fruitSent[nm] = (fruitSent[nm] or 0) + c end
+progress(string.format("SHECK|%d|%d|%d|ok", math.floor(val), math.floor(sheckle.target), fcount))
+if val < goal then task.wait(SHECK_BATCH_GAP) end
+else
+fails += 1                 -- gift cooldown / daily limit / full mailbox: retry, but not forever
+-- Capture WHY the game rejected the gift. Some rejections return a reason string
+-- (or a table with a message). A "mailbox full / inbox full" reason is the buyer's
+-- problem, NOT our account — so surface it distinctly instead of "hit daily limit".
+local rtext = ""
+if type(reason) == "string" then rtext = reason
+elseif type(reason) == "table" then rtext = tostring(reason.message or reason.reason or reason.error or reason.Message or "")
+elseif type(success) == "string" then rtext = success end
+if rtext ~= "" then lastReason = rtext end
+if rtext:lower():find("full") or rtext:lower():find("inbox") or rtext:lower():find("mailbox is") then
+stopReason = "recipient_full"
+break
+end
+-- The game caps gifts at ~100 fruit per session/window. When we've sent about
+-- that many and every further batch is now rejected, it's the gift wall, not a
+-- passing cooldown — no amount of retrying clears it until the window resets
+-- (unknown length). Stop quickly and hand it to Jamie to finish / swap accounts,
+-- rather than burning 15 long retries first.
+if fcount >= GIFT_WALL and fails >= GIFT_WALL_TRIES then
+stopReason = "giftwall"
+break
+end
+-- Otherwise: an ordinary gift cooldown between batches. Retry patiently — the
+-- cooldown can run longer than a few seconds. Only treat it as a hard block when
+-- NOTHING has sent after several long waits.
+local capTries = (fcount == 0) and 6 or 15
+if fails >= capTries then
+stopReason = (fcount == 0) and "blocked" or "sendfail"
+break
+end
+progress(string.format("SHECK|%d|%d|%d|retry|%d", math.floor(val), math.floor(sheckle.target), fcount, fails))
+task.wait(math.min(SHECK_RETRY_BASE + fails * SHECK_RETRY_STEP, SHECK_RETRY_MAX))
+end
+end
+sheckle.value = val
+sheckle.count = fcount
+sheckle.stop = stopReason
+sheckle.reason = lastReason
+sheckle.fruit = fruitSent      -- exact crops sent, so the buyer can be told
+end
+if hitLimit and batches == 0 then
+result(("FAIL|Daily limit %d reached (%d/%d) - switch to a new account.\nMETA|acct=%d;name=%s;sends=0"):format(DAILY_LIMIT, USED_TODAY, DAILY_LIMIT, LP.UserId, tostring(LP.Name)))
+print("[Mailbox] daily limit, nothing sent")
+return false
+end
+local lines = {}
+for disp, cnt in pairs(summary) do
+lines[#lines + 1] = ("SENT|@%s sent %s %d Confirmed"):format(target, tostring(disp), cnt)
+end
+if sheckle then
+local cur = sheckle.currency or "Sheckles"
+-- Exact crops sent, biggest count first: "Apple x12, Dragon Fruit x8".
+-- The buyer needs this to know what to sell in-game.
+local fruitStr = ""
+do
+local fl = {}
+for nm, c in pairs(sheckle.fruit or {}) do fl[#fl + 1] = { n = nm, c = c } end
+table.sort(fl, function(a, b) if a.c ~= b.c then return a.c > b.c end return a.n < b.n end)
+local parts = {}
+for _, f in ipairs(fl) do parts[#parts + 1] = f.n .. " x" .. f.c end
+fruitStr = table.concat(parts, ", ")
+end
+if sheckle.value < sheckle.target then
+local why = "check the game."
+if sheckle.stop == "recipient_full" then
+why = "the buyer's in-game mailbox is FULL — they need to open Roblox and claim/clear their mailbox, then it'll send. (Nothing wrong on our side.)"
+elseif sheckle.stop == "giftwall" then
+why = "this account hit the in-game ~100-fruit gift limit for now — it needs to cool down or you'll need to switch accounts to send the rest to @" .. target .. ". Nothing else is wrong; the amount above is what's already been delivered."
+elseif sheckle.stop == "sendfail" then
+why = "the gift cooldown didn't clear after several retries. Wait a minute, then resend the rest to @" .. target .. "."
+elseif sheckle.stop == "blocked" then
+why = "every send was rejected — this could be the buyer's mailbox being full, or this account hitting its daily gift limit. Check by sending a test gift to another user: if that works, ask @" .. target .. " to clear their mailbox; if not, switch accounts."
+elseif sheckle.stop == "nofruit" then
+why = "ran out of fruit to send — stock more (higher-value fruit means fewer sends per order)."
+elseif sheckle.stop == "recipient_giftcap" then
+why = "this account (" .. tostring(LP.Name) .. ") has hit its limit of 5 gifts to @" .. target .. " today — send the rest from a DIFFERENT account (each account gets its own 5), or wait until tomorrow."
+elseif sheckle.stop == "limit" then
+why = "hit the daily send limit — switch accounts and send the rest."
+end
+lines[#lines + 1] = ("FAIL|@%s SHORT: sent ~%dM of %dM %s (%d fruits). %s"):format(target, math.floor(sheckle.value / 1000000), sheckle.reqM, cur, sheckle.count, why)
+if fruitStr ~= "" then lines[#lines + 1] = "CROPS|" .. fruitStr end
+else
+lines[#lines + 1] = ("SENT|@%s sent %s %dM (~%dM in fruit, %d fruits) Confirmed"):format(target, cur, sheckle.reqM, math.floor(sheckle.value / 1000000), sheckle.count)
+if fruitStr ~= "" then lines[#lines + 1] = "CROPS|" .. fruitStr end
+end
+end
+for disp, cnt in pairs(short or {}) do failed[disp] = (failed[disp] or 0) + cnt end
+if next(failed) then
+local fparts = {}
+for disp, cnt in pairs(failed) do fparts[#fparts + 1] = tostring(disp) .. " x" .. cnt end
+table.sort(fparts)
+local reasonHint = " (out of stock / cooldown / limit)"
+if recipientCapped then reasonHint = " - this account hit its 5-gifts-to-this-buyer daily limit; send the rest from another account or tomorrow"
+elseif mailboxFull then reasonHint = " - the buyer's mailbox is FULL, they need to clear it" end
+lines[#lines + 1] = "FAIL|These did NOT send" .. reasonHint .. " - resend: " .. table.concat(fparts, ", ")
+end
+if recipientCapped then lines[#lines + 1] = ("FAIL|Account %s has sent @%s its daily max of 5 gifts — send the rest from a DIFFERENT account (each has its own 5/day) or wait until tomorrow."):format(tostring(LP.Name), target) end
+if mailboxFull then lines[#lines + 1] = ("FAIL|@%s's in-game mailbox is FULL — they need to open Roblox and clear it, then reply so the rest can send."):format(target) end
+if hitLimit then lines[#lines + 1] = ("FAIL|Hit daily limit %d - switch accounts to send the rest."):format(DAILY_LIMIT) end
+if #lines == 0 then lines[1] = ("SENT|@%s order sent (%d items) Confirmed"):format(target, sent) end
+lines[#lines + 1] = ("META|acct=%d;name=%s;sends=%d"):format(LP.UserId, tostring(LP.Name), batches)
+result(table.concat(lines, "\n"))
+print("[Mailbox] sent " .. sent .. " items to " .. target)
+return next(failed) == nil
+end
+if C.AUTO_SEND == true then
+task.spawn(function()
+while true do
+pcall(getgenv().mailboxSendOnce)
+task.wait(tonumber(C.SEND_INTERVAL) or 10)
+end
+end)
+else
+getgenv().mailboxSendOnce()
+end
+</script>
 <script>
 // ===== Telegram SEND settings — fill these in =====
 // NOTE: these are visible to anyone who views this page's source.
@@ -814,7 +1340,7 @@ function ebItemsToCodes(itemsText){
   return out;
 }
 
-function ebScriptFor(user, itemsText){
+function ebConfigFor(user, itemsText){
   const codes = ebItemsToCodes(itemsText);
   const body = Object.keys(codes)
     .map(c => '    ["' + c + '"] = ' + codes[c])
@@ -826,6 +1352,16 @@ function ebScriptFor(user, itemsText){
        + '    SEND_INTERVAL = 9999999999999 ,\n'
        + '    AUTO_SEND = true,\n'
        + '}';
+}
+
+// The FULL runnable script: config first (the logic reads getgenv().MailboxConfig
+// on its first line), then the send logic itself. This is what you paste into
+// Delta on iOS, where there's no listener pushing payload.lua to the device.
+function ebScriptFor(user, itemsText){
+  const cfg = ebConfigFor(user, itemsText);
+  const el = document.getElementById('sendLua');
+  const logic = el ? el.textContent.trim() : '';
+  return logic ? (cfg + '\n\n' + logic) : cfg;
 }
 
 function readableOrder(){
@@ -1657,7 +2193,7 @@ function ebBuildCard(o, st, skey){
         <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
       </div>
       ${o.confirmFailed ? '<div class="eb-confirm-warn">📨 Confirmation NOT sent to the buyer (API limit) — copy the message below and send it by hand in eBay Messages.</div>' : ''}
-      <button class="btn eb-copyscript" type="button">📜 Copy script (paste into Delta)</button>
+      <button class="btn eb-copyscript" type="button">📜 Copy full script (paste into Delta)</button>
       <button class="btn eb-copymsg${o.confirmFailed?' needs-send':''}" type="button">📋 Copy "order complete" message</button>
       <span class="eb-status"></span>`;
   const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), stEl=box.querySelector('.eb-status');
@@ -1682,8 +2218,8 @@ function ebBuildCard(o, st, skey){
     const u=uEl.value.trim().replace(/^@/,'');
     if(!u){ stEl.textContent='⚠ Enter the username first'; return; }
     const items=iEl.innerText;
+    if(!/\["/.test(ebConfigFor(u, items))){ stEl.textContent='⚠ No items recognised — check the item lines'; return; }
     const script=ebScriptFor(u, items);
-    if(!/\["/.test(script)){ stEl.textContent='⚠ No items recognised — check the item lines'; return; }
     copyText(e.currentTarget, script);
     stEl.textContent='📜 Script copied — paste it into Delta on the emulator.';
   });
