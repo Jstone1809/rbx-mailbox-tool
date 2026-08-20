@@ -275,6 +275,7 @@
     font-size:12px;font-weight:600;padding:6px 12px;margin-top:8px;width:100%}
   .eb-copymsg:hover{color:var(--text);border-color:var(--leaf)}
   .eb-copymsg.done{color:var(--leaf);border-color:var(--leaf)}
+  .eb-copymsg-plain{margin-top:6px}
   .eb-confirm-warn{background:#3a2a10;border:1px solid #b8860b;color:#ffd77a;
     border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px;line-height:1.4}
   .eb-giftcap{background:#2a1c3a;border:1px solid #9b6bd8;color:#d7b8ff;
@@ -2048,9 +2049,13 @@ function orderCompleteMessage(user, itemLines, fast){
   }
   return msg;
 }
-function ebBuiltMessage(o, user, itemsText){
+// force === true  -> always include the review ask
+// force === false -> never include it
+// force undefined -> decide from how quickly the order was delivered
+function ebBuiltMessage(o, user, itemsText, force){
   let fast=false;
   try{ fast = (Date.now() - new Date(o.creationDate).getTime()) <= 60*60*1000; }catch(e){}
+  if(force === true || force === false) fast = force;
   return orderCompleteMessage(user, (itemsText||'').split('\n'), fast);
 }
 function ebBuildCard(o, st, skey){
@@ -2193,8 +2198,9 @@ function ebBuildCard(o, st, skey){
         <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
       </div>
       ${o.confirmFailed ? '<div class="eb-confirm-warn">📨 Confirmation NOT sent to the buyer (API limit) — copy the message below and send it by hand in eBay Messages.</div>' : ''}
-      <button class="btn eb-copyscript" type="button">📜 Copy full script (paste into Delta)</button>
+      <button class="btn eb-copyscript" type="button" style="display:none">📜 Copy full script (paste into Delta)</button>
       <button class="btn eb-copymsg${o.confirmFailed?' needs-send':''}" type="button">📋 Copy "order complete" message</button>
+      <button class="btn eb-copymsg eb-copymsg-plain" type="button" data-review="0" style="display:none">📋 Copy message only</button>
       <span class="eb-status"></span>`;
   const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), stEl=box.querySelector('.eb-status');
   iEl.addEventListener('blur',()=>{ iEl.innerHTML=ebHighlight(iEl.innerText); });
@@ -2223,13 +2229,18 @@ function ebBuildCard(o, st, skey){
     copyText(e.currentTarget, script);
     stEl.textContent='📜 Script copied — paste it into Delta on the emulator.';
   });
-  const cpBtn=box.querySelector('.eb-copymsg');
-  if(cpBtn) cpBtn.addEventListener('click', e=>{
+  // Two copy buttons: with and without the review ask. The page can't know whether
+  // a manual send felt "fast" to the buyer — you do — so you pick.
+  box.querySelectorAll('.eb-copymsg').forEach(btn => btn.addEventListener('click', e=>{
+    const b=e.currentTarget;
     const u=uEl.value.trim().replace(/^@/,'');
     // the buyer still receives the outsourced Sheckles, so list them on the receipt
     const all = iEl.innerText + (outsourced.length ? '\n'+outsourced.join('\n') : '');
-    copyText(e.target, ebBuiltMessage(o, u, all));
-  });
+    // No data-review attribute -> pass undefined so ebBuiltMessage falls back to
+    // its original age-based choice (review ask only when delivered within the hour).
+    const rv = b.dataset.review;
+    copyText(b, ebBuiltMessage(o, u, all, rv === undefined ? undefined : rv === '1'));
+  }));
   if(askBtn) askBtn.addEventListener('click', async e=>{
     const btn=e.target; btn.disabled=true; btn.textContent='⏳ Messaging buyer…';
     try{
