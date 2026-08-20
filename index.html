@@ -267,6 +267,10 @@
   .eb-ask{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
     font-size:12px;font-weight:600;padding:6px 12px;margin-top:6px}
   .eb-ask:hover{color:var(--text);border-color:var(--leaf)}
+  .eb-copyscript{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    font-size:12px;font-weight:600;padding:6px 12px;margin-top:8px;width:100%}
+  .eb-copyscript:hover{color:var(--text);border-color:var(--leaf)}
+  .eb-copyscript.done{color:var(--leaf);border-color:var(--leaf)}
   .eb-copymsg{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
     font-size:12px;font-weight:600;padding:6px 12px;margin-top:8px;width:100%}
   .eb-copymsg:hover{color:var(--text);border-color:var(--leaf)}
@@ -768,6 +772,60 @@ function readableItems(){
   const lines = [];
   rows.forEach(o => expandRow(o).forEach(p => lines.push(pieceLine(p.label, p.qty, false))));
   return lines;
+}
+
+// ---- Manual paste fallback -------------------------------------------------
+// Turn an order's readable item text ("Raccoon x1", "1B Sheckles") into the Lua
+// config the emulator expects, so it can be pasted straight into Delta when the
+// automated send isn't running. Mirrors the listener's build_config_lua().
+function ebLabelToCode(label){
+  const t = String(label).trim();
+  const hit = ITEMS.find(it => it.label.toLowerCase() === t.toLowerCase());
+  if(hit && hit.code) return hit.code;
+  // fall back the same way the listener does: label minus a trailing " Seed"
+  return t.replace(/\s+seed$/i, '');
+}
+
+function ebItemsToCodes(itemsText){
+  const out = {};                       // code -> qty (insertion order preserved)
+  String(itemsText || '').split('\n').forEach(raw => {
+    let line = raw.trim();
+    if(!line || line.startsWith('#')) return;
+    // Currency first: "1B Sheckles" / "500M Leaves" -> amount in MILLIONS
+    const cur = line.match(/^([\d.]+)\s*([MB])\s+(Sheckles|Leaves)\b/i);
+    if(cur){
+      const n = parseFloat(cur[1]) * (cur[2].toUpperCase() === 'B' ? 1000 : 1);
+      const code = cur[3].toLowerCase() === 'leaves' ? 'LEAVES' : 'SHECKLES';
+      out[code] = (out[code] || 0) + n;
+      return;
+    }
+    // Normal "Item Name xN"
+    const m = line.match(/^(.+?)\s*[xX]\s*([\d,]+)\s*$/);
+    if(m){
+      const code = ebLabelToCode(m[1]);
+      const q = parseInt(String(m[2]).replace(/,/g, ''), 10) || 1;
+      if(code) out[code] = (out[code] || 0) + q;
+      return;
+    }
+    // No quantity given -> treat as one
+    const code = ebLabelToCode(line);
+    if(code) out[code] = (out[code] || 0) + 1;
+  });
+  return out;
+}
+
+function ebScriptFor(user, itemsText){
+  const codes = ebItemsToCodes(itemsText);
+  const body = Object.keys(codes)
+    .map(c => '    ["' + c + '"] = ' + codes[c])
+    .join(',\n');
+  return 'getgenv().MailboxConfig = {\n'
+       + '    MAIL_USERNAME = { "' + String(user || 'user_insert').replace(/^@/, '') + '" },\n'
+       + '    MAIL_ITEM_NAME = { \n' + body + '},\n'
+       + '    MAIL_NOTE = "Enjoy and have a great day!",\n'
+       + '    SEND_INTERVAL = 9999999999999 ,\n'
+       + '    AUTO_SEND = true,\n'
+       + '}';
 }
 
 function readableOrder(){
@@ -1599,6 +1657,7 @@ function ebBuildCard(o, st, skey){
         <button class="btn btn-clear eb-dismiss" type="button">✕ Dismiss</button>
       </div>
       ${o.confirmFailed ? '<div class="eb-confirm-warn">📨 Confirmation NOT sent to the buyer (API limit) — copy the message below and send it by hand in eBay Messages.</div>' : ''}
+      <button class="btn eb-copyscript" type="button">📜 Copy script (paste into Delta)</button>
       <button class="btn eb-copymsg${o.confirmFailed?' needs-send':''}" type="button">📋 Copy "order complete" message</button>
       <span class="eb-status"></span>`;
   const uEl=box.querySelector('.eb-user'), iEl=box.querySelector('.eb-items'), stEl=box.querySelector('.eb-status');
@@ -1618,6 +1677,16 @@ function ebBuildCard(o, st, skey){
     setTimeout(()=>{ stEl.textContent='Click "Fill Eldorado user" (or paste), then Pay now.'; }, 300);
   }));
   const askBtn=box.querySelector('.eb-ask');
+  const scBtn=box.querySelector('.eb-copyscript');
+  if(scBtn) scBtn.addEventListener('click', e=>{
+    const u=uEl.value.trim().replace(/^@/,'');
+    if(!u){ stEl.textContent='⚠ Enter the username first'; return; }
+    const items=iEl.innerText;
+    const script=ebScriptFor(u, items);
+    if(!/\["/.test(script)){ stEl.textContent='⚠ No items recognised — check the item lines'; return; }
+    copyText(e.currentTarget, script);
+    stEl.textContent='📜 Script copied — paste it into Delta on the emulator.';
+  });
   const cpBtn=box.querySelector('.eb-copymsg');
   if(cpBtn) cpBtn.addEventListener('click', e=>{
     const u=uEl.value.trim().replace(/^@/,'');
