@@ -1697,7 +1697,8 @@ async function cmdFetch(){
   }catch(e){ /* keep last view */ }
 }
 function cmdSchedule(){
-  const want = Date.now()<cmdFastUntil ? 3000 : 20000;
+  // 5s right after you run a command, 30s otherwise (was 3s/20s) — same KV reason.
+  const want = Date.now()<cmdFastUntil ? 5000 : 30000;
   if(want===cmdPollMs && cmdPollTimer) return;
   cmdPollMs=want; clearInterval(cmdPollTimer);
   cmdPollTimer=setInterval(async()=>{ await cmdFetch(); cmdSchedule(); }, cmdPollMs);
@@ -1909,7 +1910,7 @@ function ebHighlight(text){
 }
 
 function ebIdSafe(id){ return 'eb_'+String(id).replace(/[^A-Za-z0-9_-]/g,''); }
-let ebPollTimer=null, ebPollMs=20000;
+let ebPollTimer=null, ebPollMs=30000;
 async function ebayFetch(){
   const card=document.getElementById('ebayCard');
   if(!RELAY.on){ card.style.display='none'; return; }
@@ -1919,7 +1920,9 @@ async function ebayFetch(){
     const orders=data.orders||[];
     ebayRender(orders);
     // poll faster while something is mid-delivery, so Completed/Failed shows quickly
-    const want = orders.some(o=>(o.status||'')==='processing' || o.dispatch==='requested') ? 4000 : 20000;
+    // 6s while something is mid-delivery, 30s otherwise. Every poll is a KV read,
+    // and an open tab in the fast 4s/20s mode used to burn ~35k reads/day on its own.
+    const want = orders.some(o=>(o.status||'')==='processing' || o.dispatch==='requested') ? 6000 : 30000;
     if(want!==ebPollMs){ ebPollMs=want; clearInterval(ebPollTimer); ebPollTimer=setInterval(ebayFetch, ebPollMs); }
   }catch(e){ /* keep last view */ }
 }
