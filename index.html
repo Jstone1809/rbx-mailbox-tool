@@ -2106,7 +2106,10 @@ function ebBuildCard(o, st, skey){
       // to gift, or an outsourced Sheckles/Leaves remainder to send. The order is
       // deliberately NOT dispatched until you confirm. Word it for what's actually
       // pending, so a Leaves order doesn't say "gamepass".
-      const isCur = s => /\b(sheckles|leaves|leaf)\b/i.test(String(s));
+      // Currency OR a capped crop remainder — both are 'send more by hand',
+      // not a gamepass to gift.
+      const isCur = s => /\b(sheckles|leaves|leaf)\b/i.test(String(s))
+                      || /rainbow maple carrot/i.test(String(s));
       const curOnly = gp.every(isCur);
       const gpOnly  = gp.every(s=>!isCur(s));
       const doLabel = curOnly ? '💰 Sent manually — dispatch'
