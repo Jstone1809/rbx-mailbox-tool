@@ -1056,10 +1056,12 @@ const ITEMS = [
   {label:'Maple Pomegranate Seed', code:'Maple Pomegranate', fall:true, qtyOptions:[1,10,50,100]},
   {label:'Maple Venus Fly Trap Seed', code:'Maple Venus Fly Trap', fall:true, qtyOptions:[1,10,50,100]},
   {label:'Maple Carrot Seed',   code:'Maple Carrot', fall:true, qtyOptions:[100,500,1000,5000,10000]},
-  // The CROP (harvested fruit), not the seed. Same in-game name, different item —
-  // and it's protected from the Leaves/Sheckles currency sender in static_logic.lua
-  // so it can never be spent as change.
-  {label:'Maple Carrot',        code:'Maple Carrot', fall:true, qtyOptions:[1,3,5,10]},
+  // The CROP (harvested fruit), not the seed. "FRUIT::" sends from the harvested
+  // crop pool instead of the Seeds category — without it, "Maple Carrot" matched
+  // "Maple Carrot Seed" and shipped a seed. "|Rainbow" requires the Rainbow
+  // mutation, so a plain crop can never go out in its place. Also protected from
+  // the Leaves currency sender in static_logic.lua.
+  {label:'Rainbow Maple Carrot', code:'FRUIT::Maple Carrot|Rainbow', fall:true, qtyOptions:[1,3,5,10]},
   {label:'Maple Corn Seed',     code:'Maple Corn', fall:true, qtyOptions:[100,500,1000,5000,10000]},
   {label:'Maple Blueberry Seed', code:'Maple Blueberry', fall:true, qtyOptions:[100,500,1000]},
   {label:'Wheat Seed',          code:'Wheat', fall:true, qtyOptions:[100,500]},
