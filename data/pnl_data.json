@@ -1,18 +1,8 @@
 {
- "generated": "2026-09-04T06:00:26Z",
+ "generated": "2026-09-05T06:00:23Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 919.37,
  "days": [
-  {
-   "date": "2026-08-06",
-   "revenue": 460.2,
-   "cogs": 138.59,
-   "ads": 52.1,
-   "has_ads": true,
-   "orders": 51,
-   "units": 82,
-   "nocost_revenue": 0.0
-  },
   {
    "date": "2026-08-07",
    "revenue": 457.88,
@@ -287,7 +277,7 @@
    "date": "2026-09-03",
    "revenue": 213.36,
    "cogs": 44.78,
-   "ads": 2.54,
+   "ads": 7.2,
    "has_ads": true,
    "orders": 24,
    "units": 33,
@@ -295,8 +285,18 @@
   },
   {
    "date": "2026-09-04",
-   "revenue": 26.09,
-   "cogs": 16.62,
+   "revenue": 118.97,
+   "cogs": 57.36,
+   "ads": 5.25,
+   "has_ads": true,
+   "orders": 17,
+   "units": 20,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-09-05",
+   "revenue": 7.0,
+   "cogs": 0.32,
    "ads": 0.0,
    "has_ads": false,
    "orders": 2,
@@ -307,33 +307,33 @@
  "games": [
   {
    "game": "Grow a Garden 2",
-   "revenue": 2600.33,
-   "cogs": 648.64,
-   "units": 616
+   "revenue": 2332.92,
+   "cogs": 613.83,
+   "units": 559
   },
   {
    "game": "FISCH",
-   "revenue": 1486.0,
-   "cogs": 269.81,
-   "units": 242
+   "revenue": 1478.35,
+   "cogs": 267.9,
+   "units": 243
   },
   {
    "game": "Blox Fruits",
-   "revenue": 1436.79,
-   "cogs": 1120.11,
-   "units": 109
+   "revenue": 1379.38,
+   "cogs": 1080.82,
+   "units": 104
   },
   {
    "game": "Rivals",
-   "revenue": 294.55,
-   "cogs": 216.74,
-   "units": 66
+   "revenue": 296.56,
+   "cogs": 218.17,
+   "units": 67
   },
   {
    "game": "Grow a Garden",
-   "revenue": 245.53,
-   "cogs": 197.18,
-   "units": 92
+   "revenue": 241.29,
+   "cogs": 196.93,
+   "units": 90
   },
   {
    "game": "Escape Tsunami For Brainrots",
@@ -343,15 +343,15 @@
   },
   {
    "game": "Steal A Brainrot",
-   "revenue": 139.69,
-   "cogs": 82.4,
-   "units": 16
+   "revenue": 112.72,
+   "cogs": 59.3,
+   "units": 15
   },
   {
    "game": "MM2",
-   "revenue": 65.21,
-   "cogs": 45.97,
-   "units": 11
+   "revenue": 66.56,
+   "cogs": 46.38,
+   "units": 12
   },
   {
    "game": "Plants Vs Brainrots",
@@ -423,677 +423,6 @@
   }
  ],
  "items": [
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Shadow Dragon | GAG2 | Fall Harvest |  Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 5,
-   "sold_at": 34.65,
-   "revenue": 71.08,
-   "cogs": 0.9,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Atlantic Giant Pumpkin Seed x100",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 5,
-   "sold_at": 9.95,
-   "revenue": 42.11,
-   "cogs": 13.8,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\u2705DRAGON CANNELLONI |\ud83d\udcb0STEAL A BRAINROT\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f $250M/S+",
-   "game": "Steal A Brainrot",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 46.95,
-   "revenue": 26.97,
-   "cogs": 23.1,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Kitsune",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 25.95,
-   "revenue": 22.59,
-   "cogs": 18.8,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Tiger",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 21.95,
-   "revenue": 18.29,
-   "cogs": 13.05,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Big Fox | GAG2 | Fall Harvest |  Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 15.95,
-   "revenue": 13.7,
-   "cogs": 1.21,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Dough",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 15.45,
-   "revenue": 13.35,
-   "cogs": 10.97,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "BLOX FRUITS \ud83d\udc32PERMANENT LIGHTNING\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 15.45,
-   "revenue": 13.25,
-   "cogs": 9.16,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Portal",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 14.95,
-   "revenue": 12.81,
-   "cogs": 8.9,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "FISCH \ud83d\udc1f 1B Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 22.45,
-   "revenue": 12.56,
-   "cogs": 1.58,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "All Super Seeds x5",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 19.95,
-   "revenue": 11.46,
-   "cogs": 2.14,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Atlantic Giant Pumpkin Seed x50",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 2,
-   "sold_at": 5.95,
-   "revenue": 9.89,
-   "cogs": 2.47,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Shadow Dragon",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 17.25,
-   "revenue": 9.59,
-   "cogs": 0.13,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Atlantic Giant Pumpkin Seed x100 | GAG2 | Fall Harv",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 9.95,
-   "revenue": 8.48,
-   "cogs": 2.76,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Super Syrup Sprinkler x100",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 9.95,
-   "revenue": 8.44,
-   "cogs": 1.35,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Super Syrup Watering Can x100",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 9.95,
-   "revenue": 8.44,
-   "cogs": 0.64,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Super Syrup Sprinkler + Watering Can x50",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 9.95,
-   "revenue": 8.29,
-   "cogs": 0.76,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Atlantic Giant Pumpkin Seed x100",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 13.25,
-   "revenue": 7.29,
-   "cogs": 2.66,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Super Sprinkler x100 + Super Watering Can x100",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 11.95,
-   "revenue": 6.87,
-   "cogs": 1.6,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Dark Blade",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 6.7,
-   "cogs": 5.21,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Sovereign Relic x10",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 6.7,
-   "cogs": 0.55,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Maple Rainbow Seed x500 | GAG2 | Fall Harvest | Fas",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 11.95,
-   "revenue": 6.6,
-   "cogs": 1.97,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "CAPYBARA | CHEAPEST |\ud83e\udeb4Grow a Garden \u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f",
-   "game": "Grow a Garden",
-   "currency": "GBP",
-   "units": 3,
-   "sold_at": 2.5,
-   "revenue": 6.3,
-   "cogs": 0.58,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Requiem Rod Set",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 9.3,
-   "revenue": 5.15,
-   "cogs": 0.97,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Blight Idol",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 2,
-   "sold_at": 4.6,
-   "revenue": 5.08,
-   "cogs": 0.17,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Atlantic Giant Pumpkin Seed x50 | GAG2 | Fall Harve",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 5.95,
-   "revenue": 4.93,
-   "cogs": 1.24,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Atlantic Giant Pumpkin Seed x10 | GAG2 | Fall Harve",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 2,
-   "sold_at": 2.95,
-   "revenue": 4.76,
-   "cogs": 0.48,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "5B Sheckles",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 4.57,
-   "cogs": 0.22,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Atlantic Giant Pumpkin Seed x10",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 2,
-   "sold_at": 2.95,
-   "revenue": 4.54,
-   "cogs": 0.48,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Super Syrup Sprinkler + Super Syrup Watering Can x2",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 4.46,
-   "cogs": 0.1,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Big Hedgehog | GAG2 | Fall Harvest |  Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 2,
-   "sold_at": 2.65,
-   "revenue": 4.36,
-   "cogs": 0.27,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Super Syrup Sprinkler + Watering Can x25",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 4.34,
-   "cogs": 0.29,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | 100M Leaves | GAG2 | Fall Harvest |  Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 3,
-   "sold_at": 1.65,
-   "revenue": 4.18,
-   "cogs": 0.05,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | 100M Leaves | GAG2 | Fall Harvest |  Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 3,
-   "sold_at": 2.38,
-   "revenue": 3.96,
-   "cogs": 0.05,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Rainbow Carpet | GAG2 Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 4.99,
-   "revenue": 3.93,
-   "cogs": 2.85,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Venom Spitter Seed x5",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 6.45,
-   "revenue": 3.71,
-   "cogs": 0.12,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 6.45,
-   "revenue": 3.47,
-   "cogs": 0.16,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "2x Mastery",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 3.75,
-   "revenue": 3.24,
-   "cogs": 2.1,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "250M Leaves",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 5.25,
-   "revenue": 2.95,
-   "cogs": 0.02,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Maple Mushroom Seed x100",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": 2.46,
-   "cogs": 0.06,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Amber Cranberry Seed",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": 2.44,
-   "cogs": 0.7,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Raccoon",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": 2.27,
-   "cogs": 0.4,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Maple Mushroom Seed x100 | GAG2 | Fall Harvest",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": 2.27,
-   "cogs": 0.06,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Atlantic Giant Pumpkin Seed x10 | GAG2 | Fall Harve",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.22,
-   "cogs": 0.23,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Maple Rainbow Seed x100",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 2,
-   "sold_at": 3.95,
-   "revenue": 2.22,
-   "cogs": 0.26,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Amber Cranberry Seed",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.22,
-   "cogs": 0.68,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Maple Venom Spitter Seed",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.22,
-   "cogs": 0.21,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Big Hedgehog | GAG2 | Fall Harvest |  Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.17,
-   "cogs": 0.15,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Maple Mushroom Seed x100",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.13,
-   "cogs": 0.06,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Ghost Pepper Seed x10",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.65,
-   "revenue": 2.1,
-   "cogs": 0.45,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Atlantic Giant Pumpkin Seed",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 2,
-   "sold_at": 1.25,
-   "revenue": 2.06,
-   "cogs": 0.04,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Dragon's Breath Seed x3",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.03,
-   "cogs": 0.41,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Star Fruit Seed x3",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.02,
-   "cogs": 0.38,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Maple Dragon Fruit Seed x10",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.01,
-   "cogs": 0.4,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Mega Seed x10",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 2.65,
-   "revenue": 1.52,
-   "cogs": 0.01,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Maple Pomegranate Seed",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 2.65,
-   "revenue": 1.49,
-   "cogs": 0.08,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "100M Leaves",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 2.65,
-   "revenue": 1.43,
-   "cogs": 0.02,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "100M Leaves",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 1.95,
-   "revenue": 1.38,
-   "cogs": 0.02,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Super Sprinkler x10",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 1.45,
-   "revenue": 0.92,
-   "cogs": 0.08,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Venus Fly Trap Seed | GAG2 Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 1.25,
-   "revenue": 0.76,
-   "cogs": 0.01,
-   "costed": true
-  },
-  {
-   "date": "2026-08-06",
-   "item": "Maple Gold Seed x10",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 0.99,
-   "revenue": 0.5,
-   "cogs": 0.01,
-   "costed": true
-  },
   {
    "date": "2026-08-07",
    "item": "5B Leaves",
@@ -10237,6 +9566,28 @@
   },
   {
    "date": "2026-09-04",
+   "item": "Dragon",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 45.25,
+   "revenue": 26.24,
+   "cogs": 23.17,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "\ud83e\udeb4Grow a Garden 2 | Maple Rainbow Seed x500 | GAG2 | Fall Harvest | Fas",
+   "game": "Grow a Garden 2",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 39.95,
+   "revenue": 22.8,
+   "cogs": 6.53,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
    "item": "Yeti",
    "game": "Blox Fruits",
    "currency": "GBP",
@@ -10255,6 +9606,171 @@
    "sold_at": 13.25,
    "revenue": 7.33,
    "cogs": 3.08,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "5x Legendary Scrolls",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 11.95,
+   "revenue": 6.58,
+   "cogs": 5.73,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 2,
+   "sold_at": 5.8,
+   "revenue": 6.38,
+   "cogs": 0.29,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "10K S$ Shady Coins",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 5.45,
+   "revenue": 4.42,
+   "cogs": 0.25,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "Star Fruit Seed x3",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 2,
+   "sold_at": 2.65,
+   "revenue": 4.3,
+   "cogs": 0.7,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "Onirifalx Rod Set",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 4.95,
+   "revenue": 3.98,
+   "cogs": 0.5,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "100M Coins (via fish trade)",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 6.6,
+   "revenue": 3.53,
+   "cogs": 0.16,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "Super Sprinkler x10 + Super Watering Can x10",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 2,
+   "sold_at": 1.75,
+   "revenue": 2.71,
+   "cogs": 0.31,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "\ud83e\udeb4Grow a Garden 2 | Star Fruit Seed x3 | GAG2 Fast & Easy",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.23,
+   "cogs": 0.39,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "Venom Spitter Seed x3",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.23,
+   "cogs": 0.07,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "LOBSTER THERMIDOR | CHEAPEST |\ud83e\udeb4Grow a Garden 1 \u203c\ufe0fFAST & EASY DELIVERY\u203c",
+   "game": "Grow a Garden",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.75,
+   "revenue": 2.06,
+   "cogs": 0.34,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "Ghost Pepper Seed x10",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.75,
+   "revenue": 2.06,
+   "cogs": 0.47,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "Skin Case 1",
+   "game": "Rivals",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 3.95,
+   "revenue": 2.01,
+   "cogs": 1.43,
+   "costed": true
+  },
+  {
+   "date": "2026-09-04",
+   "item": "Sunset Gun",
+   "game": "MM2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 1.95,
+   "revenue": 1.35,
+   "cogs": 0.41,
+   "costed": true
+  },
+  {
+   "date": "2026-09-05",
+   "item": "100M Coins (via fish trade)",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 6.6,
+   "revenue": 3.53,
+   "cogs": 0.16,
+   "costed": true
+  },
+  {
+   "date": "2026-09-05",
+   "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 6.45,
+   "revenue": 3.47,
+   "cogs": 0.16,
    "costed": true
   }
  ]
