@@ -1,18 +1,8 @@
 {
- "generated": "2026-09-30T06:00:15Z",
+ "generated": "2026-10-01T06:00:16Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 86.33,
  "days": [
-  {
-   "date": "2026-09-01",
-   "revenue": 208.95,
-   "cogs": 41.49,
-   "ads": 11.12,
-   "has_ads": true,
-   "orders": 16,
-   "units": 24,
-   "nocost_revenue": 0.0
-  },
   {
    "date": "2026-09-02",
    "revenue": 211.59,
@@ -46,7 +36,7 @@
   {
    "date": "2026-09-05",
    "revenue": 168.28,
-   "cogs": 80.71,
+   "cogs": 76.28,
    "ads": 8.79,
    "has_ads": true,
    "orders": 18,
@@ -235,8 +225,8 @@
   },
   {
    "date": "2026-09-24",
-   "revenue": 183.84,
-   "cogs": 108.73,
+   "revenue": 154.68,
+   "cogs": 85.91,
    "ads": 8.57,
    "has_ads": true,
    "orders": 18,
@@ -287,7 +277,7 @@
    "date": "2026-09-29",
    "revenue": 75.6,
    "cogs": 32.6,
-   "ads": 2.59,
+   "ads": 7.77,
    "has_ads": true,
    "orders": 8,
    "units": 11,
@@ -295,39 +285,49 @@
   },
   {
    "date": "2026-09-30",
-   "revenue": 5.84,
-   "cogs": 0.49,
+   "revenue": 101.37,
+   "cogs": 49.19,
+   "ads": 2.83,
+   "has_ads": true,
+   "orders": 9,
+   "units": 11,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-10-01",
+   "revenue": 10.84,
+   "cogs": 0.0,
    "ads": 0.0,
    "has_ads": false,
    "orders": 1,
-   "units": 2,
-   "nocost_revenue": 0.0
+   "units": 1,
+   "nocost_revenue": 10.84
   }
  ],
  "games": [
   {
    "game": "FISCH",
-   "revenue": 2082.01,
-   "cogs": 535.28,
-   "units": 320
+   "revenue": 1982.26,
+   "cogs": 552.09,
+   "units": 309
   },
   {
    "game": "Blox Fruits",
-   "revenue": 1047.78,
-   "cogs": 836.75,
+   "revenue": 1018.62,
+   "cogs": 813.93,
    "units": 68
   },
   {
-   "game": "Grow a Garden 2",
-   "revenue": 554.95,
-   "cogs": 116.79,
-   "units": 141
+   "game": "Rivals",
+   "revenue": 546.67,
+   "cogs": 406.04,
+   "units": 111
   },
   {
-   "game": "Rivals",
-   "revenue": 554.33,
-   "cogs": 416.5,
-   "units": 111
+   "game": "Grow a Garden 2",
+   "revenue": 544.53,
+   "cogs": 112.41,
+   "units": 136
   },
   {
    "game": "Escape Tsunami For Brainrots",
@@ -337,15 +337,15 @@
   },
   {
    "game": "Grow a Garden",
-   "revenue": 102.94,
+   "revenue": 113.78,
    "cogs": 91.84,
-   "units": 21
+   "units": 22
   },
   {
    "game": "Steal A Brainrot",
-   "revenue": 57.19,
-   "cogs": 17.5,
-   "units": 13
+   "revenue": 61.6,
+   "cogs": 18.29,
+   "units": 14
   },
   {
    "game": "Kick a Lucky Block",
@@ -361,6 +361,12 @@
   }
  ],
  "needs_price": [
+  {
+   "item": "MEGA GERMAN SHEPHERD | CHEAPEST |\ud83e\udeb4Grow a Garden 1\u203c\ufe0fFAST & EASY DELIVER",
+   "revenue": 10.84,
+   "units": 1,
+   "sold_at": 18.95
+  },
   {
    "item": "FISCH \ud83d\udc1f Astraeus Serenade Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
    "revenue": 10.12,
@@ -405,171 +411,6 @@
   }
  ],
  "items": [
-  {
-   "date": "2026-09-01",
-   "item": "1B C$",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 10,
-   "sold_at": 16.95,
-   "revenue": 146.72,
-   "cogs": 16.5,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "RIVALS \ud83d\udd25 ULTRA KEY BUNDLE (+450 KEYS)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 14.95,
-   "revenue": 12.15,
-   "cogs": 10.55,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "Heavy Duty Bundle",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 12.95,
-   "revenue": 10.47,
-   "cogs": 9.15,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "Maple Rainbow Seed x100",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 6.6,
-   "cogs": 0.73,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "Maple Rainbow Seed x100",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 10.65,
-   "revenue": 5.89,
-   "cogs": 0.7,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "FISCH \ud83d\udc1f Requiem Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 6.95,
-   "revenue": 5.74,
-   "cogs": 1.0,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "Plaguereaver Rod Set",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 6.95,
-   "revenue": 5.74,
-   "cogs": 1.35,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "FISCH \ud83d\udc1f Mourned Moonstone\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 4.95,
-   "revenue": 3.98,
-   "cogs": 0.7,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 4.95,
-   "revenue": 3.84,
-   "cogs": 0.17,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "Super Syrup Watering Can x100",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.18,
-   "cogs": 0.18,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "Rainbow Maple Carrot",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.25,
-   "revenue": 1.62,
-   "cogs": 0.16,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Shadow Dragon | GAG2 | Fall Harvest |  Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 1.95,
-   "revenue": 1.35,
-   "cogs": 0.02,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Super Sprinkler x10 | GAG2 Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 1.95,
-   "revenue": 0.98,
-   "cogs": 0.08,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "Cosmic Relic x10",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 1.95,
-   "revenue": 0.86,
-   "cogs": 0.08,
-   "costed": true
-  },
-  {
-   "date": "2026-09-01",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Star Fruit Seed | GAG2 Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 1.65,
-   "revenue": 0.83,
-   "cogs": 0.12,
-   "costed": true
-  },
   {
    "date": "2026-09-02",
    "item": "Platinum Menace (Olympian Godbreaker Rod Skin)",
@@ -1271,7 +1112,7 @@
    "units": 4,
    "sold_at": 8.52,
    "revenue": 9.58,
-   "cogs": 5.02,
+   "cogs": 0.58,
    "costed": true
   },
   {
@@ -4983,17 +4824,6 @@
   },
   {
    "date": "2026-09-24",
-   "item": "BLOX FRUITS \ud83d\udc32PERMANENT CONTROL\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 33.25,
-   "revenue": 28.68,
-   "cogs": 22.44,
-   "costed": true
-  },
-  {
-   "date": "2026-09-24",
    "item": "BLOX FRUITS \ud83d\udc32PERMANENT TIGER\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
    "game": "Blox Fruits",
    "currency": "GBP",
@@ -5188,6 +5018,17 @@
    "sold_at": 1.95,
    "revenue": 1.35,
    "cogs": 0.03,
+   "costed": true
+  },
+  {
+   "date": "2026-09-24",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT CONTROL\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 33.25,
+   "revenue": -0.48,
+   "cogs": -0.38,
    "costed": true
   },
   {
@@ -5841,6 +5682,50 @@
   },
   {
    "date": "2026-09-30",
+   "item": "FISCH \ud83d\udc1f Platinum Menace (Olympian Godbreaker Rod Skin)\u203c\ufe0fCHEAP & FAST S",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 67.95,
+   "revenue": 57.05,
+   "cogs": 35.0,
+   "costed": true
+  },
+  {
+   "date": "2026-09-30",
+   "item": "Prop Bundle (NEW)",
+   "game": "Rivals",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 8.95,
+   "revenue": 7.48,
+   "cogs": 4.39,
+   "costed": true
+  },
+  {
+   "date": "2026-09-30",
+   "item": "Contraband Bundle",
+   "game": "Rivals",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 8.95,
+   "revenue": 7.48,
+   "cogs": 4.85,
+   "costed": true
+  },
+  {
+   "date": "2026-09-30",
+   "item": "Raccoon x5",
+   "game": "Grow a Garden 2",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 10.65,
+   "revenue": 6.05,
+   "cogs": 1.97,
+   "costed": true
+  },
+  {
+   "date": "2026-09-30",
    "item": "Big Wolf",
    "game": "Grow a Garden 2",
    "currency": "USD",
@@ -5849,6 +5734,72 @@
    "revenue": 5.84,
    "cogs": 0.49,
    "costed": true
+  },
+  {
+   "date": "2026-09-30",
+   "item": "\u2705LA EASTER GRANDE |\ud83d\udcb0STEAL A BRAINROT\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f $55M/S",
+   "game": "Steal A Brainrot",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 7.95,
+   "revenue": 4.41,
+   "cogs": 0.8,
+   "costed": true
+  },
+  {
+   "date": "2026-09-30",
+   "item": "FISCH \ud83d\udc1f Onirifalx Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 4.95,
+   "revenue": 3.98,
+   "cogs": 0.5,
+   "costed": true
+  },
+  {
+   "date": "2026-09-30",
+   "item": "Mourned Moonstone",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 4.95,
+   "revenue": 3.98,
+   "cogs": 0.7,
+   "costed": true
+  },
+  {
+   "date": "2026-09-30",
+   "item": "Golden Dragonfly x5",
+   "game": "Grow a Garden 2",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 5.25,
+   "revenue": 2.98,
+   "cogs": 0.08,
+   "costed": true
+  },
+  {
+   "date": "2026-09-30",
+   "item": "FISCH \ud83d\udc1f Cosmic Relic x50\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.12,
+   "cogs": 0.41,
+   "costed": true
+  },
+  {
+   "date": "2026-10-01",
+   "item": "MEGA GERMAN SHEPHERD | CHEAPEST |\ud83e\udeb4Grow a Garden 1\u203c\ufe0fFAST & EASY DELIVER",
+   "game": "Grow a Garden",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 18.95,
+   "revenue": 10.84,
+   "cogs": 0.0,
+   "costed": false
   }
  ]
 }
