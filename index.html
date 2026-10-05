@@ -1578,9 +1578,18 @@ refreshSendButton();
 // writes if it actually changed. If you add an item here and never open the
 // page, the Worker won't recognise it and that order simply waits for you,
 // which is the safe way to fail.
+// Fall Harvest closed on 2026-10-05 — the world was succeeded by Ghoul Garden and
+// is no longer travellable, so every item held there is unreachable and nothing
+// Fall Harvest can be delivered. Keeping the definitions below (they're the basis
+// of the Ghoul Garden catalogue) but withholding them from the synced catalogue:
+// the Worker learns the fall tag from this sync, so once they stop arriving a fall
+// line no longer maps to a known item and the order drops to the manual card
+// instead of being auto-sent into a dead lane. Set false only if the world returns.
+const FALL_RETIRED = true;
+
 async function syncItems(){
   if(!RELAY.on) return;
-  const compact = ITEMS.map(i => {
+  const compact = ITEMS.filter(i => !(FALL_RETIRED && i.fall)).map(i => {
     const o = i.bundle ? {label:i.label, bundle:i.bundle} : {label:i.label};
     if(i.code) o.code = i.code;        // Worker needs this to render "1B Sheckles"
                                        // rather than "Sheckles (M) x1000"
