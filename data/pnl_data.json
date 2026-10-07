@@ -1,22 +1,12 @@
 {
- "generated": "2026-10-06T06:00:15Z",
+ "generated": "2026-10-07T06:00:13Z",
  "method": "cost ratio applied to the actual sale price",
- "excluded_non_roblox": 90.42,
+ "excluded_non_roblox": 106.65,
  "days": [
-  {
-   "date": "2026-09-07",
-   "revenue": 167.13,
-   "cogs": 72.3,
-   "ads": 6.75,
-   "has_ads": true,
-   "orders": 21,
-   "units": 28,
-   "nocost_revenue": 0.0
-  },
   {
    "date": "2026-09-08",
    "revenue": 330.37,
-   "cogs": 176.34,
+   "cogs": 177.27,
    "ads": 6.29,
    "has_ads": true,
    "orders": 28,
@@ -26,7 +16,7 @@
   {
    "date": "2026-09-09",
    "revenue": 205.79,
-   "cogs": 107.66,
+   "cogs": 102.66,
    "ads": 6.65,
    "has_ads": true,
    "orders": 18,
@@ -36,7 +26,7 @@
   {
    "date": "2026-09-10",
    "revenue": 202.65,
-   "cogs": 79.73,
+   "cogs": 86.3,
    "ads": 7.31,
    "has_ads": true,
    "orders": 17,
@@ -46,7 +36,7 @@
   {
    "date": "2026-09-11",
    "revenue": 132.1,
-   "cogs": 65.53,
+   "cogs": 64.32,
    "ads": 10.08,
    "has_ads": true,
    "orders": 18,
@@ -56,7 +46,7 @@
   {
    "date": "2026-09-12",
    "revenue": 134.06,
-   "cogs": 74.74,
+   "cogs": 71.32,
    "ads": 8.03,
    "has_ads": true,
    "orders": 13,
@@ -66,7 +56,7 @@
   {
    "date": "2026-09-13",
    "revenue": 270.93,
-   "cogs": 130.07,
+   "cogs": 122.91,
    "ads": 8.39,
    "has_ads": true,
    "orders": 36,
@@ -76,7 +66,7 @@
   {
    "date": "2026-09-14",
    "revenue": 121.48,
-   "cogs": 69.33,
+   "cogs": 61.21,
    "ads": 5.68,
    "has_ads": true,
    "orders": 16,
@@ -86,17 +76,17 @@
   {
    "date": "2026-09-15",
    "revenue": 244.75,
-   "cogs": 91.36,
+   "cogs": 90.99,
    "ads": 6.56,
    "has_ads": true,
    "orders": 22,
    "units": 31,
-   "nocost_revenue": 4.86
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-09-16",
    "revenue": 80.36,
-   "cogs": 63.31,
+   "cogs": 32.12,
    "ads": 7.0,
    "has_ads": true,
    "orders": 13,
@@ -106,7 +96,7 @@
   {
    "date": "2026-09-17",
    "revenue": 70.54,
-   "cogs": 23.72,
+   "cogs": 22.7,
    "ads": 5.79,
    "has_ads": true,
    "orders": 10,
@@ -116,27 +106,27 @@
   {
    "date": "2026-09-18",
    "revenue": 89.87,
-   "cogs": 35.73,
+   "cogs": 38.13,
    "ads": 3.13,
    "has_ads": true,
    "orders": 9,
    "units": 13,
-   "nocost_revenue": 13.58
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-09-19",
    "revenue": 132.47,
-   "cogs": 75.53,
+   "cogs": 74.49,
    "ads": 5.38,
    "has_ads": true,
    "orders": 16,
    "units": 19,
-   "nocost_revenue": 2.79
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-09-20",
    "revenue": 201.42,
-   "cogs": 95.24,
+   "cogs": 88.21,
    "ads": 5.72,
    "has_ads": true,
    "orders": 19,
@@ -146,7 +136,7 @@
   {
    "date": "2026-09-21",
    "revenue": 68.73,
-   "cogs": 21.96,
+   "cogs": 19.78,
    "ads": 6.12,
    "has_ads": true,
    "orders": 10,
@@ -156,7 +146,7 @@
   {
    "date": "2026-09-22",
    "revenue": 69.25,
-   "cogs": 33.5,
+   "cogs": 32.41,
    "ads": 4.7,
    "has_ads": true,
    "orders": 13,
@@ -166,7 +156,7 @@
   {
    "date": "2026-09-23",
    "revenue": 221.3,
-   "cogs": 153.89,
+   "cogs": 151.74,
    "ads": 4.52,
    "has_ads": true,
    "orders": 30,
@@ -176,7 +166,7 @@
   {
    "date": "2026-09-24",
    "revenue": 154.68,
-   "cogs": 85.91,
+   "cogs": 95.17,
    "ads": 8.57,
    "has_ads": true,
    "orders": 18,
@@ -186,7 +176,7 @@
   {
    "date": "2026-09-25",
    "revenue": 96.36,
-   "cogs": 51.2,
+   "cogs": 50.52,
    "ads": 8.44,
    "has_ads": true,
    "orders": 15,
@@ -196,17 +186,17 @@
   {
    "date": "2026-09-26",
    "revenue": 152.62,
-   "cogs": 30.66,
+   "cogs": 33.45,
    "ads": 9.54,
    "has_ads": true,
    "orders": 19,
    "units": 26,
-   "nocost_revenue": 5.06
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-09-27",
    "revenue": 110.88,
-   "cogs": 64.47,
+   "cogs": 63.11,
    "ads": 5.52,
    "has_ads": true,
    "orders": 9,
@@ -216,7 +206,7 @@
   {
    "date": "2026-09-28",
    "revenue": 54.3,
-   "cogs": 32.19,
+   "cogs": 31.54,
    "ads": 7.01,
    "has_ads": true,
    "orders": 5,
@@ -226,17 +216,17 @@
   {
    "date": "2026-09-29",
    "revenue": 75.6,
-   "cogs": 32.6,
+   "cogs": 31.32,
    "ads": 7.77,
    "has_ads": true,
    "orders": 8,
    "units": 11,
-   "nocost_revenue": 5.06
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-09-30",
    "revenue": 101.37,
-   "cogs": 49.19,
+   "cogs": 42.59,
    "ads": 6.38,
    "has_ads": true,
    "orders": 9,
@@ -246,37 +236,37 @@
   {
    "date": "2026-10-01",
    "revenue": 100.11,
-   "cogs": 32.45,
+   "cogs": 40.17,
    "ads": 3.54,
    "has_ads": true,
    "orders": 11,
    "units": 13,
-   "nocost_revenue": 21.24
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-10-02",
    "revenue": 182.4,
-   "cogs": 67.74,
+   "cogs": 78.07,
    "ads": 9.96,
    "has_ads": true,
    "orders": 11,
    "units": 11,
-   "nocost_revenue": 65.1
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-10-03",
    "revenue": 140.5,
-   "cogs": 25.61,
+   "cogs": 51.65,
    "ads": 11.43,
    "has_ads": true,
    "orders": 16,
    "units": 25,
-   "nocost_revenue": 12.33
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-10-04",
    "revenue": 107.54,
-   "cogs": 46.77,
+   "cogs": 47.89,
    "ads": 7.96,
    "has_ads": true,
    "orders": 17,
@@ -286,8 +276,8 @@
   {
    "date": "2026-10-05",
    "revenue": 88.25,
-   "cogs": 52.41,
-   "ads": 5.91,
+   "cogs": 45.42,
+   "ads": 7.16,
    "has_ads": true,
    "orders": 8,
    "units": 10,
@@ -295,56 +285,66 @@
   },
   {
    "date": "2026-10-06",
-   "revenue": 7.39,
-   "cogs": 0.7,
+   "revenue": 56.84,
+   "cogs": 9.76,
+   "ads": 6.18,
+   "has_ads": true,
+   "orders": 12,
+   "units": 15,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-10-07",
+   "revenue": 22.84,
+   "cogs": 14.83,
    "ads": 0.0,
    "has_ads": false,
-   "orders": 2,
-   "units": 2,
+   "orders": 3,
+   "units": 3,
    "nocost_revenue": 0.0
   }
  ],
  "games": [
   {
    "game": "FISCH",
-   "revenue": 1767.78,
-   "cogs": 446.6,
-   "units": 278
+   "revenue": 1727.75,
+   "cogs": 491.27,
+   "units": 268
   },
   {
    "game": "Blox Fruits",
-   "revenue": 997.32,
-   "cogs": 793.13,
-   "units": 67
+   "revenue": 927.02,
+   "cogs": 729.92,
+   "units": 64
   },
   {
    "game": "Rivals",
-   "revenue": 550.04,
-   "cogs": 409.1,
-   "units": 110
+   "revenue": 559.75,
+   "cogs": 387.65,
+   "units": 112
   },
   {
    "game": "Grow a Garden 2",
-   "revenue": 438.73,
-   "cogs": 95.61,
-   "units": 108
+   "revenue": 438.8,
+   "cogs": 95.59,
+   "units": 107
   },
   {
    "game": "Grow a Garden",
-   "revenue": 169.89,
-   "cogs": 126.8,
+   "revenue": 175.6,
+   "cogs": 105.43,
    "units": 26
   },
   {
    "game": "Escape Tsunami For Brainrots",
    "revenue": 116.63,
-   "cogs": 48.16,
+   "cogs": 48.33,
    "units": 7
   },
   {
    "game": "Steal A Brainrot",
    "revenue": 63.12,
-   "cogs": 20.25,
+   "cogs": 11.72,
    "units": 16
   },
   {
@@ -362,282 +362,13 @@
  ],
  "needs_price": [
   {
-   "item": "FISCH \ud83d\udc1f Astraeus Serenade Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "revenue": 31.55,
-   "units": 6,
-   "sold_at": 9.25
-  },
-  {
-   "item": "Empyrean Relic x50",
-   "revenue": 30.18,
-   "units": 1,
-   "sold_at": 34.95
-  },
-  {
-   "item": "Blue Bonsai Glider",
-   "revenue": 17.91,
-   "units": 1,
-   "sold_at": 20.95
-  },
-  {
-   "item": "Caelinfernum (Fabulous Rod Skin)",
-   "revenue": 17.01,
-   "units": 1,
-   "sold_at": 19.95
-  },
-  {
    "item": "\u2705100M/S+ RANDOM BRAINROT |\ud83d\udcb0STEAL A BRAINROT\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f$10",
    "revenue": 11.29,
    "units": 4,
    "sold_at": 4.95
-  },
-  {
-   "item": "MEGA GERMAN SHEPHERD | CHEAPEST |\ud83e\udeb4Grow a Garden 1\u203c\ufe0fFAST & EASY DELIVER",
-   "revenue": 10.84,
-   "units": 1,
-   "sold_at": 18.95
-  },
-  {
-   "item": "FISCH \ud83d\udc1f Rainbow Totem (Pop in your server)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "revenue": 9.6,
-   "units": 3,
-   "sold_at": 5.65
-  },
-  {
-   "item": "FISCH \ud83d\udc1f Enchant Relic x100\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "revenue": 4.86,
-   "units": 1,
-   "sold_at": 5.95
-  },
-  {
-   "item": "Rainbow Totem (Pop in your server)",
-   "revenue": 3.98,
-   "units": 1,
-   "sold_at": 4.95
-  },
-  {
-   "item": "Enchant Relic x50",
-   "revenue": 2.79,
-   "units": 1,
-   "sold_at": 5.25
-  },
-  {
-   "item": "Empyrean Relic",
-   "revenue": 1.3,
-   "units": 1,
-   "sold_at": 2.65
   }
  ],
  "items": [
-  {
-   "date": "2026-09-07",
-   "item": "Dragon",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 2,
-   "sold_at": 33.95,
-   "revenue": 58.6,
-   "cogs": 48.26,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "Mechanexus",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 27.45,
-   "revenue": 15.54,
-   "cogs": 4.84,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "Lotus",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 23.95,
-   "revenue": 13.47,
-   "cogs": 4.01,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 4,
-   "sold_at": 6.45,
-   "revenue": 13.3,
-   "cogs": 0.61,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "Twisted Relic x10",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 3,
-   "sold_at": 4.95,
-   "revenue": 12.55,
-   "cogs": 0.66,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "10K Shady Coins",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 3,
-   "sold_at": 7.3,
-   "revenue": 12.08,
-   "cogs": 0.72,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "BLOX FRUITS \ud83d\udc32CHROMATIC GACHA BOX X10\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "Blox Fruits",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 19.95,
-   "revenue": 11.7,
-   "cogs": 9.1,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "FISCH \ud83d\udc1f Polaris Serenade Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 9.25,
-   "revenue": 5.18,
-   "cogs": 0.9,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "Wind Elemental Rod Set",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 4.35,
-   "cogs": 0.67,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Raccoon | GAG2 Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 2,
-   "sold_at": 3.55,
-   "revenue": 3.82,
-   "cogs": 0.69,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "100M Coins (via fish trade)",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 6.6,
-   "revenue": 3.56,
-   "cogs": 0.16,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Dragon's Breath Seed x3 | GAG2 Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": 2.23,
-   "cogs": 0.42,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "Cosmic Relic x50",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.15,
-   "cogs": 0.4,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "Exalted Relic x50",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.15,
-   "cogs": 0.2,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "KING BEE | CHEAPEST |\ud83e\udeb4Grow a Garden 1\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f",
-   "game": "Grow a Garden",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.06,
-   "cogs": 0.19,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "Star Fruit Seed x3",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.01,
-   "cogs": 0.38,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "Sovereign Relic",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.0,
-   "revenue": 1.63,
-   "cogs": 0.06,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Super Sprinkler x3 | GAG2 | Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 1.25,
-   "revenue": 0.75,
-   "cogs": 0.02,
-   "costed": true
-  },
-  {
-   "date": "2026-09-07",
-   "item": "FISCH \ud83d\udc1f Poltergeist (Plaguereaver Rod Skin)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 27.95,
-   "revenue": 0.0,
-   "cogs": 0.0,
-   "costed": true
-  },
   {
    "date": "2026-09-08",
    "item": "Poltergeist (Plaguereaver Rod Skin)",
@@ -646,7 +377,7 @@
    "units": 2,
    "sold_at": 20.95,
    "revenue": 36.26,
-   "cogs": 17.6,
+   "cogs": 18.08,
    "costed": true
   },
   {
@@ -657,7 +388,7 @@
    "units": 1,
    "sold_at": 39.95,
    "revenue": 34.55,
-   "cogs": 18.9,
+   "cogs": 18.27,
    "costed": true
   },
   {
@@ -668,7 +399,7 @@
    "units": 1,
    "sold_at": 34.45,
    "revenue": 29.74,
-   "cogs": 24.79,
+   "cogs": 22.01,
    "costed": true
   },
   {
@@ -679,7 +410,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 29.3,
-   "cogs": 24.13,
+   "cogs": 24.17,
    "costed": true
   },
   {
@@ -712,7 +443,7 @@
    "units": 2,
    "sold_at": 12.95,
    "revenue": 22.24,
-   "cogs": 9.02,
+   "cogs": 10.22,
    "costed": true
   },
   {
@@ -734,7 +465,7 @@
    "units": 2,
    "sold_at": 9.95,
    "revenue": 16.72,
-   "cogs": 1.66,
+   "cogs": 2.46,
    "costed": true
   },
   {
@@ -745,7 +476,7 @@
    "units": 2,
    "sold_at": 6.95,
    "revenue": 11.7,
-   "cogs": 7.66,
+   "cogs": 7.38,
    "costed": true
   },
   {
@@ -756,7 +487,7 @@
    "units": 1,
    "sold_at": 12.95,
    "revenue": 10.87,
-   "cogs": 5.78,
+   "cogs": 6.65,
    "costed": true
   },
   {
@@ -767,7 +498,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 4.13,
+   "cogs": 3.87,
    "costed": true
   },
   {
@@ -789,7 +520,7 @@
    "units": 1,
    "sold_at": 8.75,
    "revenue": 6.98,
-   "cogs": 1.25,
+   "cogs": 2.87,
    "costed": true
   },
   {
@@ -811,7 +542,7 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.74,
-   "cogs": 3.84,
+   "cogs": 3.69,
    "costed": true
   },
   {
@@ -833,7 +564,7 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 4.97,
-   "cogs": 3.68,
+   "cogs": 3.88,
    "costed": true
   },
   {
@@ -844,7 +575,7 @@
    "units": 1,
    "sold_at": 5.95,
    "revenue": 4.86,
-   "cogs": 3.3,
+   "cogs": 3.19,
    "costed": true
   },
   {
@@ -910,7 +641,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.23,
-   "cogs": 0.41,
+   "cogs": 0.35,
    "costed": true
   },
   {
@@ -932,7 +663,7 @@
    "units": 2,
    "sold_at": 33.95,
    "revenue": 58.6,
-   "cogs": 48.26,
+   "cogs": 48.34,
    "costed": true
   },
   {
@@ -943,7 +674,7 @@
    "units": 1,
    "sold_at": 29.95,
    "revenue": 25.79,
-   "cogs": 19.93,
+   "cogs": 18.52,
    "costed": true
   },
   {
@@ -976,7 +707,7 @@
    "units": 3,
    "sold_at": 6.95,
    "revenue": 17.82,
-   "cogs": 11.52,
+   "cogs": 11.07,
    "costed": true
   },
   {
@@ -987,7 +718,7 @@
    "units": 1,
    "sold_at": 16.95,
    "revenue": 14.52,
-   "cogs": 1.65,
+   "cogs": 1.64,
    "costed": true
   },
   {
@@ -998,7 +729,7 @@
    "units": 1,
    "sold_at": 14.95,
    "revenue": 12.63,
-   "cogs": 10.55,
+   "cogs": 8.49,
    "costed": true
   },
   {
@@ -1020,7 +751,7 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.96,
-   "cogs": 1.0,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -1031,7 +762,7 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 4.98,
-   "cogs": 3.67,
+   "cogs": 3.53,
    "costed": true
   },
   {
@@ -1042,7 +773,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.32,
-   "cogs": 3.56,
+   "cogs": 3.15,
    "costed": true
   },
   {
@@ -1097,7 +828,7 @@
    "units": 2,
    "sold_at": 16.95,
    "revenue": 27.62,
-   "cogs": 3.3,
+   "cogs": 3.28,
    "costed": true
   },
   {
@@ -1119,7 +850,7 @@
    "units": 1,
    "sold_at": 22.25,
    "revenue": 19.27,
-   "cogs": 14.44,
+   "cogs": 15.0,
    "costed": true
   },
   {
@@ -1130,7 +861,7 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 17.01,
-   "cogs": 9.07,
+   "cogs": 13.18,
    "costed": true
   },
   {
@@ -1152,7 +883,7 @@
    "units": 4,
    "sold_at": 3.95,
    "revenue": 13.37,
-   "cogs": 6.92,
+   "cogs": 8.24,
    "costed": true
   },
   {
@@ -1163,7 +894,7 @@
    "units": 1,
    "sold_at": 23.45,
    "revenue": 13.25,
-   "cogs": 3.92,
+   "cogs": 3.18,
    "costed": true
   },
   {
@@ -1174,7 +905,7 @@
    "units": 2,
    "sold_at": 9.25,
    "revenue": 10.29,
-   "cogs": 7.33,
+   "cogs": 7.06,
    "costed": true
   },
   {
@@ -1196,7 +927,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 7.88,
-   "cogs": 0.83,
+   "cogs": 1.23,
    "costed": true
   },
   {
@@ -1207,7 +938,7 @@
    "units": 1,
    "sold_at": 12.65,
    "revenue": 7.15,
-   "cogs": 1.98,
+   "cogs": 4.76,
    "costed": true
   },
   {
@@ -1229,7 +960,7 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.74,
-   "cogs": 1.0,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -1240,7 +971,7 @@
    "units": 1,
    "sold_at": 9.45,
    "revenue": 5.07,
-   "cogs": 0.98,
+   "cogs": 0.4,
    "costed": true
   },
   {
@@ -1251,7 +982,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.8,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -1262,7 +993,7 @@
    "units": 1,
    "sold_at": 4.45,
    "revenue": 3.85,
-   "cogs": 2.49,
+   "cogs": 2.32,
    "costed": true
   },
   {
@@ -1273,7 +1004,7 @@
    "units": 1,
    "sold_at": 4.25,
    "revenue": 3.68,
-   "cogs": 2.18,
+   "cogs": 2.43,
    "costed": true
   },
   {
@@ -1284,7 +1015,7 @@
    "units": 1,
    "sold_at": 6.75,
    "revenue": 3.61,
-   "cogs": 0.49,
+   "cogs": 0.4,
    "costed": true
   },
   {
@@ -1361,7 +1092,7 @@
    "units": 1,
    "sold_at": 15.95,
    "revenue": 13.12,
-   "cogs": 11.0,
+   "cogs": 11.6,
    "costed": true
   },
   {
@@ -1394,7 +1125,7 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.48,
-   "cogs": 1.0,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -1405,7 +1136,7 @@
    "units": 1,
    "sold_at": 9.45,
    "revenue": 5.06,
-   "cogs": 0.98,
+   "cogs": 0.4,
    "costed": true
   },
   {
@@ -1416,7 +1147,7 @@
    "units": 1,
    "sold_at": 6.45,
    "revenue": 5.06,
-   "cogs": 1.3,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -1460,7 +1191,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.81,
-   "cogs": 0.17,
+   "cogs": 0.42,
    "costed": true
   },
   {
@@ -1504,7 +1235,7 @@
    "units": 1,
    "sold_at": 90.75,
    "revenue": 52.37,
-   "cogs": 33.69,
+   "cogs": 28.75,
    "costed": true
   },
   {
@@ -1526,7 +1257,7 @@
    "units": 1,
    "sold_at": 17.25,
    "revenue": 9.95,
-   "cogs": 5.55,
+   "cogs": 6.38,
    "costed": true
   },
   {
@@ -1537,7 +1268,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 6.34,
+   "cogs": 7.38,
    "costed": true
   },
   {
@@ -1570,7 +1301,7 @@
    "units": 2,
    "sold_at": 3.95,
    "revenue": 4.18,
-   "cogs": 0.79,
+   "cogs": 0.68,
    "costed": true
   },
   {
@@ -1581,7 +1312,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.5,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -1592,7 +1323,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.8,
-   "cogs": 0.8,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -1614,7 +1345,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.01,
-   "cogs": 1.42,
+   "cogs": 1.41,
    "costed": true
   },
   {
@@ -1625,7 +1356,7 @@
    "units": 1,
    "sold_at": 2.65,
    "revenue": 1.25,
-   "cogs": 0.24,
+   "cogs": 0.49,
    "costed": true
   },
   {
@@ -1669,7 +1400,7 @@
    "units": 20,
    "sold_at": 3.16,
    "revenue": 34.84,
-   "cogs": 22.71,
+   "cogs": 22.55,
    "costed": true
   },
   {
@@ -1680,7 +1411,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 29.3,
-   "cogs": 24.13,
+   "cogs": 24.17,
    "costed": true
   },
   {
@@ -1691,7 +1422,7 @@
    "units": 1,
    "sold_at": 20.45,
    "revenue": 17.47,
-   "cogs": 14.52,
+   "cogs": 11.53,
    "costed": true
   },
   {
@@ -1702,7 +1433,7 @@
    "units": 1,
    "sold_at": 20.45,
    "revenue": 17.47,
-   "cogs": 14.52,
+   "cogs": 11.53,
    "costed": true
   },
   {
@@ -1724,7 +1455,7 @@
    "units": 1,
    "sold_at": 14.95,
    "revenue": 12.15,
-   "cogs": 6.8,
+   "cogs": 7.05,
    "costed": true
   },
   {
@@ -1757,7 +1488,7 @@
    "units": 1,
    "sold_at": 17.25,
    "revenue": 9.54,
-   "cogs": 9.67,
+   "cogs": 6.82,
    "costed": true
   },
   {
@@ -1768,7 +1499,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 0.83,
+   "cogs": 1.23,
    "costed": true
   },
   {
@@ -1779,7 +1510,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 7.87,
-   "cogs": 6.34,
+   "cogs": 7.38,
    "costed": true
   },
   {
@@ -1790,7 +1521,7 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 5.07,
-   "cogs": 0.9,
+   "cogs": 0.24,
    "costed": true
   },
   {
@@ -1801,7 +1532,7 @@
    "units": 1,
    "sold_at": 5.95,
    "revenue": 4.86,
-   "cogs": 1.18,
+   "cogs": 2.5,
    "costed": true
   },
   {
@@ -1823,7 +1554,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.3,
-   "cogs": 3.18,
+   "cogs": 3.08,
    "costed": true
   },
   {
@@ -1834,7 +1565,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 1.45,
+   "cogs": 0.53,
    "costed": true
   },
   {
@@ -1878,7 +1609,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 3.11,
-   "cogs": 1.19,
+   "cogs": 0.6,
    "costed": true
   },
   {
@@ -1911,7 +1642,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.13,
-   "cogs": 0.75,
+   "cogs": 1.17,
    "costed": true
   },
   {
@@ -1922,7 +1653,7 @@
    "units": 1,
    "sold_at": 2.75,
    "revenue": 2.06,
-   "cogs": 0.47,
+   "cogs": 1.0,
    "costed": true
   },
   {
@@ -1933,7 +1664,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.01,
-   "cogs": 0.4,
+   "cogs": 0.34,
    "costed": true
   },
   {
@@ -1944,7 +1675,7 @@
    "units": 1,
    "sold_at": 3.25,
    "revenue": 1.61,
-   "cogs": 0.57,
+   "cogs": 0.74,
    "costed": true
   },
   {
@@ -1955,7 +1686,7 @@
    "units": 1,
    "sold_at": 1.95,
    "revenue": 0.86,
-   "cogs": 0.08,
+   "cogs": 0.07,
    "costed": true
   },
   {
@@ -1966,7 +1697,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 29.3,
-   "cogs": 24.13,
+   "cogs": 24.17,
    "costed": true
   },
   {
@@ -1977,7 +1708,7 @@
    "units": 1,
    "sold_at": 34.45,
    "revenue": 28.75,
-   "cogs": 24.79,
+   "cogs": 22.01,
    "costed": true
   },
   {
@@ -1988,7 +1719,7 @@
    "units": 1,
    "sold_at": 12.95,
    "revenue": 10.81,
-   "cogs": 10.08,
+   "cogs": 7.11,
    "costed": true
   },
   {
@@ -2010,7 +1741,7 @@
    "units": 1,
    "sold_at": 7.75,
    "revenue": 6.47,
-   "cogs": 4.66,
+   "cogs": 4.19,
    "costed": true
   },
   {
@@ -2032,7 +1763,7 @@
    "units": 1,
    "sold_at": 6.45,
    "revenue": 5.07,
-   "cogs": 1.3,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -2043,7 +1774,7 @@
    "units": 1,
    "sold_at": 9.3,
    "revenue": 5.02,
-   "cogs": 0.97,
+   "cogs": 0.2,
    "costed": true
   },
   {
@@ -2054,7 +1785,7 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 4.97,
-   "cogs": 1.35,
+   "cogs": 1.08,
    "costed": true
   },
   {
@@ -2131,7 +1862,7 @@
    "units": 1,
    "sold_at": 1.95,
    "revenue": 0.86,
-   "cogs": 0.08,
+   "cogs": 0.07,
    "costed": true
   },
   {
@@ -2197,7 +1928,7 @@
    "units": 1,
    "sold_at": 29.95,
    "revenue": 25.79,
-   "cogs": 19.93,
+   "cogs": 18.52,
    "costed": true
   },
   {
@@ -2208,7 +1939,7 @@
    "units": 4,
    "sold_at": 6.95,
    "revenue": 23.18,
-   "cogs": 15.36,
+   "cogs": 14.76,
    "costed": true
   },
   {
@@ -2263,7 +1994,7 @@
    "units": 2,
    "sold_at": 4.95,
    "revenue": 7.77,
-   "cogs": 0.34,
+   "cogs": 0.84,
    "costed": true
   },
   {
@@ -2296,7 +2027,7 @@
    "units": 2,
    "sold_at": 3.95,
    "revenue": 6.39,
-   "cogs": 3.46,
+   "cogs": 4.12,
    "costed": true
   },
   {
@@ -2318,8 +2049,8 @@
    "units": 1,
    "sold_at": 5.95,
    "revenue": 4.86,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.62,
+   "costed": true
   },
   {
    "date": "2026-09-15",
@@ -2351,7 +2082,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 4.09,
-   "cogs": 0.22,
+   "cogs": 0.16,
    "costed": true
   },
   {
@@ -2373,7 +2104,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 3.11,
-   "cogs": 0.41,
+   "cogs": 0.33,
    "costed": true
   },
   {
@@ -2395,7 +2126,7 @@
    "units": 4,
    "sold_at": 6.95,
    "revenue": 22.88,
-   "cogs": 15.36,
+   "cogs": 14.76,
    "costed": true
   },
   {
@@ -2417,7 +2148,7 @@
    "units": 1,
    "sold_at": 12.95,
    "revenue": 10.87,
-   "cogs": 4.51,
+   "cogs": 5.11,
    "costed": true
   },
   {
@@ -2428,7 +2159,7 @@
    "units": 1,
    "sold_at": 10.95,
    "revenue": 9.12,
-   "cogs": 5.64,
+   "cogs": 7.93,
    "costed": true
   },
   {
@@ -2483,7 +2214,7 @@
    "units": 1,
    "sold_at": 1.95,
    "revenue": 1.28,
-   "cogs": 34.0,
+   "cogs": 0.52,
    "costed": true
   },
   {
@@ -2494,7 +2225,7 @@
    "units": 3,
    "sold_at": 6.95,
    "revenue": 17.82,
-   "cogs": 11.52,
+   "cogs": 11.07,
    "costed": true
   },
   {
@@ -2505,7 +2236,7 @@
    "units": 1,
    "sold_at": 14.95,
    "revenue": 12.63,
-   "cogs": 9.07,
+   "cogs": 8.49,
    "costed": true
   },
   {
@@ -2593,7 +2324,7 @@
    "units": 1,
    "sold_at": 26.95,
    "revenue": 23.16,
-   "cogs": 18.5,
+   "cogs": 18.6,
    "costed": true
   },
   {
@@ -2604,7 +2335,7 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 11.39,
-   "cogs": 3.35,
+   "cogs": 4.21,
    "costed": true
   },
   {
@@ -2626,7 +2357,7 @@
    "units": 1,
    "sold_at": 16.95,
    "revenue": 10.0,
-   "cogs": 6.82,
+   "cogs": 6.92,
    "costed": true
   },
   {
@@ -2637,8 +2368,8 @@
    "units": 3,
    "sold_at": 5.65,
    "revenue": 9.6,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 1.02,
+   "costed": true
   },
   {
    "date": "2026-09-18",
@@ -2648,7 +2379,7 @@
    "units": 1,
    "sold_at": 9.45,
    "revenue": 5.14,
-   "cogs": 0.5,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -2670,8 +2401,8 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.41,
+   "costed": true
   },
   {
    "date": "2026-09-18",
@@ -2725,7 +2456,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 28.0,
-   "cogs": 24.13,
+   "cogs": 24.17,
    "costed": true
   },
   {
@@ -2736,7 +2467,7 @@
    "units": 1,
    "sold_at": 20.45,
    "revenue": 16.98,
-   "cogs": 13.69,
+   "cogs": 12.63,
    "costed": true
   },
   {
@@ -2769,7 +2500,7 @@
    "units": 2,
    "sold_at": 5.95,
    "revenue": 6.49,
-   "cogs": 4.59,
+   "cogs": 4.42,
    "costed": true
   },
   {
@@ -2780,7 +2511,7 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.74,
-   "cogs": 3.83,
+   "cogs": 3.69,
    "costed": true
   },
   {
@@ -2802,8 +2533,8 @@
    "units": 1,
    "sold_at": 5.25,
    "revenue": 2.79,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.3,
+   "costed": true
   },
   {
    "date": "2026-09-19",
@@ -2813,7 +2544,7 @@
    "units": 1,
    "sold_at": 3.45,
    "revenue": 2.67,
-   "cogs": 1.57,
+   "cogs": 1.8,
    "costed": true
   },
   {
@@ -2824,7 +2555,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.23,
-   "cogs": 0.41,
+   "cogs": 0.35,
    "costed": true
   },
   {
@@ -2846,7 +2577,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.15,
-   "cogs": 1.44,
+   "cogs": 1.28,
    "costed": true
   },
   {
@@ -2857,7 +2588,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.15,
-   "cogs": 1.43,
+   "cogs": 1.42,
    "costed": true
   },
   {
@@ -2912,7 +2643,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 28.48,
-   "cogs": 24.13,
+   "cogs": 24.17,
    "costed": true
   },
   {
@@ -2934,7 +2665,7 @@
    "units": 2,
    "sold_at": 7.95,
    "revenue": 13.47,
-   "cogs": 10.14,
+   "cogs": 11.04,
    "costed": true
   },
   {
@@ -2945,7 +2676,7 @@
    "units": 1,
    "sold_at": 14.25,
    "revenue": 12.02,
-   "cogs": 8.96,
+   "cogs": 8.41,
    "costed": true
   },
   {
@@ -2956,7 +2687,7 @@
    "units": 1,
    "sold_at": 17.45,
    "revenue": 9.83,
-   "cogs": 3.36,
+   "cogs": 2.34,
    "costed": true
   },
   {
@@ -2967,7 +2698,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 5.0,
+   "cogs": 1.4,
    "costed": true
   },
   {
@@ -2978,7 +2709,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 4.13,
+   "cogs": 3.87,
    "costed": true
   },
   {
@@ -2989,7 +2720,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 7.84,
-   "cogs": 0.83,
+   "cogs": 1.23,
    "costed": true
   },
   {
@@ -3000,7 +2731,7 @@
    "units": 1,
    "sold_at": 13.25,
    "revenue": 7.31,
-   "cogs": 4.0,
+   "cogs": 3.75,
    "costed": true
   },
   {
@@ -3011,7 +2742,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 6.6,
-   "cogs": 3.3,
+   "cogs": 2.65,
    "costed": true
   },
   {
@@ -3022,7 +2753,7 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.74,
-   "cogs": 1.0,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -3033,7 +2764,7 @@
    "units": 1,
    "sold_at": 6.45,
    "revenue": 5.03,
-   "cogs": 1.3,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -3066,7 +2797,7 @@
    "units": 1,
    "sold_at": 5.0,
    "revenue": 4.02,
-   "cogs": 1.26,
+   "cogs": 0.76,
    "costed": true
   },
   {
@@ -3088,7 +2819,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.05,
-   "cogs": 0.4,
+   "cogs": 0.34,
    "costed": true
   },
   {
@@ -3121,7 +2852,7 @@
    "units": 7,
    "sold_at": 3.16,
    "revenue": 12.53,
-   "cogs": 8.08,
+   "cogs": 7.16,
    "costed": true
   },
   {
@@ -3143,7 +2874,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 6.41,
-   "cogs": 2.0,
+   "cogs": 1.21,
    "costed": true
   },
   {
@@ -3154,7 +2885,7 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.74,
-   "cogs": 1.0,
+   "cogs": 0.21,
    "costed": true
   },
   {
@@ -3187,7 +2918,7 @@
    "units": 1,
    "sold_at": 5.45,
    "revenue": 2.97,
-   "cogs": 1.74,
+   "cogs": 2.07,
    "costed": true
   },
   {
@@ -3242,7 +2973,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 29.3,
-   "cogs": 24.13,
+   "cogs": 24.17,
    "costed": true
   },
   {
@@ -3264,7 +2995,7 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.74,
-   "cogs": 1.0,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -3275,7 +3006,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.17,
+   "cogs": 0.42,
    "costed": true
   },
   {
@@ -3308,7 +3039,7 @@
    "units": 1,
    "sold_at": 5.95,
    "revenue": 3.23,
-   "cogs": 2.3,
+   "cogs": 2.21,
    "costed": true
   },
   {
@@ -3319,7 +3050,7 @@
    "units": 1,
    "sold_at": 4.45,
    "revenue": 2.33,
-   "cogs": 1.35,
+   "cogs": 1.18,
    "costed": true
   },
   {
@@ -3330,7 +3061,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.23,
-   "cogs": 0.41,
+   "cogs": 0.35,
    "costed": true
   },
   {
@@ -3341,7 +3072,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.05,
-   "cogs": 0.78,
+   "cogs": 0.62,
    "costed": true
   },
   {
@@ -3352,7 +3083,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.05,
-   "cogs": 1.45,
+   "cogs": 1.28,
    "costed": true
   },
   {
@@ -3363,7 +3094,7 @@
    "units": 1,
    "sold_at": 3.25,
    "revenue": 1.65,
-   "cogs": 0.63,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -3374,7 +3105,7 @@
    "units": 2,
    "sold_at": 1.12,
    "revenue": 1.61,
-   "cogs": 0.09,
+   "cogs": 0.18,
    "costed": true
   },
   {
@@ -3396,7 +3127,7 @@
    "units": 1,
    "sold_at": 45.95,
    "revenue": 26.64,
-   "cogs": 24.19,
+   "cogs": 21.48,
    "costed": true
   },
   {
@@ -3407,7 +3138,7 @@
    "units": 5,
    "sold_at": 9.25,
    "revenue": 26.26,
-   "cogs": 18.69,
+   "cogs": 17.96,
    "costed": true
   },
   {
@@ -3418,7 +3149,7 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 11.38,
-   "cogs": 4.4,
+   "cogs": 9.04,
    "costed": true
   },
   {
@@ -3429,7 +3160,7 @@
    "units": 1,
    "sold_at": 17.25,
    "revenue": 9.78,
-   "cogs": 9.82,
+   "cogs": 6.92,
    "costed": true
   },
   {
@@ -3451,7 +3182,7 @@
    "units": 3,
    "sold_at": 3.95,
    "revenue": 6.18,
-   "cogs": 4.12,
+   "cogs": 4.45,
    "costed": true
   },
   {
@@ -3462,7 +3193,7 @@
    "units": 1,
    "sold_at": 10.75,
    "revenue": 5.94,
-   "cogs": 3.26,
+   "cogs": 2.62,
    "costed": true
   },
   {
@@ -3484,7 +3215,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.41,
-   "cogs": 3.22,
+   "cogs": 3.12,
    "costed": true
   },
   {
@@ -3517,7 +3248,7 @@
    "units": 2,
    "sold_at": 3.95,
    "revenue": 4.12,
-   "cogs": 2.89,
+   "cogs": 2.87,
    "costed": true
   },
   {
@@ -3627,7 +3358,7 @@
    "units": 1,
    "sold_at": 33.25,
    "revenue": 28.68,
-   "cogs": 22.44,
+   "cogs": 22.31,
    "costed": true
   },
   {
@@ -3638,7 +3369,7 @@
    "units": 1,
    "sold_at": 24.25,
    "revenue": 20.79,
-   "cogs": 14.42,
+   "cogs": 17.04,
    "costed": true
   },
   {
@@ -3649,7 +3380,7 @@
    "units": 1,
    "sold_at": 20.45,
    "revenue": 17.47,
-   "cogs": 13.69,
+   "cogs": 12.63,
    "costed": true
   },
   {
@@ -3660,7 +3391,7 @@
    "units": 1,
    "sold_at": 19.45,
    "revenue": 16.57,
-   "cogs": 13.25,
+   "cogs": 12.88,
    "costed": true
   },
   {
@@ -3671,7 +3402,7 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 11.32,
-   "cogs": 4.44,
+   "cogs": 9.11,
    "costed": true
   },
   {
@@ -3682,7 +3413,7 @@
    "units": 2,
    "sold_at": 8.65,
    "revenue": 9.8,
-   "cogs": 2.44,
+   "cogs": 7.05,
    "costed": true
   },
   {
@@ -3715,7 +3446,7 @@
    "units": 1,
    "sold_at": 6.45,
    "revenue": 5.3,
-   "cogs": 1.3,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -3726,7 +3457,7 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 5.1,
-   "cogs": 3.76,
+   "cogs": 3.62,
    "costed": true
   },
   {
@@ -3814,7 +3545,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.06,
-   "cogs": 0.41,
+   "cogs": 0.35,
    "costed": true
   },
   {
@@ -3836,7 +3567,7 @@
    "units": 1,
    "sold_at": 33.25,
    "revenue": -0.48,
-   "cogs": -0.38,
+   "cogs": -0.37,
    "costed": true
   },
   {
@@ -3847,7 +3578,7 @@
    "units": 2,
    "sold_at": 26.95,
    "revenue": 46.32,
-   "cogs": 37.0,
+   "cogs": 37.2,
    "costed": true
   },
   {
@@ -3935,7 +3666,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.23,
-   "cogs": 1.47,
+   "cogs": 1.46,
    "costed": true
   },
   {
@@ -3946,7 +3677,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.23,
-   "cogs": 1.47,
+   "cogs": 1.46,
    "costed": true
   },
   {
@@ -3957,7 +3688,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.06,
-   "cogs": 0.41,
+   "cogs": 0.35,
    "costed": true
   },
   {
@@ -3968,7 +3699,7 @@
    "units": 1,
    "sold_at": 1.95,
    "revenue": 1.35,
-   "cogs": 0.99,
+   "cogs": 0.51,
    "costed": true
   },
   {
@@ -3979,7 +3710,7 @@
    "units": 1,
    "sold_at": 1.95,
    "revenue": 1.35,
-   "cogs": 0.82,
+   "cogs": 0.51,
    "costed": true
   },
   {
@@ -4045,7 +3776,7 @@
    "units": 1,
    "sold_at": 18.75,
    "revenue": 10.73,
-   "cogs": 3.09,
+   "cogs": 4.91,
    "costed": true
   },
   {
@@ -4078,7 +3809,7 @@
    "units": 2,
    "sold_at": 4.95,
    "revenue": 7.96,
-   "cogs": 0.34,
+   "cogs": 0.84,
    "costed": true
   },
   {
@@ -4111,7 +3842,7 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 5.19,
-   "cogs": 3.76,
+   "cogs": 3.62,
    "costed": true
   },
   {
@@ -4133,8 +3864,8 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 5.06,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.32,
+   "costed": true
   },
   {
    "date": "2026-09-26",
@@ -4177,7 +3908,7 @@
    "units": 1,
    "sold_at": 7.3,
    "revenue": 4.04,
-   "cogs": 0.81,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -4199,7 +3930,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.2,
-   "cogs": 0.74,
+   "cogs": 1.15,
    "costed": true
   },
   {
@@ -4232,7 +3963,7 @@
    "units": 1,
    "sold_at": 39.95,
    "revenue": 23.55,
-   "cogs": 19.57,
+   "cogs": 18.19,
    "costed": true
   },
   {
@@ -4254,7 +3985,7 @@
    "units": 1,
    "sold_at": 27.25,
    "revenue": 15.94,
-   "cogs": 13.42,
+   "cogs": 12.39,
    "costed": true
   },
   {
@@ -4265,7 +3996,7 @@
    "units": 1,
    "sold_at": 21.25,
    "revenue": 12.2,
-   "cogs": 10.79,
+   "cogs": 11.38,
    "costed": true
   },
   {
@@ -4276,7 +4007,7 @@
    "units": 1,
    "sold_at": 14.45,
    "revenue": 12.19,
-   "cogs": 7.24,
+   "cogs": 7.29,
    "costed": true
   },
   {
@@ -4309,7 +4040,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.12,
-   "cogs": 0.83,
+   "cogs": 1.23,
    "costed": true
   },
   {
@@ -4320,7 +4051,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 4.07,
-   "cogs": 0.8,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -4331,7 +4062,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.09,
-   "cogs": 0.74,
+   "cogs": 1.15,
    "costed": true
   },
   {
@@ -4342,7 +4073,7 @@
    "units": 1,
    "sold_at": 33.25,
    "revenue": 28.68,
-   "cogs": 22.44,
+   "cogs": 22.31,
    "costed": true
   },
   {
@@ -4375,7 +4106,7 @@
    "units": 1,
    "sold_at": 5.45,
    "revenue": 4.42,
-   "cogs": 0.82,
+   "cogs": 0.7,
    "costed": true
   },
   {
@@ -4386,7 +4117,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.81,
-   "cogs": 0.8,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -4397,7 +4128,7 @@
    "units": 3,
    "sold_at": 9.25,
    "revenue": 16.04,
-   "cogs": 11.26,
+   "cogs": 10.85,
    "costed": true
   },
   {
@@ -4430,7 +4161,7 @@
    "units": 1,
    "sold_at": 17.25,
    "revenue": 9.78,
-   "cogs": 4.42,
+   "cogs": 5.01,
    "costed": true
   },
   {
@@ -4452,8 +4183,8 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 5.06,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.32,
+   "costed": true
   },
   {
    "date": "2026-09-29",
@@ -4463,7 +4194,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.6,
-   "cogs": 3.25,
+   "cogs": 3.14,
    "costed": true
   },
   {
@@ -4474,7 +4205,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.44,
-   "cogs": 2.17,
+   "cogs": 0.5,
    "costed": true
   },
   {
@@ -4496,7 +4227,7 @@
    "units": 1,
    "sold_at": 67.95,
    "revenue": 57.05,
-   "cogs": 35.0,
+   "cogs": 29.87,
    "costed": true
   },
   {
@@ -4507,7 +4238,7 @@
    "units": 1,
    "sold_at": 8.95,
    "revenue": 7.48,
-   "cogs": 4.39,
+   "cogs": 4.15,
    "costed": true
   },
   {
@@ -4518,7 +4249,7 @@
    "units": 1,
    "sold_at": 8.95,
    "revenue": 7.48,
-   "cogs": 4.85,
+   "cogs": 4.94,
    "costed": true
   },
   {
@@ -4529,7 +4260,7 @@
    "units": 1,
    "sold_at": 10.65,
    "revenue": 6.05,
-   "cogs": 1.97,
+   "cogs": 1.19,
    "costed": true
   },
   {
@@ -4551,7 +4282,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.41,
-   "cogs": 0.8,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -4562,7 +4293,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.5,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -4595,7 +4326,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.12,
-   "cogs": 0.41,
+   "cogs": 0.35,
    "costed": true
   },
   {
@@ -4628,8 +4359,8 @@
    "units": 1,
    "sold_at": 18.95,
    "revenue": 10.84,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 7.41,
+   "costed": true
   },
   {
    "date": "2026-10-01",
@@ -4639,8 +4370,8 @@
    "units": 2,
    "sold_at": 9.25,
    "revenue": 10.4,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.65,
+   "costed": true
   },
   {
    "date": "2026-10-01",
@@ -4661,7 +4392,7 @@
    "units": 1,
    "sold_at": 7.45,
    "revenue": 4.3,
-   "cogs": 0.82,
+   "cogs": 0.7,
    "costed": true
   },
   {
@@ -4694,7 +4425,7 @@
    "units": 1,
    "sold_at": 5.95,
    "revenue": 3.29,
-   "cogs": 2.45,
+   "cogs": 2.28,
    "costed": true
   },
   {
@@ -4705,7 +4436,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 3.11,
-   "cogs": 0.16,
+   "cogs": 0.17,
    "costed": true
   },
   {
@@ -4716,7 +4447,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.23,
-   "cogs": 0.41,
+   "cogs": 0.35,
    "costed": true
   },
   {
@@ -4727,7 +4458,7 @@
    "units": 1,
    "sold_at": 67.95,
    "revenue": 59.1,
-   "cogs": 38.0,
+   "cogs": 22.74,
    "costed": true
   },
   {
@@ -4738,8 +4469,8 @@
    "units": 1,
    "sold_at": 34.95,
    "revenue": 30.18,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 8.41,
+   "costed": true
   },
   {
    "date": "2026-10-02",
@@ -4749,7 +4480,7 @@
    "units": 1,
    "sold_at": 45.95,
    "revenue": 27.24,
-   "cogs": 23.2,
+   "cogs": 21.69,
    "costed": true
   },
   {
@@ -4760,8 +4491,8 @@
    "units": 1,
    "sold_at": 20.95,
    "revenue": 17.91,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 9.44,
+   "costed": true
   },
   {
    "date": "2026-10-02",
@@ -4771,8 +4502,8 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 17.01,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 5.89,
+   "costed": true
   },
   {
    "date": "2026-10-02",
@@ -4782,7 +4513,7 @@
    "units": 1,
    "sold_at": 12.95,
    "revenue": 10.87,
-   "cogs": 0.48,
+   "cogs": 3.86,
    "costed": true
   },
   {
@@ -4793,7 +4524,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 4.13,
+   "cogs": 3.87,
    "costed": true
   },
   {
@@ -4804,7 +4535,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.17,
+   "cogs": 0.42,
    "costed": true
   },
   {
@@ -4826,7 +4557,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.1,
-   "cogs": 1.46,
+   "cogs": 1.45,
    "costed": true
   },
   {
@@ -4848,7 +4579,7 @@
    "units": 1,
    "sold_at": 86.75,
    "revenue": 50.5,
-   "cogs": 2.38,
+   "cogs": 28.14,
    "costed": true
   },
   {
@@ -4870,7 +4601,7 @@
    "units": 3,
    "sold_at": 7.86,
    "revenue": 13.56,
-   "cogs": 9.6,
+   "cogs": 9.22,
    "costed": true
   },
   {
@@ -4892,8 +4623,8 @@
    "units": 1,
    "sold_at": 6.95,
    "revenue": 5.74,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.33,
+   "costed": true
   },
   {
    "date": "2026-10-03",
@@ -4914,8 +4645,8 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 5.29,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.32,
+   "costed": true
   },
   {
    "date": "2026-10-03",
@@ -4936,7 +4667,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.8,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -4969,7 +4700,7 @@
    "units": 1,
    "sold_at": 3.45,
    "revenue": 2.67,
-   "cogs": 1.57,
+   "cogs": 1.8,
    "costed": true
   },
   {
@@ -5035,8 +4766,8 @@
    "units": 1,
    "sold_at": 2.65,
    "revenue": 1.3,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 0.17,
+   "costed": true
   },
   {
    "date": "2026-10-03",
@@ -5046,7 +4777,7 @@
    "units": 1,
    "sold_at": 1.45,
    "revenue": 1.09,
-   "cogs": 0.08,
+   "cogs": 0.07,
    "costed": true
   },
   {
@@ -5068,7 +4799,7 @@
    "units": 1,
    "sold_at": 14.25,
    "revenue": 12.02,
-   "cogs": 8.96,
+   "cogs": 8.41,
    "costed": true
   },
   {
@@ -5112,7 +4843,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 4.13,
+   "cogs": 3.87,
    "costed": true
   },
   {
@@ -5123,7 +4854,7 @@
    "units": 1,
    "sold_at": 8.95,
    "revenue": 7.48,
-   "cogs": 4.39,
+   "cogs": 4.15,
    "costed": true
   },
   {
@@ -5134,7 +4865,7 @@
    "units": 1,
    "sold_at": 10.25,
    "revenue": 5.71,
-   "cogs": 4.54,
+   "cogs": 4.08,
    "costed": true
   },
   {
@@ -5145,7 +4876,7 @@
    "units": 1,
    "sold_at": 6.45,
    "revenue": 5.3,
-   "cogs": 1.24,
+   "cogs": 3.58,
    "costed": true
   },
   {
@@ -5167,7 +4898,7 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 5.1,
-   "cogs": 3.76,
+   "cogs": 3.62,
    "costed": true
   },
   {
@@ -5178,7 +4909,7 @@
    "units": 1,
    "sold_at": 7.3,
    "revenue": 4.15,
-   "cogs": 0.81,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -5189,7 +4920,7 @@
    "units": 2,
    "sold_at": 3.95,
    "revenue": 4.1,
-   "cogs": 2.75,
+   "cogs": 2.97,
    "costed": true
   },
   {
@@ -5200,7 +4931,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.83,
-   "cogs": 0.5,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -5255,7 +4986,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.25,
-   "cogs": 0.74,
+   "cogs": 1.15,
    "costed": true
   },
   {
@@ -5266,7 +4997,7 @@
    "units": 1,
    "sold_at": 29.95,
    "revenue": 24.58,
-   "cogs": 12.0,
+   "cogs": 5.04,
    "costed": true
   },
   {
@@ -5288,7 +5019,7 @@
    "units": 1,
    "sold_at": 27.25,
    "revenue": 15.59,
-   "cogs": 13.43,
+   "cogs": 12.39,
    "costed": true
   },
   {
@@ -5299,7 +5030,7 @@
    "units": 3,
    "sold_at": 5.45,
    "revenue": 9.21,
-   "cogs": 5.27,
+   "cogs": 6.28,
    "costed": true
   },
   {
@@ -5310,7 +5041,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 0.83,
+   "cogs": 1.23,
    "costed": true
   },
   {
@@ -5332,7 +5063,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.79,
-   "cogs": 0.8,
+   "cogs": 0.41,
    "costed": true
   },
   {
@@ -5348,6 +5079,50 @@
   },
   {
    "date": "2026-10-06",
+   "item": "FISCH \ud83d\udc1f Astraeus Serenade Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 2,
+   "sold_at": 9.25,
+   "revenue": 10.41,
+   "cogs": 0.65,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "Prop Bundle (NEW)",
+   "game": "Rivals",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 8.95,
+   "revenue": 7.48,
+   "cogs": 4.15,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "FISCH \ud83d\udc1f Admin Relic\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 6.95,
+   "revenue": 5.74,
+   "cogs": 0.4,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "FISCH \ud83d\udc1f Astraeus Serenade Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 6.95,
+   "revenue": 5.74,
+   "cogs": 0.33,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
    "item": "FIRE WISP | CHEAPEST |\ud83e\udeb4Grow a Garden 1\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f",
    "game": "Grow a Garden",
    "currency": "USD",
@@ -5359,6 +5134,28 @@
   },
   {
    "date": "2026-10-06",
+   "item": "FISCH \ud83d\udc1f Cosmic Relic x100\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 7.45,
+   "revenue": 4.15,
+   "cogs": 0.71,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "Star Fruit x3 + Dragon's Breath Seed x3",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 4.89,
+   "revenue": 4.11,
+   "cogs": 0.69,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
    "item": "GOLD FINCH | CHEAPEST |\ud83e\udeb4Grow a Garden 1\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f",
    "game": "Grow a Garden",
    "currency": "USD",
@@ -5366,6 +5163,105 @@
    "sold_at": 5.45,
    "revenue": 2.96,
    "cogs": 0.28,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "Super Sprinkler x25 + Super Watering Can x25",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 3.35,
+   "revenue": 2.81,
+   "cogs": 0.36,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "Abyssal Enchant Relic",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.41,
+   "cogs": 0.08,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "Hexed Enchant Relic",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.41,
+   "cogs": 0.08,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "Skin Case 1",
+   "game": "Rivals",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.23,
+   "cogs": 1.31,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "Ghost Pepper Seed x3",
+   "game": "Grow a Garden 2",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 1.49,
+   "revenue": 1.25,
+   "cogs": 0.26,
+   "costed": true
+  },
+  {
+   "date": "2026-10-06",
+   "item": "Firefly",
+   "game": "Grow a Garden 2",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 1.65,
+   "revenue": 0.71,
+   "cogs": 0.06,
+   "costed": true
+  },
+  {
+   "date": "2026-10-07",
+   "item": "FISCH \ud83d\udc1f Bunblade (Plaguereaver Rod Skin)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 19.95,
+   "revenue": 11.42,
+   "cogs": 9.12,
+   "costed": true
+  },
+  {
+   "date": "2026-10-07",
+   "item": "MEGA RACCOON | CHEAPEST |\ud83e\udeb4Grow a Garden 1\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f",
+   "game": "Grow a Garden",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 13.65,
+   "revenue": 7.77,
+   "cogs": 4.88,
+   "costed": true
+  },
+  {
+   "date": "2026-10-07",
+   "item": "Abyssal Enchant Relic x10",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 6.65,
+   "revenue": 3.65,
+   "cogs": 0.83,
    "costed": true
   }
  ]
