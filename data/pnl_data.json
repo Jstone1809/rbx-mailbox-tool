@@ -1,22 +1,12 @@
 {
- "generated": "2026-10-08T05:45:14Z",
+ "generated": "2026-10-09T05:45:15Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 55.65,
  "days": [
   {
-   "date": "2026-09-09",
-   "revenue": 205.79,
-   "cogs": 104.57,
-   "ads": 6.65,
-   "has_ads": true,
-   "orders": 18,
-   "units": 23,
-   "nocost_revenue": 0.0
-  },
-  {
    "date": "2026-09-10",
    "revenue": 211.98,
-   "cogs": 78.39,
+   "cogs": 83.81,
    "ads": 7.31,
    "has_ads": true,
    "orders": 20,
@@ -46,7 +36,7 @@
   {
    "date": "2026-09-13",
    "revenue": 274.04,
-   "cogs": 122.99,
+   "cogs": 122.97,
    "ads": 8.39,
    "has_ads": true,
    "orders": 37,
@@ -56,7 +46,7 @@
   {
    "date": "2026-09-14",
    "revenue": 121.48,
-   "cogs": 61.64,
+   "cogs": 61.62,
    "ads": 5.68,
    "has_ads": true,
    "orders": 16,
@@ -96,7 +86,7 @@
   {
    "date": "2026-09-18",
    "revenue": 89.87,
-   "cogs": 37.74,
+   "cogs": 39.86,
    "ads": 3.13,
    "has_ads": true,
    "orders": 9,
@@ -246,7 +236,7 @@
   {
    "date": "2026-10-03",
    "revenue": 140.5,
-   "cogs": 51.96,
+   "cogs": 51.94,
    "ads": 11.43,
    "has_ads": true,
    "orders": 16,
@@ -266,7 +256,7 @@
   {
    "date": "2026-10-05",
    "revenue": 88.25,
-   "cogs": 45.42,
+   "cogs": 49.56,
    "ads": 7.16,
    "has_ads": true,
    "orders": 8,
@@ -287,7 +277,7 @@
    "date": "2026-10-07",
    "revenue": 23.37,
    "cogs": 7.11,
-   "ads": 6.87,
+   "ads": 14.56,
    "has_ads": true,
    "orders": 6,
    "units": 6,
@@ -295,45 +285,55 @@
   },
   {
    "date": "2026-10-08",
-   "revenue": 3.6,
-   "cogs": 0.69,
+   "revenue": 100.81,
+   "cogs": 55.35,
+   "ads": 4.37,
+   "has_ads": true,
+   "orders": 9,
+   "units": 14,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-10-09",
+   "revenue": 35.38,
+   "cogs": 10.62,
    "ads": 0.0,
    "has_ads": false,
-   "orders": 1,
-   "units": 1,
+   "orders": 2,
+   "units": 5,
    "nocost_revenue": 0.0
   }
  ],
  "games": [
   {
    "game": "FISCH",
-   "revenue": 1571.06,
-   "cogs": 428.53,
-   "units": 255
+   "revenue": 1551.05,
+   "cogs": 443.71,
+   "units": 252
   },
   {
    "game": "Blox Fruits",
-   "revenue": 849.88,
-   "cogs": 667.11,
-   "units": 60
+   "revenue": 831.91,
+   "cogs": 649.01,
+   "units": 61
   },
   {
    "game": "Rivals",
-   "revenue": 502.74,
-   "cogs": 347.51,
-   "units": 106
+   "revenue": 462.99,
+   "cogs": 321.27,
+   "units": 100
   },
   {
    "game": "Grow a Garden 2",
-   "revenue": 408.5,
-   "cogs": 81.27,
-   "units": 101
+   "revenue": 403.16,
+   "cogs": 80.5,
+   "units": 99
   },
   {
    "game": "Grow a Garden",
-   "revenue": 170.5,
-   "cogs": 100.1,
-   "units": 25
+   "revenue": 180.37,
+   "cogs": 102.38,
+   "units": 30
   },
   {
    "game": "Escape Tsunami For Brainrots",
@@ -375,171 +375,6 @@
   }
  ],
  "items": [
-  {
-   "date": "2026-09-09",
-   "item": "Dragon",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 2,
-   "sold_at": 33.95,
-   "revenue": 58.6,
-   "cogs": 48.34,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Kitsune",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 29.95,
-   "revenue": 25.79,
-   "cogs": 18.52,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 6,
-   "sold_at": 6.45,
-   "revenue": 20.2,
-   "cogs": 2.28,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Admin Relic x10",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 33.3,
-   "revenue": 18.82,
-   "cogs": 3.84,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Skin Case 3 (x3)",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 3,
-   "sold_at": 6.95,
-   "revenue": 17.82,
-   "cogs": 11.07,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "1B C$",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 16.95,
-   "revenue": 14.52,
-   "cogs": 1.64,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Ultra Key Bundle (+450 Keys)",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 14.95,
-   "revenue": 12.63,
-   "cogs": 8.49,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "FISCH \ud83d\udc1f 500M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 19.95,
-   "revenue": 11.06,
-   "cogs": 2.02,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Requiem Rod Set",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 6.95,
-   "revenue": 5.96,
-   "cogs": 0.41,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Skin Case 2 (x3)",
-   "game": "Rivals",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 9.25,
-   "revenue": 4.98,
-   "cogs": 3.53,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Linked Sword",
-   "game": "Rivals",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 4.32,
-   "cogs": 3.15,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "100M Coins (via fish trade)",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 6.6,
-   "revenue": 3.73,
-   "cogs": 0.4,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Red Panda | GAG2 | Fall Harvest |  Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 3.11,
-   "cogs": 0.7,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Super Syrup Sprinkler + Watering Can x25",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": 2.23,
-   "cogs": 0.07,
-   "costed": true
-  },
-  {
-   "date": "2026-09-09",
-   "item": "Chaotic Enchant Relic",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.02,
-   "cogs": 0.1,
-   "costed": true
-  },
   {
    "date": "2026-09-10",
    "item": "1B C$",
@@ -614,7 +449,7 @@
    "units": 1,
    "sold_at": 23.45,
    "revenue": 13.25,
-   "cogs": 3.18,
+   "cogs": 8.6,
    "costed": true
   },
   {
@@ -1439,7 +1274,7 @@
    "units": 1,
    "sold_at": 1.95,
    "revenue": 0.86,
-   "cogs": 0.07,
+   "cogs": 0.05,
    "costed": true
   },
   {
@@ -1615,7 +1450,7 @@
    "units": 1,
    "sold_at": 1.95,
    "revenue": 0.86,
-   "cogs": 0.07,
+   "cogs": 0.05,
    "costed": true
   },
   {
@@ -2088,7 +1923,7 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 11.39,
-   "cogs": 4.21,
+   "cogs": 6.32,
    "costed": true
   },
   {
@@ -4552,7 +4387,7 @@
    "units": 1,
    "sold_at": 1.45,
    "revenue": 1.09,
-   "cogs": 0.07,
+   "cogs": 0.05,
    "costed": true
   },
   {
@@ -4805,7 +4640,7 @@
    "units": 1,
    "sold_at": 29.95,
    "revenue": 24.58,
-   "cogs": 5.04,
+   "cogs": 9.18,
    "costed": true
   },
   {
@@ -5118,6 +4953,94 @@
   },
   {
    "date": "2026-10-08",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT TIGER\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 32.45,
+   "revenue": 18.8,
+   "cogs": 16.82,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT YETI\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 30.65,
+   "revenue": 17.74,
+   "cogs": 12.18,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT VENOM\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 26.95,
+   "revenue": 15.56,
+   "cogs": 10.62,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT PAIN\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 23.25,
+   "revenue": 14.32,
+   "cogs": 9.14,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
+   "item": "MUMMY | CHEAPEST |\ud83e\udeb4Grow a Garden 1 \u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f",
+   "game": "Grow a Garden",
+   "currency": "GBP",
+   "units": 5,
+   "sold_at": 2.36,
+   "revenue": 9.87,
+   "cogs": 2.28,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
+   "item": "500M C$",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 9.95,
+   "revenue": 8.36,
+   "cogs": 1.23,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
+   "item": "FISCH \ud83d\udc1f Plaguereaver Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 6.95,
+   "revenue": 5.57,
+   "cogs": 1.35,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
+   "item": "FISCH \ud83d\udc1f Wind Elemental Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 5.95,
+   "revenue": 4.76,
+   "cogs": 0.7,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
    "item": "Mourned Moonstone",
    "game": "FISCH",
    "currency": "USD",
@@ -5125,6 +5048,72 @@
    "sold_at": 6.6,
    "revenue": 3.6,
    "cogs": 0.69,
+   "costed": true
+  },
+  {
+   "date": "2026-10-08",
+   "item": "FISCH \ud83d\udc1f Cosmic Relic x50\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.23,
+   "cogs": 0.35,
+   "costed": true
+  },
+  {
+   "date": "2026-10-09",
+   "item": "Purrari",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 16.65,
+   "revenue": 10.38,
+   "cogs": 4.68,
+   "costed": true
+  },
+  {
+   "date": "2026-10-09",
+   "item": "FISCH \ud83d\udc1f Full Lens Set (All 5 Lenses)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 13.25,
+   "revenue": 8.01,
+   "cogs": 1.9,
+   "costed": true
+  },
+  {
+   "date": "2026-10-09",
+   "item": "Blue Cat",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 10.65,
+   "revenue": 6.64,
+   "cogs": 1.64,
+   "costed": true
+  },
+  {
+   "date": "2026-10-09",
+   "item": "Mummy Puppy",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 8.65,
+   "revenue": 5.39,
+   "cogs": 1.22,
+   "costed": true
+  },
+  {
+   "date": "2026-10-09",
+   "item": "Flipper Express",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 7.95,
+   "revenue": 4.96,
+   "cogs": 1.19,
    "costed": true
   }
  ]
