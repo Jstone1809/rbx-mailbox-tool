@@ -1,22 +1,12 @@
 {
- "generated": "2026-10-13T05:45:14Z",
+ "generated": "2026-10-14T05:45:12Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 55.65,
  "days": [
   {
-   "date": "2026-09-14",
-   "revenue": 121.48,
-   "cogs": 67.88,
-   "ads": 5.68,
-   "has_ads": true,
-   "orders": 16,
-   "units": 26,
-   "nocost_revenue": 0.0
-  },
-  {
    "date": "2026-09-15",
    "revenue": 244.75,
-   "cogs": 101.82,
+   "cogs": 103.19,
    "ads": 6.56,
    "has_ads": true,
    "orders": 22,
@@ -26,7 +16,7 @@
   {
    "date": "2026-09-16",
    "revenue": 80.36,
-   "cogs": 33.22,
+   "cogs": 34.31,
    "ads": 7.0,
    "has_ads": true,
    "orders": 13,
@@ -36,7 +26,7 @@
   {
    "date": "2026-09-17",
    "revenue": 70.54,
-   "cogs": 27.61,
+   "cogs": 28.93,
    "ads": 5.79,
    "has_ads": true,
    "orders": 10,
@@ -46,7 +36,7 @@
   {
    "date": "2026-09-18",
    "revenue": 89.87,
-   "cogs": 39.86,
+   "cogs": 40.13,
    "ads": 3.13,
    "has_ads": true,
    "orders": 9,
@@ -56,7 +46,7 @@
   {
    "date": "2026-09-19",
    "revenue": 135.58,
-   "cogs": 79.75,
+   "cogs": 81.94,
    "ads": 5.38,
    "has_ads": true,
    "orders": 17,
@@ -66,7 +56,7 @@
   {
    "date": "2026-09-20",
    "revenue": 204.53,
-   "cogs": 88.97,
+   "cogs": 91.49,
    "ads": 5.72,
    "has_ads": true,
    "orders": 20,
@@ -76,7 +66,7 @@
   {
    "date": "2026-09-21",
    "revenue": 68.73,
-   "cogs": 24.7,
+   "cogs": 24.98,
    "ads": 6.12,
    "has_ads": true,
    "orders": 10,
@@ -86,7 +76,7 @@
   {
    "date": "2026-09-22",
    "revenue": 69.25,
-   "cogs": 31.98,
+   "cogs": 33.91,
    "ads": 4.7,
    "has_ads": true,
    "orders": 13,
@@ -96,7 +86,7 @@
   {
    "date": "2026-09-23",
    "revenue": 221.3,
-   "cogs": 156.04,
+   "cogs": 155.94,
    "ads": 4.52,
    "has_ads": true,
    "orders": 30,
@@ -106,7 +96,7 @@
   {
    "date": "2026-09-24",
    "revenue": 154.68,
-   "cogs": 89.85,
+   "cogs": 90.13,
    "ads": 8.57,
    "has_ads": true,
    "orders": 18,
@@ -116,7 +106,7 @@
   {
    "date": "2026-09-25",
    "revenue": 96.36,
-   "cogs": 49.75,
+   "cogs": 50.3,
    "ads": 8.44,
    "has_ads": true,
    "orders": 15,
@@ -126,7 +116,7 @@
   {
    "date": "2026-09-26",
    "revenue": 152.62,
-   "cogs": 37.63,
+   "cogs": 40.07,
    "ads": 9.54,
    "has_ads": true,
    "orders": 19,
@@ -136,7 +126,7 @@
   {
    "date": "2026-09-27",
    "revenue": 110.88,
-   "cogs": 66.46,
+   "cogs": 67.7,
    "ads": 5.52,
    "has_ads": true,
    "orders": 9,
@@ -156,7 +146,7 @@
   {
    "date": "2026-09-29",
    "revenue": 75.6,
-   "cogs": 33.02,
+   "cogs": 34.6,
    "ads": 7.77,
    "has_ads": true,
    "orders": 8,
@@ -166,7 +156,7 @@
   {
    "date": "2026-09-30",
    "revenue": 101.37,
-   "cogs": 43.19,
+   "cogs": 43.4,
    "ads": 6.38,
    "has_ads": true,
    "orders": 9,
@@ -176,7 +166,7 @@
   {
    "date": "2026-10-01",
    "revenue": 100.11,
-   "cogs": 43.84,
+   "cogs": 44.8,
    "ads": 3.54,
    "has_ads": true,
    "orders": 11,
@@ -186,7 +176,7 @@
   {
    "date": "2026-10-02",
    "revenue": 182.4,
-   "cogs": 81.77,
+   "cogs": 82.34,
    "ads": 9.96,
    "has_ads": true,
    "orders": 11,
@@ -196,7 +186,7 @@
   {
    "date": "2026-10-03",
    "revenue": 140.5,
-   "cogs": 52.22,
+   "cogs": 52.5,
    "ads": 11.43,
    "has_ads": true,
    "orders": 16,
@@ -206,7 +196,7 @@
   {
    "date": "2026-10-04",
    "revenue": 119.25,
-   "cogs": 47.29,
+   "cogs": 48.88,
    "ads": 7.96,
    "has_ads": true,
    "orders": 19,
@@ -216,7 +206,7 @@
   {
    "date": "2026-10-05",
    "revenue": 88.25,
-   "cogs": 49.15,
+   "cogs": 50.4,
    "ads": 7.16,
    "has_ads": true,
    "orders": 8,
@@ -246,7 +236,7 @@
   {
    "date": "2026-10-08",
    "revenue": 90.94,
-   "cogs": 59.04,
+   "cogs": 60.28,
    "ads": 12.06,
    "has_ads": true,
    "orders": 9,
@@ -256,7 +246,7 @@
   {
    "date": "2026-10-09",
    "revenue": 146.59,
-   "cogs": 80.02,
+   "cogs": 81.63,
    "ads": 10.66,
    "has_ads": true,
    "orders": 13,
@@ -266,7 +256,7 @@
   {
    "date": "2026-10-10",
    "revenue": 85.22,
-   "cogs": 18.61,
+   "cogs": 18.55,
    "ads": 14.42,
    "has_ads": true,
    "orders": 14,
@@ -276,7 +266,7 @@
   {
    "date": "2026-10-11",
    "revenue": 142.69,
-   "cogs": 48.39,
+   "cogs": 50.37,
    "ads": 14.2,
    "has_ads": true,
    "orders": 21,
@@ -286,54 +276,64 @@
   {
    "date": "2026-10-12",
    "revenue": 73.16,
-   "cogs": 39.86,
+   "cogs": 40.39,
    "ads": 6.09,
    "has_ads": true,
    "orders": 11,
    "units": 13,
-   "nocost_revenue": 3.34
+   "nocost_revenue": 0.0
   },
   {
    "date": "2026-10-13",
-   "revenue": 5.92,
-   "cogs": 1.91,
+   "revenue": 39.85,
+   "cogs": 8.81,
    "ads": 0.0,
    "has_ads": false,
-   "orders": 2,
-   "units": 2,
+   "orders": 8,
+   "units": 10,
+   "nocost_revenue": 0.0
+  },
+  {
+   "date": "2026-10-14",
+   "revenue": 209.37,
+   "cogs": 158.48,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 13,
+   "units": 15,
    "nocost_revenue": 0.0
   }
  ],
  "games": [
   {
    "game": "FISCH",
-   "revenue": 1416.67,
-   "cogs": 379.14,
-   "units": 251
+   "revenue": 1402.89,
+   "cogs": 403.42,
+   "units": 245
   },
   {
    "game": "Blox Fruits",
-   "revenue": 707.33,
-   "cogs": 563.85,
-   "units": 47
+   "revenue": 885.17,
+   "cogs": 704.34,
+   "units": 60
   },
   {
    "game": "Rivals",
-   "revenue": 490.26,
-   "cogs": 368.82,
-   "units": 85
+   "revenue": 444.24,
+   "cogs": 329.26,
+   "units": 82
   },
   {
    "game": "Grow a Garden 2",
-   "revenue": 339.84,
-   "cogs": 94.05,
-   "units": 88
+   "revenue": 329.87,
+   "cogs": 93.5,
+   "units": 78
   },
   {
    "game": "Grow a Garden",
-   "revenue": 134.69,
-   "cogs": 74.95,
-   "units": 27
+   "revenue": 135.05,
+   "cogs": 75.04,
+   "units": 26
   },
   {
    "game": "Escape Tsunami For Brainrots",
@@ -343,15 +343,15 @@
   },
   {
    "game": "Steal An Egg",
-   "revenue": 58.93,
+   "revenue": 68.57,
    "cogs": 13.19,
-   "units": 12
+   "units": 14
   },
   {
    "game": "Steal A Brainrot",
-   "revenue": 56.17,
-   "cogs": 12.76,
-   "units": 20
+   "revenue": 59.92,
+   "cogs": 12.64,
+   "units": 22
   },
   {
    "game": "Plants Vs Brainrots",
@@ -372,224 +372,9 @@
    "revenue": 11.29,
    "units": 4,
    "sold_at": 4.95
-  },
-  {
-   "item": "FISCH \ud83d\udc1f Luxcutter (Toxinburst Rod Skin)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "revenue": 3.34,
-   "units": 1,
-   "sold_at": 4.45
   }
  ],
  "items": [
-  {
-   "date": "2026-09-14",
-   "item": "BLOX FRUITS \ud83d\udc32PERMANENT DRAGON\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "Blox Fruits",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 33.95,
-   "revenue": 29.3,
-   "cogs": 24.17,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Legendary Key Bundle (+1100 Keys)",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 34.45,
-   "revenue": 28.75,
-   "cogs": 25.52,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Heavy Duty Bundle",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 12.95,
-   "revenue": 10.81,
-   "cogs": 9.85,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "10K S$ Shady Coins",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 2,
-   "sold_at": 5.45,
-   "revenue": 8.69,
-   "cogs": 0.5,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Pirate Bundle (NEW)",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 7.75,
-   "revenue": 6.47,
-   "cogs": 4.19,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 2,
-   "sold_at": 5.8,
-   "revenue": 6.36,
-   "cogs": 0.71,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Tranquility Rod Set",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 6.45,
-   "revenue": 5.07,
-   "cogs": 0.41,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Toxinburst Rod Set",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 9.3,
-   "revenue": 5.02,
-   "cogs": 0.2,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Red Racer",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 9.25,
-   "revenue": 4.97,
-   "cogs": 1.08,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "FISCH \ud83d\udc1f Wind Elemental Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 4.31,
-   "cogs": 0.68,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Shadow Dragon x3 | GAG2 | Fall Harvest |  Fast & Ea",
-   "game": "Grow a Garden 2",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 3.11,
-   "cogs": 0.05,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "\ud83e\udeb4Grow a Garden 2 | 10M Sheckles | GAG2 Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 6,
-   "sold_at": 0.79,
-   "revenue": 2.47,
-   "cogs": 0.0,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Dragon's Breath Seed x3",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 3.95,
-   "revenue": 2.12,
-   "cogs": 0.41,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "500M Sheckles",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 2.65,
-   "revenue": 1.42,
-   "cogs": 0.02,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "FISCH \ud83d\udc1f Exalted Relic x10\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 2.65,
-   "revenue": 1.27,
-   "cogs": 0.05,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Cosmic Relic x10",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 1.95,
-   "revenue": 0.86,
-   "cogs": 0.05,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "\ud83e\udeb4Grow a Garden 2 | Super Watering Can x10 | GAG2 Fast & Easy",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 1.95,
-   "revenue": 0.85,
-   "cogs": 0.08,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "Mourned Moonstone",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 6.6,
-   "revenue": 0.0,
-   "cogs": 0.0,
-   "costed": true
-  },
-  {
-   "date": "2026-09-14",
-   "item": "PEACH WASP | CHEAPEST |\ud83e\udeb4Grow a Garden 1 \u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f",
-   "game": "Grow a Garden",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": -0.36,
-   "cogs": -0.09,
-   "costed": true
-  },
   {
    "date": "2026-09-15",
    "item": "\ud83c\udf0aEscape Tsunami For Brainrots \ud83d\udcb0 100,000 Tokens\u203c\ufe0fCHEAPEST + FAST\u203c\ufe0f",
@@ -686,7 +471,7 @@
    "units": 2,
    "sold_at": 4.95,
    "revenue": 7.77,
-   "cogs": 0.84,
+   "cogs": 1.41,
    "costed": true
   },
   {
@@ -697,7 +482,7 @@
    "units": 2,
    "sold_at": 6.45,
    "revenue": 6.92,
-   "cogs": 0.79,
+   "cogs": 1.33,
    "costed": true
   },
   {
@@ -785,7 +570,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.56,
-   "cogs": 0.4,
+   "cogs": 0.68,
    "costed": true
   },
   {
@@ -873,7 +658,7 @@
    "units": 2,
    "sold_at": 6.6,
    "revenue": 7.1,
-   "cogs": 0.81,
+   "cogs": 1.36,
    "costed": true
   },
   {
@@ -884,7 +669,7 @@
    "units": 2,
    "sold_at": 6.45,
    "revenue": 6.96,
-   "cogs": 0.79,
+   "cogs": 1.33,
    "costed": true
   },
   {
@@ -950,7 +735,7 @@
    "units": 3,
    "sold_at": 6.45,
    "revenue": 9.89,
-   "cogs": 1.11,
+   "cogs": 1.87,
    "costed": true
   },
   {
@@ -983,7 +768,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.42,
+   "cogs": 0.7,
    "costed": true
   },
   {
@@ -994,7 +779,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.57,
-   "cogs": 0.41,
+   "cogs": 0.68,
    "costed": true
   },
   {
@@ -1115,7 +900,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.77,
-   "cogs": 0.41,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -1148,7 +933,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 28.0,
-   "cogs": 24.17,
+   "cogs": 25.82,
    "costed": true
   },
   {
@@ -1181,7 +966,7 @@
    "units": 2,
    "sold_at": 6.45,
    "revenue": 7.07,
-   "cogs": 0.8,
+   "cogs": 1.34,
    "costed": true
   },
   {
@@ -1346,7 +1131,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 28.48,
-   "cogs": 24.17,
+   "cogs": 25.82,
    "costed": true
   },
   {
@@ -1423,7 +1208,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 7.84,
-   "cogs": 1.23,
+   "cogs": 2.47,
    "costed": true
   },
   {
@@ -1445,7 +1230,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 6.6,
-   "cogs": 2.81,
+   "cogs": 2.43,
    "costed": true
   },
   {
@@ -1621,7 +1406,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.57,
-   "cogs": 0.41,
+   "cogs": 0.68,
    "costed": true
   },
   {
@@ -1687,7 +1472,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 29.3,
-   "cogs": 24.17,
+   "cogs": 25.82,
    "costed": true
   },
   {
@@ -1720,7 +1505,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.42,
+   "cogs": 0.7,
    "costed": true
   },
   {
@@ -1907,7 +1692,7 @@
    "units": 1,
    "sold_at": 10.75,
    "revenue": 5.94,
-   "cogs": 2.78,
+   "cogs": 2.41,
    "costed": true
   },
   {
@@ -1973,7 +1758,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.59,
-   "cogs": 0.41,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -2193,7 +1978,7 @@
    "units": 1,
    "sold_at": 6.45,
    "revenue": 3.58,
-   "cogs": 0.4,
+   "cogs": 0.68,
    "costed": true
   },
   {
@@ -2347,7 +2132,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.56,
-   "cogs": 0.41,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -2358,7 +2143,7 @@
    "units": 1,
    "sold_at": 6.45,
    "revenue": 3.53,
-   "cogs": 0.4,
+   "cogs": 0.68,
    "costed": true
   },
   {
@@ -2468,7 +2253,7 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 11.48,
-   "cogs": 2.06,
+   "cogs": 3.65,
    "costed": true
   },
   {
@@ -2523,7 +2308,7 @@
    "units": 2,
    "sold_at": 4.95,
    "revenue": 7.96,
-   "cogs": 0.84,
+   "cogs": 1.41,
    "costed": true
   },
   {
@@ -2633,7 +2418,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.63,
-   "cogs": 0.41,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -2754,7 +2539,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.12,
-   "cogs": 1.23,
+   "cogs": 2.47,
    "costed": true
   },
   {
@@ -2864,7 +2649,7 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 11.44,
-   "cogs": 2.06,
+   "cogs": 3.65,
    "costed": true
   },
   {
@@ -2996,7 +2781,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.41,
-   "cogs": 1.01,
+   "cogs": 1.22,
    "costed": true
   },
   {
@@ -3062,7 +2847,7 @@
    "units": 1,
    "sold_at": 33.25,
    "revenue": 19.18,
-   "cogs": 6.06,
+   "cogs": 6.74,
    "costed": true
   },
   {
@@ -3128,7 +2913,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.65,
-   "cogs": 0.41,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -3249,7 +3034,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.98,
-   "cogs": 0.42,
+   "cogs": 0.7,
    "costed": true
   },
   {
@@ -3260,7 +3045,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.6,
-   "cogs": 0.41,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -3403,7 +3188,7 @@
    "units": 1,
    "sold_at": 6.6,
    "revenue": 3.64,
-   "cogs": 0.41,
+   "cogs": 0.69,
    "costed": true
   },
   {
@@ -3524,7 +3309,7 @@
    "units": 1,
    "sold_at": 19.95,
    "revenue": 11.45,
-   "cogs": 2.06,
+   "cogs": 3.65,
    "costed": true
   },
   {
@@ -3788,7 +3573,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 1.23,
+   "cogs": 2.47,
    "costed": true
   },
   {
@@ -4107,7 +3892,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 1.23,
+   "cogs": 2.47,
    "costed": true
   },
   {
@@ -4294,7 +4079,7 @@
    "units": 1,
    "sold_at": 6.45,
    "revenue": 3.78,
-   "cogs": 0.4,
+   "cogs": 0.68,
    "costed": true
   },
   {
@@ -4305,7 +4090,7 @@
    "units": 1,
    "sold_at": 4.95,
    "revenue": 3.77,
-   "cogs": 0.42,
+   "cogs": 0.7,
    "costed": true
   },
   {
@@ -4316,7 +4101,7 @@
    "units": 1,
    "sold_at": 3.83,
    "revenue": 3.2,
-   "cogs": 0.41,
+   "cogs": 1.46,
    "costed": true
   },
   {
@@ -4426,7 +4211,7 @@
    "units": 1,
    "sold_at": 9.25,
    "revenue": 5.79,
-   "cogs": 2.07,
+   "cogs": 2.06,
    "costed": true
   },
   {
@@ -4459,7 +4244,7 @@
    "units": 1,
    "sold_at": 7.95,
    "revenue": 4.75,
-   "cogs": 2.2,
+   "cogs": 2.18,
    "costed": true
   },
   {
@@ -4503,7 +4288,7 @@
    "units": 1,
    "sold_at": 3.95,
    "revenue": 2.22,
-   "cogs": 0.34,
+   "cogs": 0.31,
    "costed": true
   },
   {
@@ -4558,7 +4343,7 @@
    "units": 5,
    "sold_at": 2.95,
    "revenue": 11.64,
-   "cogs": 1.71,
+   "cogs": 1.58,
    "costed": true
   },
   {
@@ -4580,7 +4365,7 @@
    "units": 1,
    "sold_at": 9.95,
    "revenue": 8.36,
-   "cogs": 2.53,
+   "cogs": 2.52,
    "costed": true
   },
   {
@@ -4591,7 +4376,7 @@
    "units": 1,
    "sold_at": 12.58,
    "revenue": 7.79,
-   "cogs": 2.74,
+   "cogs": 2.73,
    "costed": true
   },
   {
@@ -4613,7 +4398,7 @@
    "units": 2,
    "sold_at": 3.95,
    "revenue": 6.32,
-   "cogs": 0.84,
+   "cogs": 3.02,
    "costed": true
   },
   {
@@ -4679,7 +4464,7 @@
    "units": 2,
    "sold_at": 3.95,
    "revenue": 4.71,
-   "cogs": 0.67,
+   "cogs": 0.62,
    "costed": true
   },
   {
@@ -4778,7 +4563,7 @@
    "units": 1,
    "sold_at": 33.95,
    "revenue": 27.9,
-   "cogs": 24.17,
+   "cogs": 25.82,
    "costed": true
   },
   {
@@ -4789,7 +4574,7 @@
    "units": 1,
    "sold_at": 13.25,
    "revenue": 8.02,
-   "cogs": 3.13,
+   "cogs": 4.48,
    "costed": true
   },
   {
@@ -4800,7 +4585,7 @@
    "units": 1,
    "sold_at": 11.25,
    "revenue": 6.93,
-   "cogs": 5.9,
+   "cogs": 1.96,
    "costed": true
   },
   {
@@ -4811,7 +4596,7 @@
    "units": 1,
    "sold_at": 10.65,
    "revenue": 6.56,
-   "cogs": 2.9,
+   "cogs": 2.79,
    "costed": true
   },
   {
@@ -4844,8 +4629,8 @@
    "units": 1,
    "sold_at": 4.45,
    "revenue": 3.34,
-   "cogs": 0.0,
-   "costed": false
+   "cogs": 1.6,
+   "costed": true
   },
   {
    "date": "2026-10-12",
@@ -4877,7 +4662,7 @@
    "units": 1,
    "sold_at": 2.95,
    "revenue": 2.23,
-   "cogs": 0.34,
+   "cogs": 0.32,
    "costed": true
   },
   {
@@ -4915,13 +4700,68 @@
   },
   {
    "date": "2026-10-13",
+   "item": "Enchanted Forest Eggs x5",
+   "game": "Steal An Egg",
+   "currency": "GBP",
+   "units": 2,
+   "sold_at": 5.77,
+   "revenue": 9.64,
+   "cogs": 0.0,
+   "costed": true
+  },
+  {
+   "date": "2026-10-13",
+   "item": "FISCH \ud83d\udc1f Martyr's Battleaxe (Fabulous Rod Skin)\u203c\ufe0fCHEAP & FAST SERVICE \u203c",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 9.95,
+   "revenue": 8.36,
+   "cogs": 3.87,
+   "costed": true
+  },
+  {
+   "date": "2026-10-13",
+   "item": "Full Lens Set (All 5 Lenses)",
+   "game": "FISCH",
+   "currency": "CAD",
+   "units": 1,
+   "sold_at": 18.95,
+   "revenue": 8.16,
+   "cogs": 1.9,
+   "costed": true
+  },
+  {
+   "date": "2026-10-13",
    "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
    "game": "FISCH",
    "currency": "USD",
    "units": 1,
    "sold_at": 6.45,
    "revenue": 3.79,
-   "cogs": 0.4,
+   "cogs": 0.68,
+   "costed": true
+  },
+  {
+   "date": "2026-10-13",
+   "item": "Nuclearo Dinossauro",
+   "game": "Steal A Brainrot",
+   "currency": "CAD",
+   "units": 2,
+   "sold_at": 4.45,
+   "revenue": 3.75,
+   "cogs": 0.41,
+   "costed": true
+  },
+  {
+   "date": "2026-10-13",
+   "item": "FISCH \ud83d\udc1f Crimson Colossal Blue Dragon\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 3.45,
+   "revenue": 2.67,
+   "cogs": 0.37,
    "costed": true
   },
   {
@@ -4933,6 +4773,160 @@
    "sold_at": 2.95,
    "revenue": 2.13,
    "cogs": 1.51,
+   "costed": true
+  },
+  {
+   "date": "2026-10-13",
+   "item": "Cosmic Relic x10",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 1.95,
+   "revenue": 1.35,
+   "cogs": 0.07,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32 3X MYTHICAL SCROLLS\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 3,
+   "sold_at": 21.25,
+   "revenue": 39.82,
+   "cogs": 34.2,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT CONTROL\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 44.45,
+   "revenue": 27.67,
+   "cogs": 22.0,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT MAGNET\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 35.95,
+   "revenue": 22.3,
+   "cogs": 18.2,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT YETI\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 30.65,
+   "revenue": 18.96,
+   "cogs": 14.5,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT GAS\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 27.25,
+   "revenue": 16.82,
+   "cogs": 12.41,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT GRAVITY\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 25.95,
+   "revenue": 16.0,
+   "cogs": 12.68,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT T-REX\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 24.95,
+   "revenue": 15.36,
+   "cogs": 9.83,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT PAIN\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 23.25,
+   "revenue": 14.29,
+   "cogs": 11.15,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT LIGHTNING\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 22.95,
+   "revenue": 14.1,
+   "cogs": 8.99,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32PERMANENT PORTAL\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 22.25,
+   "revenue": 13.67,
+   "cogs": 8.77,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "Ice",
+   "game": "Blox Fruits",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 6.95,
+   "revenue": 5.48,
+   "cogs": 3.55,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "BLOX FRUITS \ud83d\udc32 FAST BOATS\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Blox Fruits",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 4.65,
+   "revenue": 2.67,
+   "cogs": 1.79,
+   "costed": true
+  },
+  {
+   "date": "2026-10-14",
+   "item": "FISCH \ud83d\udc1f 100M Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 3.95,
+   "revenue": 2.23,
+   "cogs": 0.42,
    "costed": true
   }
  ]
