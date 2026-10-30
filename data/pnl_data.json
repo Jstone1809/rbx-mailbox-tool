@@ -1,18 +1,8 @@
 {
- "generated": "2026-10-29T06:46:50Z",
+ "generated": "2026-10-30T06:46:51Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 0.0,
  "days": [
-  {
-   "date": "2026-09-30",
-   "revenue": 101.37,
-   "cogs": 43.02,
-   "ads": 6.38,
-   "has_ads": true,
-   "orders": 9,
-   "units": 11,
-   "nocost_revenue": 5.84
-  },
   {
    "date": "2026-10-01",
    "revenue": 100.11,
@@ -146,7 +136,7 @@
   {
    "date": "2026-10-14",
    "revenue": 57.08,
-   "cogs": 44.22,
+   "cogs": 43.93,
    "ads": 0.0,
    "has_ads": false,
    "orders": 22,
@@ -292,32 +282,42 @@
    "orders": 32,
    "units": 44,
    "nocost_revenue": 9.69
+  },
+  {
+   "date": "2026-10-29",
+   "revenue": 239.28,
+   "cogs": 138.12,
+   "ads": 0.0,
+   "has_ads": false,
+   "orders": 17,
+   "units": 18,
+   "nocost_revenue": 0.0
   }
  ],
  "games": [
   {
    "game": "FISCH",
-   "revenue": 1751.95,
-   "cogs": 526.08,
-   "units": 329
+   "revenue": 1754.49,
+   "cogs": 517.83,
+   "units": 337
   },
   {
    "game": "Rivals",
-   "revenue": 546.54,
-   "cogs": 400.66,
+   "revenue": 553.01,
+   "cogs": 406.4,
    "units": 130
   },
   {
    "game": "Blox Fruits",
-   "revenue": 324.23,
-   "cogs": 267.28,
-   "units": 48
+   "revenue": 365.55,
+   "cogs": 295.58,
+   "units": 50
   },
   {
    "game": "Steal A Brainrot",
-   "revenue": 266.14,
-   "cogs": 103.48,
-   "units": 44
+   "revenue": 261.73,
+   "cogs": 102.26,
+   "units": 43
   },
   {
    "game": "ARC Raiders",
@@ -333,9 +333,15 @@
   },
   {
    "game": "Grow a Garden",
-   "revenue": 232.52,
-   "cogs": 129.13,
-   "units": 36
+   "revenue": 235.02,
+   "cogs": 130.63,
+   "units": 37
+  },
+  {
+   "game": "MM2",
+   "revenue": 126.44,
+   "cogs": 83.65,
+   "units": 4
   },
   {
    "game": "Steal An Egg",
@@ -345,15 +351,9 @@
   },
   {
    "game": "Grow a Garden 2",
-   "revenue": 53.03,
-   "cogs": 9.49,
-   "units": 15
-  },
-  {
-   "game": "MM2",
-   "revenue": 22.08,
-   "cogs": 13.64,
-   "units": 3
+   "revenue": 38.16,
+   "cogs": 8.21,
+   "units": 11
   },
   {
    "game": "Escape Tsunami For Brainrots",
@@ -374,125 +374,9 @@
    "revenue": 9.69,
    "units": 2,
    "sold_at": 5.8
-  },
-  {
-   "item": "Big Wolf",
-   "revenue": 5.84,
-   "units": 2,
-   "sold_at": 5.25
   }
  ],
  "items": [
-  {
-   "date": "2026-09-30",
-   "item": "FISCH \ud83d\udc1f Platinum Menace (Olympian Godbreaker Rod Skin)\u203c\ufe0fCHEAP & FAST S",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 67.95,
-   "revenue": 57.05,
-   "cogs": 29.87,
-   "costed": true
-  },
-  {
-   "date": "2026-09-30",
-   "item": "Prop Bundle (NEW)",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 8.95,
-   "revenue": 7.48,
-   "cogs": 4.15,
-   "costed": true
-  },
-  {
-   "date": "2026-09-30",
-   "item": "Contraband Bundle",
-   "game": "Rivals",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 8.95,
-   "revenue": 7.48,
-   "cogs": 4.98,
-   "costed": true
-  },
-  {
-   "date": "2026-09-30",
-   "item": "Raccoon x5",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 10.65,
-   "revenue": 6.05,
-   "cogs": 1.19,
-   "costed": true
-  },
-  {
-   "date": "2026-09-30",
-   "item": "Big Wolf",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 2,
-   "sold_at": 5.25,
-   "revenue": 5.84,
-   "cogs": 0.0,
-   "costed": false
-  },
-  {
-   "date": "2026-09-30",
-   "item": "\u2705LA EASTER GRANDE |\ud83d\udcb0STEAL A BRAINROT\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f $55M/S",
-   "game": "Steal A Brainrot",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 7.95,
-   "revenue": 4.41,
-   "cogs": 1.22,
-   "costed": true
-  },
-  {
-   "date": "2026-09-30",
-   "item": "FISCH \ud83d\udc1f Onirifalx Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 4.95,
-   "revenue": 3.98,
-   "cogs": 0.41,
-   "costed": true
-  },
-  {
-   "date": "2026-09-30",
-   "item": "Mourned Moonstone",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 4.95,
-   "revenue": 3.98,
-   "cogs": 0.7,
-   "costed": true
-  },
-  {
-   "date": "2026-09-30",
-   "item": "Golden Dragonfly x5",
-   "game": "Grow a Garden 2",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 5.25,
-   "revenue": 2.98,
-   "cogs": 0.08,
-   "costed": true
-  },
-  {
-   "date": "2026-09-30",
-   "item": "FISCH \ud83d\udc1f Cosmic Relic x50\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": 2.12,
-   "cogs": 0.42,
-   "costed": true
-  },
   {
    "date": "2026-10-01",
    "item": "\ud83e\udeb4Grow a Garden 1 | 10,000 Tokens | CHEAPEST + FAST",
@@ -2459,7 +2343,7 @@
    "units": 2,
    "sold_at": 12.07,
    "revenue": 20.69,
-   "cogs": 13.49,
+   "cogs": 13.19,
    "costed": true
   },
   {
@@ -6266,6 +6150,193 @@
    "sold_at": 7.39,
    "revenue": -0.48,
    "cogs": -0.31,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "Chroma Beach Set",
+   "game": "MM2",
+   "currency": "EUR",
+   "units": 1,
+   "sold_at": 150.95,
+   "revenue": 104.36,
+   "cogs": 70.3,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "Kitsune",
+   "game": "Blox Fruits",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 30.95,
+   "revenue": 26.67,
+   "cogs": 19.14,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "FISCH \ud83d\udc1f Purr of Rebellion (Astraeus Serenade Rod Skin)\u203c\ufe0fCHEAP & FAST S",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 35.95,
+   "revenue": 22.24,
+   "cogs": 9.69,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "RIVALS \ud83d\udd25 SPOOKY SKIN CASE (X9)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "Rivals",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 18.15,
+   "revenue": 15.44,
+   "cogs": 11.15,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "Lightning",
+   "game": "Blox Fruits",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 17.25,
+   "revenue": 14.65,
+   "cogs": 9.16,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "Surgeon's Sword",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 12.95,
+   "revenue": 10.87,
+   "cogs": 5.11,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "FISCH \ud83d\udc1f Full Lens Set (All 5 Lenses)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 13.25,
+   "revenue": 7.98,
+   "cogs": 1.61,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "FISCH \ud83d\udc1f Ominous Ouija (Stellarwave Melody Rod Skin)\u203c\ufe0fCHEAP & FAST SERV",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 11.25,
+   "revenue": 6.72,
+   "cogs": 1.94,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "Spooky Skin Case (x3)",
+   "game": "Rivals",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 7.25,
+   "revenue": 5.99,
+   "cogs": 3.72,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "FISCH \ud83d\udc1f 1B Coins C$ Via Mythic Fish\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 5.95,
+   "revenue": 4.86,
+   "cogs": 1.64,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "Requiem Rod Set",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 6.95,
+   "revenue": 4.1,
+   "cogs": 0.3,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "FISCH \ud83d\udc1f Nessie\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 4.95,
+   "revenue": 3.98,
+   "cogs": 1.39,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "Spiritbinder Rod Set",
+   "game": "FISCH",
+   "currency": "USD",
+   "units": 1,
+   "sold_at": 6.45,
+   "revenue": 3.79,
+   "cogs": 0.79,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "FISCH \ud83d\udc1f Paradise Relic x5\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 2,
+   "sold_at": 1.95,
+   "revenue": 2.9,
+   "cogs": 0.26,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "\ud83e\udeb4Grow a Garden 1 | 1000 Tokens | CHEAPEST + FAST",
+   "game": "Grow a Garden",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 3.25,
+   "revenue": 2.5,
+   "cogs": 1.5,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "FISCH \ud83d\udc1f Cosmic Relic x50\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 2.95,
+   "revenue": 2.23,
+   "cogs": 0.42,
+   "costed": true
+  },
+  {
+   "date": "2026-10-29",
+   "item": "Spiritbinder Rod Set",
+   "game": "FISCH",
+   "currency": "GBP",
+   "units": 1,
+   "sold_at": 8.95,
+   "revenue": 0.0,
+   "cogs": 0.0,
    "costed": true
   }
  ]
