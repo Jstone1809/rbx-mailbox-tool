@@ -1,18 +1,8 @@
 {
- "generated": "2026-11-05T06:47:25Z",
+ "generated": "2026-11-06T06:46:49Z",
  "method": "cost ratio applied to the actual sale price",
  "excluded_non_roblox": 0.0,
  "days": [
-  {
-   "date": "2026-10-07",
-   "revenue": 23.37,
-   "cogs": 3.07,
-   "ads": 14.56,
-   "has_ads": true,
-   "orders": 6,
-   "units": 6,
-   "nocost_revenue": 0.0
-  },
   {
    "date": "2026-10-08",
    "revenue": 90.94,
@@ -76,7 +66,7 @@
   {
    "date": "2026-10-14",
    "revenue": 57.08,
-   "cogs": 42.16,
+   "cogs": 43.48,
    "ads": 0.0,
    "has_ads": false,
    "orders": 22,
@@ -226,7 +216,7 @@
   {
    "date": "2026-10-29",
    "revenue": 239.28,
-   "cogs": 135.89,
+   "cogs": 136.21,
    "ads": 0.0,
    "has_ads": false,
    "orders": 17,
@@ -267,9 +257,9 @@
  "games": [
   {
    "game": "FISCH",
-   "revenue": 1579.31,
-   "cogs": 457.94,
-   "units": 319
+   "revenue": 1563.71,
+   "cogs": 456.56,
+   "units": 314
   },
   {
    "game": "Rivals",
@@ -303,14 +293,14 @@
   },
   {
    "game": "Grow a Garden",
-   "revenue": 180.25,
-   "cogs": 100.99,
-   "units": 32
+   "revenue": 172.48,
+   "cogs": 99.31,
+   "units": 31
   },
   {
    "game": "MM2",
    "revenue": 126.44,
-   "cogs": 79.99,
+   "cogs": 81.63,
    "units": 4
   },
   {
@@ -347,72 +337,6 @@
   }
  ],
  "items": [
-  {
-   "date": "2026-10-07",
-   "item": "MEGA RACCOON | CHEAPEST |\ud83e\udeb4Grow a Garden 1\u203c\ufe0fFAST & EASY DELIVERY\u203c\ufe0f",
-   "game": "Grow a Garden",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 13.65,
-   "revenue": 7.77,
-   "cogs": 1.68,
-   "costed": true
-  },
-  {
-   "date": "2026-10-07",
-   "item": "FISCH \ud83d\udc1f Wind Elemental Rod Set\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 5.95,
-   "revenue": 4.86,
-   "cogs": 0.22,
-   "costed": true
-  },
-  {
-   "date": "2026-10-07",
-   "item": "Toxic Spire Rod",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 5.95,
-   "revenue": 4.86,
-   "cogs": 0.6,
-   "costed": true
-  },
-  {
-   "date": "2026-10-07",
-   "item": "Abyssal Enchant Relic x10",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 6.65,
-   "revenue": 3.65,
-   "cogs": 0.52,
-   "costed": true
-  },
-  {
-   "date": "2026-10-07",
-   "item": "FISCH \ud83d\udc1f Chaotic Enchant Relic\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "GBP",
-   "units": 1,
-   "sold_at": 2.95,
-   "revenue": 2.23,
-   "cogs": 0.05,
-   "costed": true
-  },
-  {
-   "date": "2026-10-07",
-   "item": "FISCH \ud83d\udc1f Bunblade (Plaguereaver Rod Skin)\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
-   "game": "FISCH",
-   "currency": "USD",
-   "units": 1,
-   "sold_at": 19.95,
-   "revenue": 0.0,
-   "cogs": 0.0,
-   "costed": true
-  },
   {
    "date": "2026-10-08",
    "item": "BLOX FRUITS \ud83d\udc32PERMANENT TIGER\u203c\ufe0fCHEAP & FAST SERVICE \u203c\ufe0f",
@@ -1367,7 +1291,7 @@
    "units": 2,
    "sold_at": 12.07,
    "revenue": 20.69,
-   "cogs": 11.52,
+   "cogs": 12.84,
    "costed": true
   },
   {
@@ -5184,7 +5108,7 @@
    "units": 1,
    "sold_at": 150.95,
    "revenue": 104.36,
-   "cogs": 68.31,
+   "cogs": 68.63,
    "costed": true
   },
   {
